@@ -4,8 +4,10 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.Controls;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -13,11 +15,31 @@ public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName, pbHeaderText;
     Boolean isModified, suppressModified;
 
-    public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
+    ActivePanel activePanel { get; set; } = ActivePanel.Left;
+
+    /// <summary>
+    /// Gets or sets the currently active panel of the asn.1 document
+    /// </summary>
+    public ActivePanel ActivePanel
+    {
+        get => activePanel;
+        set
+        {
+            if (activePanel != value)
+            {
+                activePanel = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands, MainWindowVM mainWindowVM)
+    {
         DataSource = new DataSource(nodeViewOptions);
         DataSource.CollectionChanged += onDataSourceCollectionChanged;
         DataSource.RequireTreeRefresh += onTreeRefreshRequired;
         TreeCommands = treeCommands;
+        MainWindowVM = mainWindowVM;
     }
     async void onTreeRefreshRequired(Object sender, EventArgs e) {
         await RefreshTreeView();
@@ -27,6 +49,18 @@ public class Asn1DocumentVM : AsyncViewModel {
             IsModified = true;
         }
     }
+
+    /// <summary>
+    /// Reference to the view model for the main window of the application
+    /// </summary>
+    public MainWindowVM MainWindowVM { get; }
+
+    /// <summary>
+    /// Gets the current command to move a tab between panels
+    /// </summary>
+    public ICommand MoveTabCommand => activePanel == ActivePanel.Left
+        ? MainWindowVM.MoveTabRightCommand
+        : MainWindowVM.MoveTabLeftCommand;
 
     public IDataSource DataSource { get; }
     public ITreeCommands TreeCommands { get; }
@@ -127,5 +161,11 @@ public class Asn1DocumentVM : AsyncViewModel {
         DataSource.Reset();
         Path = String.Empty;
         IsModified = false;
+    }
+
+    /// <inheritdoc />
+    public override String ToString()
+    {
+        return $"Header: {Header}, Active panel: {ActivePanel}";
     }
 }

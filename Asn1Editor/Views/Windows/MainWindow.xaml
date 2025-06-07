@@ -9,6 +9,7 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:wpfControls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
         xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
+        xmlns:converters="clr-namespace:SysadminsLV.Asn1Editor.Controls.Converters;assembly=SysadminsLV.Asn1Editor.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="ASN.1 Editor"
@@ -24,6 +25,234 @@
         <KeyBinding Modifiers="Ctrl" Key="F4" Command="{Binding CloseTabCommand}"/>
         <KeyBinding Modifiers="Control+Shift" Key="S" Command="{Binding SaveCommand}" CommandParameter="2"/>
     </Window.InputBindings>
+    <Window.Resources>
+        <converters:MoveTabHeaderConverter x:Key="MoveTabHeaderConverter"/>
+        <DataTemplate x:Key="AsnTabHeaderTemplate">
+            <TextBlock Text="{Binding Header}"
+                       ToolTip="{Binding ToolTipText}">
+                <TextBlock.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="_Save"
+                                  Command="{Binding DataContext.MainWindowVM.SaveCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  InputGestureText="Ctrl + S">
+                            <MenuItem.Icon>
+                                <Image Source="/Views/Images/Menu/save_16x16.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="_Close"
+                                  Command="{Binding DataContext.MainWindowVM.CloseTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  InputGestureText="Ctrl + F4">
+                            <MenuItem.Icon>
+                                <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Close _All"
+                                  Command="{Binding DataContext.MainWindowVM.CloseAllTabsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding}">
+                            <MenuItem.Icon>
+                                <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Close All _But This"
+                                  Command="{Binding DataContext.MainWindowVM.CloseAllButThisTabCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  CommandParameter="{Binding}">
+                            <MenuItem.Icon>
+                                <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="{Binding ActivePanel, Converter={StaticResource MoveTabHeaderConverter}}"
+                                  Command="{Binding MoveTabCommand}"
+                                  CommandParameter="{Binding}">
+                            <MenuItem.Icon>
+                                <Image Width="16">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ActivePanel}" Value="Left">
+                                                    <Setter Property="Source" Value="/Views/Images/Menu/right-arrow_16x16.png"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ActivePanel}" Value="Right">
+                                                    <Setter Property="Source" Value="/Views/Images/Menu/left-arrow_16x16.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="AsnTabContentTemplate">
+            <DockPanel>
+                <DockPanel Visibility="{Binding ElementName=HexViewerToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
+                    <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
+                        <ToolBar>
+                            <ToggleButton x:Name="HexAddressToggle"
+                              IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
+                              ToolTip="Show or hide address panel">
+                                <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
+                            </ToggleButton>
+                            <Separator/>
+                            <ToggleButton x:Name="AsciiToggle"
+                              IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
+                              ToolTip="Show or hide ASCII panel">
+                                <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
+                            </ToggleButton>
+                            <Separator/>
+                            <ToggleButton x:Name="HexColorToggle"
+                              IsChecked="{Binding NodeViewOptions.HexViewerColoringEnabled}"
+                              ToolTip="Enable or disable hex coloring">
+                                <Image Source="/Views/Images/Menu/textcolor_32x32.png"/>
+                            </ToggleButton>
+                        </ToolBar>
+                    </ToolBarTray>
+                    <c:AsnHexViewer DataSource="{Binding DataSource.RawData, Mode=OneWay}"
+                        SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"
+                        FontFamily="Consolas"
+                        FontSize="{Binding NodeViewOptions.FontSize}"
+                        Background="#D5E7FE"
+                        IsColoringEnabled="{Binding ElementName=HexColorToggle, Path=IsChecked}"
+                        ShowAddressPane="{Binding ElementName=HexAddressToggle, Path=IsChecked}"
+                        ShowAsciiPane="{Binding ElementName=AsciiToggle, Path=IsChecked}"/>
+                </DockPanel>
+                <Grid>
+                    <Grid.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="/Views/TreeViewResources.xaml"/>
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </Grid.Resources>
+                    <c:AsnTreeView ItemsSource="{Binding Tree}"
+                                   SelectedItem="{Binding DataSource.SelectedNode, Mode=TwoWay}"
+                                   AllowDrop="True"
+                                   FontSize="{Binding NodeViewOptions.FontSize}"
+                                   MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
+                                   DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
+                                   DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
+                                   PreviewMouseDown="asnTreeViewPreviewMouseDown"
+                                   FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                   ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
+                                   ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}">
+                        <c:AsnTreeView.InputBindings>
+                            <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
+                            <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
+                            <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
+                            <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
+                            <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
+                            <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}"/>
+                        </c:AsnTreeView.InputBindings>
+                        <c:AsnTreeView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Edit node..."
+                              Command="{Binding TreeCommands.EditNodeCommand}"
+                              CommandParameter="{x:Static clr:NodeEditMode.Text}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Save selected node as..."
+                              Command="{Binding TreeCommands.SaveNodeCommand}"/>
+                                <MenuItem Header="View node text..."
+                              Command="{Binding TreeCommands.ShowNodeTextViewer}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="View encoded node..."
+                              Command="{Binding TreeCommands.ShowNodeInConverter}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/converter_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Edit Object Identifier mapping"
+                              Command="{Binding TreeCommands.RegisterOidCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/book_16x16.png"/>
+                                    </MenuItem.Icon>
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DataSource.SelectedNode.Value.Tag}" Value="6">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.Style>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="New node"
+                              Command="{Binding TreeCommands.AddNewNodeCommand}"
+                              InputGestureText="Ctrl + N">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Cut"
+                              Command="{Binding TreeCommands.CutNodeCommand}"
+                              InputGestureText="Ctrl + X">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/cut_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Copy"
+                              Command="{Binding TreeCommands.CopyNodeCommand}"
+                              InputGestureText="Ctrl + C">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/copy_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Paste before"
+                              Command="{Binding TreeCommands.PasteBeforeCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Paste After"
+                              Command="{Binding TreeCommands.PasteAfterCommand}"
+                              InputGestureText="Ctrl + V">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Insert as a last child node"
+                              Command="{Binding TreeCommands.PasteLastCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Remove"
+                              Command="{Binding TreeCommands.DeleteNodeCommand}"
+                              InputGestureText="Del">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Views/Images/Menu/delete_16x16.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </c:AsnTreeView.ContextMenu>
+                    </c:AsnTreeView>
+                    <c:BusyIndicator IsShown="{Binding IsBusy}"
+                         HeaderText="{Binding ProgressText}"
+                         Text="This may take a while"/>
+                </Grid>
+            </DockPanel>
+        </DataTemplate>
+        <Style x:Key="LeftTabControlStyle" TargetType="TabControl">
+            <Setter Property="Grid.ColumnSpan" Value="1"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSplitView}" Value="False">
+                    <Setter Property="Grid.ColumnSpan" Value="3"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -307,212 +536,54 @@
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
-        <wpfControls:ClosableTabControl ItemsSource="{Binding Tabs}"
-                                        SelectedItem="{Binding SelectedTab}"
-                                        AddTabCommand="{Binding NewCommand}"
-                                        CloseTabCommand="{Binding CloseTabCommand}"
-                                        ShowNewTabButton="False"
-                                        BorderThickness="0"
-                                        Style="{StaticResource ScrollableTabControl}">
-            <wpfControls:ClosableTabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Header}"
-                               ToolTip="{Binding Path=ToolTipText}"
-                               Tag="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=wpfControls:ClosableTabControl}}"
-                               ContextMenuOpening="onTabHeaderContextMenuOpening">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}"
-                                         MaxHeight="200">
-                                <MenuItem Header="_Save"
-                                          Command="{Binding SaveCommand}"
-                                          InputGestureText="Ctrl + S">
-                                    <MenuItem.Icon>
-                                        <Image Source="/Views/Images/Menu/save_16x16.png"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <Separator/>
-                                <MenuItem Header="_Close"
-                                          Command="{Binding Path=CloseTabCommand}"
-                                          InputGestureText="Ctrl + F4">
-                                    <MenuItem.Icon>
-                                        <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Close _All"
-                                          Command="{Binding Path=CloseAllTabsCommand}">
-                                    <MenuItem.Icon>
-                                        <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                                <MenuItem Header="Close All _But This"
-                                          Command="{Binding Path=CloseAllButThisTabCommand}">
-                                    <MenuItem.Icon>
-                                        <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
-                                    </MenuItem.Icon>
-                                </MenuItem>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
-                    </TextBlock>
-                </DataTemplate>
-            </wpfControls:ClosableTabControl.ItemTemplate>
-            <wpfControls:ClosableTabControl.ContentTemplate>
-                <DataTemplate>
-                    <DockPanel>
-                        <DockPanel Visibility="{Binding ElementName=HexViewerToggle, Path=IsChecked, Converter={StaticResource BooleanToVisibility}}">
-                            <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
-                                <ToolBar>
-                                    <ToggleButton x:Name="HexAddressToggle"
-                                                  IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
-                                                  ToolTip="Show or hide address panel">
-                                        <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
-                                    </ToggleButton>
-                                    <Separator/>
-                                    <ToggleButton x:Name="AsciiToggle"
-                                                  IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
-                                                  ToolTip="Show or hide ASCII panel">
-                                        <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
-                                    </ToggleButton>
-                                    <Separator/>
-                                    <ToggleButton x:Name="HexColorToggle"
-                                                  IsChecked="{Binding NodeViewOptions.HexViewerColoringEnabled}"
-                                                  ToolTip="Enable or disable hex coloring">
-                                        <Image Source="/Views/Images/Menu/textcolor_32x32.png"/>
-                                    </ToggleButton>
-                                </ToolBar>
-                            </ToolBarTray>
-                            <c:AsnHexViewer DataSource="{Binding DataSource.RawData, Mode=OneWay}"
-                                            SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"
-                                            FontFamily="Consolas"
-                                            FontSize="{Binding NodeViewOptions.FontSize}"
-                                            Background="#D5E7FE"
-                                            IsColoringEnabled="{Binding ElementName=HexColorToggle, Path=IsChecked}"
-                                            ShowAddressPane="{Binding ElementName=HexAddressToggle, Path=IsChecked}"
-                                            ShowAsciiPane="{Binding ElementName=AsciiToggle, Path=IsChecked}"/>
-                        </DockPanel>
-                        <Grid>
-                            <Grid.Resources>
-                                <ResourceDictionary>
-                                    <ResourceDictionary.MergedDictionaries>
-                                        <ResourceDictionary Source="/Views/TreeViewResources.xaml"/>
-                                    </ResourceDictionary.MergedDictionaries>
-                                </ResourceDictionary>
-                            </Grid.Resources>
-                            <c:AsnTreeView ItemsSource="{Binding Tree}"
-                                           SelectedItem="{Binding DataSource.SelectedNode, Mode=TwoWay}"
-                                           AllowDrop="True"
-                                           FontSize="{Binding NodeViewOptions.FontSize}"
-                                           MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
-                                           DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
-                                           DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
-                                           FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                           ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
-                                           ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}">
-                                <c:AsnTreeView.InputBindings>
-                                    <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
-                                    <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
-                                    <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
-                                    <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
-                                    <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
-                                    <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}"/>
-                                </c:AsnTreeView.InputBindings>
-                                <c:AsnTreeView.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Edit node..."
-                                                  Command="{Binding TreeCommands.EditNodeCommand}"
-                                                  CommandParameter="{x:Static clr:NodeEditMode.Text}">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Save selected node as..."
-                                                  Command="{Binding TreeCommands.SaveNodeCommand}"/>
-                                        <MenuItem Header="View node text..."
-                                                  Command="{Binding TreeCommands.ShowNodeTextViewer}">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="View encoded node..."
-                                                  Command="{Binding TreeCommands.ShowNodeInConverter}">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/converter_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Edit Object Identifier mapping"
-                                                  Command="{Binding TreeCommands.RegisterOidCommand}">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/book_16x16.png"/>
-                                            </MenuItem.Icon>
-                                            <MenuItem.Style>
-                                                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding DataSource.SelectedNode.Value.Tag}" Value="6">
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </MenuItem.Style>
-                                        </MenuItem>
-                                        <Separator/>
-                                        <MenuItem Header="New node"
-                                                  Command="{Binding TreeCommands.AddNewNodeCommand}"
-                                                  InputGestureText="Ctrl + N">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Cut"
-                                                  Command="{Binding TreeCommands.CutNodeCommand}"
-                                                  InputGestureText="Ctrl + X">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/cut_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Copy"
-                                                  Command="{Binding TreeCommands.CopyNodeCommand}"
-                                                  InputGestureText="Ctrl + C">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/copy_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Paste before"
-                                                  Command="{Binding TreeCommands.PasteBeforeCommand}">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Paste After"
-                                                  Command="{Binding TreeCommands.PasteAfterCommand}"
-                                                  InputGestureText="Ctrl + V">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <MenuItem Header="Insert as a last child node"
-                                                  Command="{Binding TreeCommands.PasteLastCommand}">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                        <Separator/>
-                                        <MenuItem Header="Remove"
-                                                  Command="{Binding TreeCommands.DeleteNodeCommand}"
-                                                  InputGestureText="Del">
-                                            <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/delete_16x16.png"/>
-                                            </MenuItem.Icon>
-                                        </MenuItem>
-                                    </ContextMenu>
-                                </c:AsnTreeView.ContextMenu>
-                            </c:AsnTreeView>
-                            <c:BusyIndicator IsShown="{Binding IsBusy}"
-                                             HeaderText="{Binding ProgressText}"
-                                             Text="This may take a while"/>
-                        </Grid>
-                    </DockPanel>
-                </DataTemplate>
-            </wpfControls:ClosableTabControl.ContentTemplate>
-        </wpfControls:ClosableTabControl>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="{Binding SeparatorWidth}" />
+                <ColumnDefinition Width="{Binding RightColumnWidth}" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="LightBlue">
+                <TabControl ItemsSource="{Binding LeftTabsView}"
+                            SelectedItem="{Binding SelectedLeftTab}"
+                            BorderThickness="0"
+                            Style="{StaticResource LeftTabControlStyle}"
+                            SelectionChanged="onLeftTabSelectionChanged"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <TabControl.ItemTemplate>
+                        <StaticResource ResourceKey="AsnTabHeaderTemplate"/>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <StaticResource ResourceKey="AsnTabContentTemplate"/>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Border>
+            <GridSplitter Grid.Column="1"
+                  Width="5"
+                  Background="DarkGray"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ShowsPreview="True"
+                  Visibility="{Binding IsSplitView, Converter={StaticResource BooleanToVisibility}}"
+                  ResizeBehavior="PreviousAndNext" />
+            <Border 
+                Grid.Column="2" 
+                Background="LightGreen" 
+                Visibility="{Binding IsSplitView, Converter={StaticResource BooleanToVisibility}}">
+                <TabControl ItemsSource="{Binding RightTabsView}"
+                            SelectedItem="{Binding SelectedRightTab}"
+                            SelectionChanged="onLeftTabSelectionChanged"
+                            BorderThickness="0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch">
+                    <TabControl.ItemTemplate>
+                        <StaticResource ResourceKey="AsnTabHeaderTemplate"/>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <StaticResource ResourceKey="AsnTabContentTemplate"/>
+                    </TabControl.ContentTemplate>
+                </TabControl>
+            </Border>
+        </Grid>
     </DockPanel>
 </Window>

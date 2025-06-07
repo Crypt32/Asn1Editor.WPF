@@ -1,30 +1,39 @@
-﻿using System;
+﻿using SysadminsLV.Asn1Editor.API.Abstractions;
+using SysadminsLV.Asn1Editor.API.Interfaces;
+using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Controls;
+using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.OfficeTheme.Controls;
+using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
-using SysadminsLV.Asn1Editor.API.Abstractions;
-using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.API.Utils;
-using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Controls;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
+public class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
+    Asn1DocumentVM selectedLeftTab;
+    Asn1DocumentVM selectedRightTab;
     Asn1DocumentVM selectedTab;
+    private GridLength separatorWidth = new GridLength(0, GridUnitType.Pixel);
+    private GridLength rightColumnWidth = new GridLength(0, GridUnitType.Pixel);
 
     public MainWindowVM(
         IWindowFactory windowFactory,
         IAppCommands appCommands,
-        NodeViewOptions nodeViewOptions) {
+        NodeViewOptions nodeViewOptions)
+    {
         _windowFactory = windowFactory;
         _uiMessenger = windowFactory.GetUIMessenger();
         GlobalData = new GlobalData();
@@ -32,19 +41,51 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         TreeCommands = new TreeViewCommands(windowFactory, this);
         NodeViewOptions = nodeViewOptions;
         NodeViewOptions.RequireTreeRefresh += onNodeViewOptionsChanged;
+
         NewCommand = new RelayCommand(newTab);
-        CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
-        CloseAllTabsCommand = new RelayCommand(closeAllTabs);
-        CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
+        CloseTabCommand = new RelayCommand<Asn1DocumentVM>(closeTab);
+        CloseAllTabsCommand = new RelayCommand(_ => CloseAllTabs());
+        CloseAllButThisTabCommand = new RelayCommand<Asn1DocumentVM>(closeAllButThisTab);
         OpenCommand = new AsyncCommand(openFileAsync);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
+        MoveTabLeftCommand = new RelayCommand(moveTabLeft);
+        MoveTabRightCommand = new RelayCommand(moveTabRight);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-        addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
+
+        // Handle dynamic updates
+        Tabs.CollectionChanged += (_, _) => attachPropertyChangedHandlers();
+
+        // Start with one tab
+        addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands, this));
+
+        LeftTabsView = new ListCollectionView(Tabs);
+        LeftTabsView.Filter = o => ((Asn1DocumentVM)o).ActivePanel == ActivePanel.Left;
+
+        RightTabsView = new ListCollectionView(Tabs);
+        RightTabsView.Filter = o => ((Asn1DocumentVM)o).ActivePanel == ActivePanel.Right;
     }
 
     async void onNodeViewOptionsChanged(Object sender, RequireTreeRefreshEventArgs args) {
         await RefreshTabs(args.Filter);
+    }
+    
+    private void attachPropertyChangedHandlers()
+    {
+        foreach (var tab in Tabs)
+        {
+            tab.PropertyChanged -= onTabPropertyChanged;
+            tab.PropertyChanged += onTabPropertyChanged;
+        }
+    }
+    
+    private void onTabPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Asn1DocumentVM.ActivePanel))
+        {
+            LeftTabsView.Refresh();
+            RightTabsView.Refresh();
+        }
     }
 
     public ICommand NewCommand { get; }
@@ -60,14 +101,92 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     public IAppCommands AppCommands { get; }
     public ITreeCommands TreeCommands { get; }
 
+    /// <summary>
+    /// Gets the command that moves the currently selected tab to the left.
+    /// </summary>
+    public ICommand MoveTabLeftCommand { get; }
+
+    /// <summary>
+    /// Gets the command that moves the currently selected tab to the right.
+    /// </summary>
+    public ICommand MoveTabRightCommand { get; }
+
     public GlobalData GlobalData { get; }
     public NodeViewOptions NodeViewOptions { get; }
+
     public ObservableCollection<Asn1DocumentVM> Tabs { get; } = [];
-    public Asn1DocumentVM SelectedTab {
-        get => selectedTab;
-        set {
+
+    public ICollectionView LeftTabsView { get; }
+    public ICollectionView RightTabsView { get; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the view is split into multiple panels.
+    /// </summary>
+    public bool IsSplitView => Tabs.Any(x => x.ActivePanel == ActivePanel.Right);
+
+    /// <summary>
+    /// Gets a value indicating whether the current view is not a split view
+    /// </summary>
+    public bool IsNotSplitView => !IsSplitView;
+
+    /// <summary>
+    /// Gets or sets the width of the separator between panels in the grid layout.
+    /// </summary>
+    public GridLength SeparatorWidth
+    {
+        get
+        {
+            return separatorWidth;
+        }
+        set
+        {
+            separatorWidth = value;
+            OnPropertyChanged();
+        }
+    } 
+
+    /// <summary>
+    /// Gets or sets the width of the right panel in the grid layout.
+    /// </summary>
+    public GridLength RightColumnWidth
+    {
+        get
+        {
+            return rightColumnWidth;
+        }
+        set
+        {
+            rightColumnWidth = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Selected tab of both panels
+    /// </summary>
+    public Asn1DocumentVM SelectedTab => selectedTab;
+
+    public Asn1DocumentVM SelectedLeftTab
+    {
+        get => selectedLeftTab;
+        set
+        {
+            selectedLeftTab = value;
             selectedTab = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(SelectedTab));
+        }
+    }
+
+    public Asn1DocumentVM SelectedRightTab
+    {
+        get => selectedRightTab;
+        set
+        {
+            selectedRightTab = value;
+            selectedTab = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(SelectedTab));
         }
     }
 
@@ -83,18 +202,26 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
     void newTab(Object o) {
-        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands, this);
         addTabToList(tab);
     }
+
+    private void removeTab(Asn1DocumentVM tab) 
+    {
+        Tabs.Remove(tab);
+    }
+
     /// <summary>
-    /// Adds tab specified by <strong>tab</strong> parameter to <see cref="Tabs"/> list and optionally makes it
+    /// Adds tab specified by <strong>tab</strong> parameter to <see cref="LeftTabs"/> list and optionally makes it
     /// active (sets to <see cref="SelectedTab"/> property).
     /// </summary>
     /// <param name="tab">Tab document to add.</param>
-    void addTabToList(Asn1DocumentVM tab) {
+    private void addTabToList(Asn1DocumentVM tab)
+    {
         Tabs.Add(tab);
-        SelectedTab = tab;
+        selectedTab = tab;
     }
+
     /// <summary>
     /// Returns a blank tab instance. Either, it is a current value of <see cref="SelectedTab"/> property
     /// or new tab document instance.
@@ -112,7 +239,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
 
         isNew = true;
-        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands, this);
         addTabToList(tab);
 
         return tab;
@@ -132,9 +259,56 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
             if (!useExistingTab) {
-                Tabs.Remove(tab);
+                removeTab(tab);
             }
         }
+    }
+
+    /// <summary>
+    /// Moves the selected tab from the left panel to the right panel.
+    /// </summary>
+    private void moveTabRight(Object o)
+    {
+        if (o is not Asn1DocumentVM tab)
+        {
+            return;
+        }
+
+        int leftTabCount = Tabs.Count(x => x.ActivePanel == ActivePanel.Left);
+        if (leftTabCount > 1)
+        {
+            tab.ActivePanel = ActivePanel.Right;
+            SelectedRightTab = tab;
+
+            if (Tabs.Count(x => x.ActivePanel == ActivePanel.Right) == 1)
+            {
+                RightColumnWidth = new GridLength(1, GridUnitType.Star);
+                SeparatorWidth = new GridLength(5, GridUnitType.Pixel);
+            }
+
+            OnPropertyChanged(nameof(IsSplitView));
+        }
+    }
+
+    private void moveTabLeft(Object o)
+    {
+        if (o is not Asn1DocumentVM tab)
+        {
+            return;
+        }
+
+        tab.ActivePanel = ActivePanel.Left;
+        SelectedLeftTab = tab;
+
+        int rightTabCount = Tabs.Count(x => x.ActivePanel == ActivePanel.Right);
+        if (rightTabCount == 0)
+        {
+            RightColumnWidth = new GridLength(0, GridUnitType.Pixel);
+            SeparatorWidth = new GridLength(0, GridUnitType.Pixel);
+            SelectedRightTab = null;
+        }
+
+        OnPropertyChanged(nameof(IsSplitView));
     }
 
     #region Read content to tab
@@ -211,14 +385,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     #region Close Tab(s)
 
-    void closeTab(Object o) {
-        if (o == null) {
-            closeTab(SelectedTab);
-        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (Asn1DocumentVM)tabItem.Content;
-            closeTab(vm);
-        }
-    }
     Boolean canCloseTab(Object o) {
         // TODO: need to eliminate explicit reference to UI elements
         return o is null or ClosableTabItem;
@@ -226,14 +392,12 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     void closeAllTabs(Object o) {
         CloseAllTabs();
     }
-    void closeAllButThisTab(Object o) {
-        if (o == null) {
-            closeTabsWithPreservation(SelectedTab);
-        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (Asn1DocumentVM)tabItem.Content;
-            closeTabsWithPreservation(vm);
-        }
+    
+    private void closeAllButThisTab(Asn1DocumentVM preservedTab)
+    {
+        closeTabsWithPreservation(SelectedTab);
     }
+
     Boolean canCloseAllButThisTab(Object o) {
         if (Tabs.Count == 0) {
             return false;
@@ -247,29 +411,33 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     void closeTab(Asn1DocumentVM tab) {
         if (!tab.IsModified) {
-            Tabs.Remove(tab);
+            removeTab(tab);
         }
         if (tab.IsModified && RequestFileSave(tab)) {
-            Tabs.Remove(tab);
+            removeTab(tab);
         }
     }
     Boolean closeTabsWithPreservation(Asn1DocumentVM preservedTab = null) {
         // loop over a copy of tabs since we are going to update source collection in a loop
         var tabs = Tabs.ToList();
-        foreach (Asn1DocumentVM tab in tabs) {
-            if (preservedTab != null && Equals(tab, preservedTab)) {
+        foreach (Asn1DocumentVM tab in tabs)
+        {
+            if (preservedTab != null && Equals(tab, preservedTab))
+            {
                 continue;
             }
-            if (!tab.IsModified) {
-                Tabs.Remove(tab);
+            if (!tab.IsModified)
+            {
+                removeTab(tab);
 
                 continue;
             }
-            SelectedTab = tab;
-            if (!RequestFileSave(tab)) {
+            selectedTab = tab;
+            if (!RequestFileSave(tab))
+            {
                 return false;
             }
-            Tabs.Remove(tab);
+            removeTab(tab);
         }
 
         return true;
@@ -315,7 +483,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
 
-    public Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null) {
+    public Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null)
+    {
         return Task.WhenAll(Tabs.Select(x => x.RefreshTreeView(filter)));
     }
 }

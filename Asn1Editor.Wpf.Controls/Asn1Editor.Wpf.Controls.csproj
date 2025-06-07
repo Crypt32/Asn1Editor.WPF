@@ -56,12 +56,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivePanel.cs" />
     <Compile Include="AsnHexViewer.cs" />
     <Compile Include="AsnTreeView.cs" />
     <Compile Include="AutoSizeTextBox.cs" />
     <Compile Include="Behaviors\TextBlockBehavior.cs" />
     <Compile Include="BusyIndicator.cs" />
     <Compile Include="Converters\IntegerToEnumConverter.cs" />
+    <Compile Include="Converters\MoveTabHeaderConverter.cs" />
     <Compile Include="Extensions\TextBoxBaseExtensions.cs" />
     <Compile Include="IHexAsnNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

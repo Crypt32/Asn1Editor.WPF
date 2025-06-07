@@ -2,7 +2,7 @@
 using System.Reflection;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
-class GlobalData {
+public class GlobalData {
     public GlobalData() {
         AppVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(3);
     }

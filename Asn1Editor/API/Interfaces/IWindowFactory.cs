@@ -8,7 +8,7 @@ using SysadminsLV.Asn1Editor.API.Utils;
 
 namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
-interface IWindowFactory {
+public interface IWindowFactory {
     IUIMessenger GetUIMessenger();
     void ShowLicenseDialog();
     void ShowAboutDialog();
