@@ -33,6 +33,11 @@
                 <Setter Property="Padding" Value="0"/>
             </Style>
             <Style TargetType="wpfControls:BindableRichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}"/>
+            <Style x:Key="GridTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="IsReadOnly" Value="True"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
