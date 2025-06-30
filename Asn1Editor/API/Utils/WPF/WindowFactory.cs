@@ -66,4 +66,9 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         ShowAsDialog();
         return vm.GetAsnNode();
     }
+    public void ShowNodeHashesDialog(IDataSource dataSource) {
+        hwnd = App.Container.Resolve<NodeHashWindow>();
+        hwnd.DataContext = new NodeHashVM(dataSource);
+        ShowAsDialog();
+    }
 }
