@@ -17,17 +17,21 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class NodeHashVM : ClosableWindowVM {
     readonly IDataSource _dataSource;
     readonly StringBuilder _sb = new(128);
+    readonly String[] _algorithms = ["MD5", "SHA1", "SHA256", "SHA384", "SHA512"];
 
     Boolean isHexChecked, isBase64Checked;
 
     public NodeHashVM(IDataSource dataSource) {
+        for (Int32 i = 0; i < 10; i++) {
+            Hashes.Add(String.Empty);
+        }
         _dataSource = dataSource;
         NodeViewOptions = dataSource.NodeViewOptions;
         CopyValueCommand = new RelayCommand(copyValue);
         IsHexChecked = true;
         calculateAllHashes();
     }
-    
+
     public ICommand CopyValueCommand { get; }
 
     public ObservableCollection<String> Hashes { get; } = [];
@@ -51,28 +55,29 @@ class NodeHashVM : ClosableWindowVM {
     }
 
     void calculateAllHashes() {
-        Hashes.Clear();
         Byte[] data = _dataSource.RawData.Skip(_dataSource.SelectedNode.Offset).Take(_dataSource.SelectedNode.TagLength).ToArray();
-        calculateHashes(data);
+        calculateHashes(data, 0);
         data = _dataSource.RawData.Skip(_dataSource.SelectedNode.PayloadStartOffset).Take(_dataSource.SelectedNode.PayloadLength).ToArray();
-        calculateHashes(data);
+        calculateHashes(data, _algorithms.Length);
 
     }
-    void calculateHashes(Byte[] data) {
-        foreach (String hashAlg in new[] { "MD5", "SHA1", "SHA256", "SHA384", "SHA512" }) {
+    void calculateHashes(Byte[] data, Int32 shift) {
+        for (Int32 index = 0; index < _algorithms.Length; index++) {
+            String hashAlg = _algorithms[index];
             _sb.Clear();
             using var hasher = HashAlgorithm.Create(hashAlg);
             if (IsHexChecked) {
                 foreach (Byte b in hasher!.ComputeHash(data)) {
                     _sb.Append(b.ToString("x2"));
                 }
-                Hashes.Add(_sb.ToString());
+
+                Hashes[index + shift] = _sb.ToString();
             } else {
-                Hashes.Add(Convert.ToBase64String(hasher!.ComputeHash(data)));
+                Hashes[index + shift] = Convert.ToBase64String(hasher!.ComputeHash(data));
             }
         }
     }
-    
+
     void copyValue(Object o) {
         if (!Int32.TryParse(o?.ToString(), out Int32 index) || index >= Hashes.Count) {
             return;
