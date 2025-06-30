@@ -182,6 +182,7 @@
     <Compile Include="API\Utils\WPF\WindowFactoryBase.cs" />
     <Compile Include="API\ViewModel\AppCommands.cs" />
     <Compile Include="API\ViewModel\BinaryConverterVM.cs" />
+    <Compile Include="API\ViewModel\NodeHashVM.cs" />
     <Compile Include="API\ViewModel\OidEditorVM.cs" />
     <Compile Include="API\ViewModel\StaticCommands.cs" />
     <Compile Include="API\ViewModel\TagDataEditorVM.cs" />
@@ -202,6 +203,9 @@
     </Compile>
     <Compile Include="Views\Windows\NewTreeNodeWindow.xaml.cs">
       <DependentUpon>NewTreeNodeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\NodeHashWindow.xaml.cs">
+      <DependentUpon>NodeHashWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Windows\OidLookupEditorWindow.xaml.cs">
       <DependentUpon>OidLookupEditorWindow.xaml</DependentUpon>
@@ -236,6 +240,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Windows\NewTreeNodeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\NodeHashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
