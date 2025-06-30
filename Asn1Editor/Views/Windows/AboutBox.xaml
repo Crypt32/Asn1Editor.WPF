@@ -64,17 +64,13 @@
                     <TextBlock>
                         <Hyperlink x:Name="company"
                                    x:Uid="company"
-                                   NavigateUri="https://www.pkisolutions.com"
+                                   NavigateUri="https://www.sysadmins.lv"
                                    RequestNavigate="Company_OnRequestNavigate">
                             <TextBlock Text="{Binding Mode=OneTime, Path=Company}"/>
                         </Hyperlink>
                     </TextBlock>
                         <TextBlock x:Name="reserved" x:Uid="reserved" Text="All Rights Reserved." />
                 </StackPanel>
-                <Image Grid.Column="1"
-                       Source="/Views/Images/pkisolutions_logo_small.png" Width="120"
-                       Height="74"
-                       VerticalAlignment="Center"/>
             </Grid>
             
             <Label x:Name="info" x:Uid="info" Style="{StaticResource ParagraphSeparator}" 

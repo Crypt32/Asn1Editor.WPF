@@ -8,9 +8,9 @@ using System.Windows;
 [assembly: AssemblyTitle("ASN.1 Editor")]
 [assembly: AssemblyDescription("WPF-based ASN.1 encoded data viewer and editor")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("PKI Solutions LLC")]
+[assembly: AssemblyCompany("Sysadmins LV")]
 [assembly: AssemblyProduct("ASN.1 Editor")]
-[assembly: AssemblyCopyright("Copyright © PKI Solutions Inc.  2019 - 2025")]
+[assembly: AssemblyCopyright("Copyright © Sysadmins LV  2019 - 2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

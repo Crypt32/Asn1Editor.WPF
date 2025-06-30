@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -21,14 +22,12 @@ public partial class LicenseWindow {
     public ICommand CloseCommand { get; }
 
     void loadEula() {
-        if (File.Exists("EULA.rtf")) {
-            try {
-                using var fileStream = new FileStream("EULA.rtf", FileMode.Open, FileAccess.Read, FileShare.Read);
-                var textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-                textRange.Load(fileStream, DataFormats.Rtf);
-            } catch (Exception ex) {
-                MsgBox.Show("Error", $"Failed to open license file:\n{ex.Message}");
-            }
+        const String resourceName = "SysadminsLV.Asn1Editor.EULA.rtf";
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        using Stream resourceStream = assembly.GetManifestResourceStream(resourceName);
+        if (resourceStream != null) {
+            var textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
+            textRange.Load(resourceStream, DataFormats.Rtf);
         } else {
             MsgBox.Show("Error", "License file not found.");
         }
