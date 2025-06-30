@@ -294,9 +294,7 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
-    <None Include="EULA.rtf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="EULA.rtf" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -329,7 +327,6 @@
     <Resource Include="Views\Images\Menu\viewtext_16x16.png" />
     <Resource Include="Views\Images\asnlogo.ico" />
     <Resource Include="asnlogo.ico" />
-    <Resource Include="Views\Images\pkisolutions_logo_small.png" />
     <Resource Include="Views\Images\Menu\saveall_16x16.png" />
     <Resource Include="Views\Images\Menu\cancel_16x16.png" />
   </ItemGroup>
