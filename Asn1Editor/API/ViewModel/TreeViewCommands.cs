@@ -31,6 +31,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);
         ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, ensureNodeSelected);
         ShowNodeInConverter = new RelayCommand(showNodeInConverter, ensureNodeSelected);
+        ShowNodeHashCommand = new RelayCommand(showNodeHashes, ensureNodeSelected);
         EditNodeCommand = new RelayCommand(editNodeContent, ensureNodeSelected);
         RegisterOidCommand = new RelayCommand(registerOid, ensureNodeSelected);
         AddNewNodeCommand = new RelayCommand(addNewNode, canAddNewNode);
@@ -44,6 +45,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
 
     public ICommand ShowNodeTextViewer { get; }
     public ICommand ShowNodeInConverter { get; }
+    public ICommand ShowNodeHashCommand { get; }
     public ICommand EditNodeCommand { get; }
     public ICommand RegisterOidCommand { get; }
     public ICommand SaveNodeCommand { get; }
@@ -76,6 +78,10 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     void showNodeTextViewer(Object o) {
         _windowFactory.ShowNodeTextViewer();
+    }
+    void showNodeHashes(Object o) {
+        isTabSelected(out IDataSource data); // granted to be non-null
+        _windowFactory.ShowNodeHashesDialog(data);
     }
     void showNodeInConverter(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null

@@ -17,4 +17,5 @@ interface IWindowFactory {
     void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task>? action);
     void ShowOidEditor(OidDto? oidValue = null);
     Byte[]? ShowNewAsnNodeEditor(IDataSource dataSource);
+    void ShowNodeHashesDialog(IDataSource dataSource);
 }
