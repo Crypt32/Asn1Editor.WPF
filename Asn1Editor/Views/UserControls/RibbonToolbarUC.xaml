@@ -120,8 +120,8 @@
         </RibbonTab>
         <RibbonTab Header="View">
             <RibbonGroup Header="View options">
-                <RibbonToggleButton Label="Show node offset"
-                                    IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
+                <CheckBox Content="Show node offset"
+                          IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
                 <RibbonToggleButton Label="Show node length"
                                     IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
                 <RibbonToggleButton Label="Show tag number"
