@@ -21,10 +21,6 @@ public partial class MainWindow {
     void onClosing(Object sender, CancelEventArgs e) {
         e.Cancel = !_vm.CloseAllTabs();
     }
-
-    void onCloseClick(Object sender, RoutedEventArgs e) {
-        Close();
-    }
     void onTabHeaderContextMenuOpening(Object sender, ContextMenuEventArgs e) {
         var vm = (Asn1DocumentVM)((FrameworkElement)sender).DataContext;
         e.Handled = _vm.SelectedTab != vm;
