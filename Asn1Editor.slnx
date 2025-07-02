@@ -6,7 +6,7 @@
   </Configurations>
   <Project Path="Asn1Editor.Wpf.Controls/Asn1Editor.Wpf.Controls.csproj" Id="90da0e35-1652-498b-be73-1953a64fecbe" />
   <Project Path="Asn1Editor/Asn1Editor.csproj" Id="6338c8ed-b646-470e-8a68-7ed4b05ac02e">
-    <Platform Solution="*|x64" Project="x64" />
     <Platform Solution="*|x86" Project="x86" />
+    <Platform Solution="*|x64" Project="x64" />
   </Project>
 </Solution>
