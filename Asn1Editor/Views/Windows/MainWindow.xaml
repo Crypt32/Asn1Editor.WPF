@@ -25,6 +25,7 @@
     </Window.InputBindings>
     <DockPanel>
         <uc:ClassicToolbarUC DockPanel.Dock="Top"/>
+        <uc:RibbonToolbarUC DockPanel.Dock="Top" Visibility="Collapsed"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
