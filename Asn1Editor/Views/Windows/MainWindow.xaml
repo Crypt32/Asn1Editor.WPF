@@ -24,8 +24,8 @@
         <KeyBinding Modifiers="Control+Shift" Key="S" Command="{Binding SaveCommand}" CommandParameter="2"/>
     </Window.InputBindings>
     <DockPanel>
-        <uc:ClassicToolbarUC DockPanel.Dock="Top"/>
         <uc:RibbonToolbarUC DockPanel.Dock="Top" Visibility="Collapsed"/>
+        <uc:ClassicToolbarUC DockPanel.Dock="Top"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">

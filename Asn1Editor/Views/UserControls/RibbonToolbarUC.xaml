@@ -9,7 +9,17 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Ribbon>
+    <Ribbon ShowQuickAccessToolBarOnTop="False">
+        <Ribbon.ApplicationMenu>
+            <RibbonApplicationMenu>
+                <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/new_32x32.png"
+                                           Header="New tab"
+                                           Command="{Binding NewCommand}"/>
+                <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/open_32x32.png"
+                                           Header="Open file"
+                                           Command="{Binding OpenCommand}"/>
+            </RibbonApplicationMenu>
+        </Ribbon.ApplicationMenu>
         <RibbonTab Header="Main">
             <RibbonGroup Header="File">
                 <RibbonButton LargeImageSource="/Views/Images/Menu/new_32x32.png"
@@ -37,9 +47,9 @@
                 </RibbonMenuButton>
             </RibbonGroup>
             <RibbonGroup Header="Dialogs">
-                <RibbonToggleButton x:Name="HexViewerToggle"
-                                    LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
+                <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
                                     Label="Show hex"
+                                    IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
                                     ToolTip="Show or hide hex viewer"/>
                 <RibbonButton LargeImageSource="/Views/Images/Menu/edit_32x32.png"
                               Label="Edit node"
