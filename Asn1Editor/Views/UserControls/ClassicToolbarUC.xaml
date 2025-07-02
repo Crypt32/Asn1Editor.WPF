@@ -8,7 +8,7 @@
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="60" d:DesignWidth="800">
     <StackPanel>
         <Menu>
             <MenuItem Header="_File">
