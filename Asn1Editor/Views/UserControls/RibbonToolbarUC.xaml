@@ -50,6 +50,10 @@
                                   Label="View node text"
                                   Command="{Binding TreeCommands.ShowNodeTextViewer}"
                                   ToolTip="Edit selected node"/>
+                <RibbonButton LargeImageSource="/Views/Images/Menu/book_32x32.png"
+                              Label="OID Editor"
+                              Command="{Binding AppCommands.ShowOidEditor}"
+                              ToolTip="Show OID editor"/>
             </RibbonGroup>
             <RibbonGroup Header="Tree Commands">
                 <RibbonButton SmallImageSource="/Views/Images/Menu/newnode_16x16.png"
