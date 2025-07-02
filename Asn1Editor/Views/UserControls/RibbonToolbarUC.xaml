@@ -110,19 +110,19 @@
         </RibbonTab>
         <RibbonTab Header="View">
             <RibbonGroup Header="View options">
-                <RibbonToggleButton Content="Show node offset"
+                <RibbonToggleButton Label="Show node offset"
                                     IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
-                <RibbonToggleButton Content="Show node length"
+                <RibbonToggleButton Label="Show node length"
                                     IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
-                <RibbonToggleButton Content="Show tag number"
+                <RibbonToggleButton Label="Show tag number"
                                     IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
-                <RibbonToggleButton Content="Show node path"
+                <RibbonToggleButton Label="Show node path"
                                     IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
-                <RibbonToggleButton Content="Show in hex"
+                <RibbonToggleButton Label="Show in hex"
                                     IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
-                <RibbonToggleButton Content="Decode Integer as integer"
+                <RibbonToggleButton Label="Decode Integer as integer"
                                     IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
-                <RibbonToggleButton Content="Show content"
+                <RibbonToggleButton Label="Show content"
                                     IsChecked="{Binding NodeViewOptions.ShowContent}"/>
             </RibbonGroup>
         </RibbonTab>
