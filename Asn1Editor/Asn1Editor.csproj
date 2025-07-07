@@ -17,6 +17,13 @@
     <LangVersion>latest</LangVersion>
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Images\Menu\classicmenu_32x32.png" />
+    <None Remove="Views\Images\Menu\exit_16x16.png" />
+    <None Remove="Views\Images\Menu\exit_32x32.png" />
+  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="Views\Images\asnlogo.ico" />
     <Resource Include="Views\Images\oid.ico" />
@@ -26,20 +33,26 @@
     <Resource Include="Views\Images\Menu\book_16x16.png" />
     <Resource Include="Views\Images\Menu\book_32x32.png" />
     <Resource Include="Views\Images\Menu\cancel_16x16.png" />
+    <Resource Include="Views\Images\Menu\classicmenu_32x32.png" />
     <Resource Include="Views\Images\Menu\converter_16x16.png" />
+    <Resource Include="Views\Images\Menu\converter_32x32.png" />
     <Resource Include="Views\Images\Menu\copy_16x16.png" />
     <Resource Include="Views\Images\Menu\cut_16x16.png" />
     <Resource Include="Views\Images\Menu\delete_16x16.png" />
     <Resource Include="Views\Images\Menu\edit_16x16.png" />
     <Resource Include="Views\Images\Menu\edit_32x32.png" />
     <Resource Include="Views\Images\Menu\eraser_16x16.png" />
+    <Resource Include="Views\Images\Menu\exit_16x16.png" />
+    <Resource Include="Views\Images\Menu\exit_32x32.png" />
     <Resource Include="Views\Images\Menu\help_16x16.png" />
     <Resource Include="Views\Images\Menu\hexview_16x16.png" />
     <Resource Include="Views\Images\Menu\hexview_32x32.png" />
     <Resource Include="Views\Images\Menu\info_16x16.png" />
+    <Resource Include="Views\Images\Menu\info_32x32.png" />
     <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
     <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
     <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
+    <Resource Include="Views\Images\Menu\license_32x32.png" />
     <Resource Include="Views\Images\Menu\new_16x16.png" />
     <Resource Include="Views\Images\Menu\new_32x32.png" />
     <Resource Include="Views\Images\Menu\newnode_16x16.png" />
