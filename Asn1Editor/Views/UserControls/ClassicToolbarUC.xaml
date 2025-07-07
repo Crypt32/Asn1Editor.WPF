@@ -177,7 +177,7 @@
                     <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>
                 </ToggleButton>
                 <Button Command="{Binding AppCommands.ShowConverterWindow, Mode=OneTime}" ToolTip="Open data converter">
-                    <Image Source="/Views/Images/Menu/converter_16x16.png"/>
+                    <Image Source="/Views/Images/Menu/converter_16x16.png" Width="16"/>
                 </Button>
                 <Button Command="{Binding AppCommands.ShowOidEditor, Mode=OneTime}" ToolTip="Open Object Identifier mapping editor">
                     <Image Source="/Views/Images/Menu/book_16x16.png"/>

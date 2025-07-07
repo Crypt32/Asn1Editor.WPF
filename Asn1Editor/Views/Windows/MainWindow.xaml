@@ -192,7 +192,7 @@
                                         <MenuItem Header="View encoded node..."
                                                   Command="{Binding TreeCommands.ShowNodeInConverter}">
                                             <MenuItem.Icon>
-                                                <Image Source="/Views/Images/Menu/converter_16x16.png"/>
+                                                <Image Source="/Views/Images/Menu/converter_16x16.png" Height="16"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Header="View node hash values"
