@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Windows.Input;
 using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects; 
 
@@ -17,9 +19,12 @@ public class NodeViewOptions : ViewModelBase {
         showHexViewer,
         showHexAddrPanel = true,
         showHexAsciiPanel = true,
-        hexViewerColoringEnabled = true;
+        hexViewerColoringEnabled = true,
+        useRibbonToolbar = true;
     Int32 fontSize = 12;
     Int32 maxStringLength = 150;
+    
+    public ICommand ToggleToolbar => new RelayCommand(_ => UseRibbonToolbar = !UseRibbonToolbar);
 
     [XmlElement("showTagNum")]
     public Boolean ShowTagNumber {
@@ -149,6 +154,20 @@ public class NodeViewOptions : ViewModelBase {
             OnPropertyChanged();
         }
     }
+    [XmlElement(ElementName = "useRibbonToolbar")]
+    public Boolean UseRibbonToolbar {
+        get => useRibbonToolbar;
+        set {
+            if (value == useRibbonToolbar) {
+                return;
+            }
+            useRibbonToolbar = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(UseClassicToolbar));
+        }
+    }
+    [XmlIgnore]
+    public Boolean UseClassicToolbar => !UseRibbonToolbar;
     [XmlElement("fontSize")]
     public Int32 FontSize {
         get => fontSize;
