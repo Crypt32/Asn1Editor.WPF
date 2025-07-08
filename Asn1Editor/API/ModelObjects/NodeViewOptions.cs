@@ -163,11 +163,8 @@ public class NodeViewOptions : ViewModelBase {
             }
             useRibbonToolbar = value;
             OnPropertyChanged();
-            OnPropertyChanged(nameof(UseClassicToolbar));
         }
     }
-    [XmlIgnore]
-    public Boolean UseClassicToolbar => !UseRibbonToolbar;
     [XmlElement("fontSize")]
     public Int32 FontSize {
         get => fontSize;

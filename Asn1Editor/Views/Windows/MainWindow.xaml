@@ -8,6 +8,7 @@
         xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
         xmlns:uc="clr-namespace:SysadminsLV.Asn1Editor.Views.UserControls"
         xmlns:wpfControls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+        xmlns:wpf="clr-namespace:SysadminsLV.Asn1Editor.API.Utils.WPF"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:MainWindowVM}"
         Title="ASN.1 Editor"
@@ -23,9 +24,21 @@
         <KeyBinding Modifiers="Ctrl" Key="F4" Command="{Binding CloseTabCommand}"/>
         <KeyBinding Modifiers="Control+Shift" Key="S" Command="{Binding SaveCommand}" CommandParameter="2"/>
     </Window.InputBindings>
+    <Window.Resources>
+        <DataTemplate x:Key="RibbonToolbarTemplate">
+            <uc:RibbonToolbarUC DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="ClassicToolbarTemplate">
+            <uc:ClassicToolbarUC DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"/>
+        </DataTemplate>
+        <wpf:ToolbarTemplateSelector x:Key="ToolbarSelector"
+                                     RibbonTemplate="{StaticResource RibbonToolbarTemplate}"
+                                     ClassicTemplate="{StaticResource ClassicToolbarTemplate}" />
+    </Window.Resources>
     <DockPanel>
-        <uc:RibbonToolbarUC DockPanel.Dock="Top" Visibility="Collapsed"/>
-        <uc:ClassicToolbarUC DockPanel.Dock="Top"/>
+        <ContentControl DockPanel.Dock="Top"
+                        Content="{Binding NodeViewOptions.UseRibbonToolbar}"
+                        ContentTemplateSelector="{StaticResource ToolbarSelector}"/>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
