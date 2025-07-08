@@ -10,9 +10,9 @@
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="120" d:DesignWidth="800">
     <Grid>
-        <Ribbon x:Name="Ribbon"
-                ShowQuickAccessToolBarOnTop="False"
-                Margin="0,-23,0,0">
+        <Ribbon ShowQuickAccessToolBarOnTop="False"
+                Margin="0,-23,0,0"
+                IsMinimized="{Binding NodeViewOptions.RibbonMinimized}">
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu Label="File">
                     <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/info_32x32.png"
@@ -183,7 +183,7 @@
                     <Style TargetType="Path">
                         <Setter Property="Data" Value="M0,4 L8,4 L4,0 Z"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
+                            <DataTrigger Binding="{Binding NodeViewOptions.RibbonMinimized}" Value="True">
                                 <Setter Property="Data" Value="M0,0 L8,0 L4,4 Z"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -194,7 +194,7 @@
                 <Style TargetType="Button" BasedOn="{StaticResource ToolBarButtonStyle}">
                     <Setter Property="ToolTip" Value="Minimize the Ribbon"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
+                        <DataTrigger Binding="{Binding NodeViewOptions.RibbonMinimized}" Value="True">
                             <Setter Property="ToolTip" Value="Expand the Ribbon"/>
                         </DataTrigger>
                     </Style.Triggers>
