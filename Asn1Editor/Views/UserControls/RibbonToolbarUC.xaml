@@ -8,74 +8,96 @@
              xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Ribbon ShowQuickAccessToolBarOnTop="False">
-        <Ribbon.ApplicationMenu>
-            <RibbonApplicationMenu>
-                <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/new_32x32.png"
-                                           Header="New tab"
-                                           Command="{Binding NewCommand}"/>
-                <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/open_32x32.png"
-                                           Header="Open file"
-                                           Command="{Binding OpenCommand}"/>
-            </RibbonApplicationMenu>
-        </Ribbon.ApplicationMenu>
-        <RibbonTab Header="Main">
-            <RibbonGroup Header="File">
-                <RibbonButton LargeImageSource="/Views/Images/Menu/new_32x32.png"
+             d:DesignHeight="120" d:DesignWidth="800">
+    <Grid>
+        <Ribbon x:Name="Ribbon"
+                ShowQuickAccessToolBarOnTop="False"
+                Margin="0,-23,0,0">
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu Label="File">
+                    <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/info_32x32.png"
+                                           Header="About"
+                                           Command="{Binding AppCommands.ShowAboutCommand}"/>
+                    <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/license_32x32.png"
+                                           Header="License"
+                                           Command="{Binding AppCommands.ShowLicenseCommand}"/>
+                    <RibbonSeparator/>
+                    <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/exit_32x32.png"
+                                           Header="Exit"
+                                           Click="onCloseClick"/>
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            <RibbonTab Header="Main">
+                <RibbonGroup Header="File">
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/new_32x32.png"
                               Label="New tab"
                               Command="{Binding NewCommand}"/>
-                <RibbonButton LargeImageSource="/Views/Images/Menu/open_32x32.png"
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/open_32x32.png"
                               Label="Open file"
                               Command="{Binding OpenCommand}"/>
-                <RibbonMenuButton LargeImageSource="/Views/Images/Menu/save_32x32.png"
+                    <RibbonMenuButton LargeImageSource="/Views/Images/Menu/save_32x32.png"
                                   Label="Save"
                                   KeyTip="S">
-                    <RibbonMenuItem Header="Save"
+                        <RibbonMenuItem Header="Save"
                                     ImageSource="/Views/Images/Menu/save_16x16.png"
                                     InputGestureText="Ctrl+S"
                                     Command="{Binding SaveCommand}"/>
-                    <RibbonMenuItem Header="Save All"
+                        <RibbonMenuItem Header="Save All"
                                     ImageSource="/Views/Images/Menu/saveall_16x16.png"
                                     InputGestureText="Ctrl+Shift+S"
                                     Command="{Binding SaveCommand}"
                                     CommandParameter="2"/>
-                    <RibbonMenuItem Header="Save _As"
+                        <RibbonMenuItem Header="Save _As"
                                     ImageSource="/Views/Images/Menu/save_16x16.png"
                                     Command="{Binding SaveCommand}"
                                     CommandParameter="1"/>
-                </RibbonMenuButton>
-            </RibbonGroup>
-            <RibbonGroup Header="Dialogs">
-                <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
+                    </RibbonMenuButton>
+                </RibbonGroup>
+                <RibbonGroup Header="Dialogs">
+                    <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
                                     Label="Show hex"
                                     IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
                                     ToolTip="Show or hide hex viewer"/>
-                <RibbonButton LargeImageSource="/Views/Images/Menu/edit_32x32.png"
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/converter_32x32.png"
+                              Label="Binary Converter"
+                              Command="{Binding AppCommands.ShowOidEditor}"
+                              ToolTip="Open data converter"/>
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/book_32x32.png"
+                              Label="OID Editor"
+                              Command="{Binding AppCommands.ShowOidEditor}"
+                              ToolTip="Show OID editor"/>
+                </RibbonGroup>
+                <RibbonGroup Header="Tree Commands">
+                    <RibbonGroup.Resources>
+                        <Style TargetType="RibbonSeparator">
+                            <Setter Property="LayoutTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="90"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </RibbonGroup.Resources>
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/edit_32x32.png"
                               Label="Edit node"
                               Command="{Binding TreeCommands.EditNodeCommand}"
                               CommandParameter="{x:Static clr:NodeEditMode.Text}"
                               ToolTip="Edit selected node"/>
-                <RibbonButton LargeImageSource="/Views/Images/Menu/viewtext_32x32.png"
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/viewtext_32x32.png"
                               Label="View node text"
                               Command="{Binding TreeCommands.ShowNodeTextViewer}"
                               ToolTip="Edit selected node"/>
-                <RibbonButton LargeImageSource="/Views/Images/Menu/book_32x32.png"
-                              Label="OID Editor"
-                              Command="{Binding AppCommands.ShowOidEditor}"
-                              ToolTip="Show OID editor"/>
-            </RibbonGroup>
-            <RibbonGroup Header="Tree Commands">
-                <RibbonButton SmallImageSource="/Views/Images/Menu/newnode_16x16.png"
+                    <RibbonSeparator/>
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/newnode_32x32.png"
                               Label="New node"
                               Command="{Binding TreeCommands.AddNewNodeCommand}"/>
-                <RibbonButton SmallImageSource="/Views/Images/Menu/cut_16x16.png"
+
+                    <RibbonButton SmallImageSource="/Views/Images/Menu/cut_16x16.png"
                               Label="Cut node"
                               Command="{Binding TreeCommands.CutNodeCommand}"/>
-                <RibbonButton SmallImageSource="/Views/Images/Menu/copy_16x16.png"
+                    <RibbonButton SmallImageSource="/Views/Images/Menu/copy_16x16.png"
                               Label="Copy node"
                               Command="{Binding TreeCommands.CopyNodeCommand}"/>
-                <!-- keep this just for reference as an option
+                    <!-- keep this just for reference as an option
                     <RibbonMenuButton LargeImageSource="/Views/Images/Menu/paste_32x32.png"
                                       Label="Paste"
                                       KeyTip="V">
@@ -89,52 +111,67 @@
                                         Header="Insert before"
                                         Command="{Binding TreeCommands.PasteLastCommand}"/>
                     </RibbonMenuButton>-->
-                <RibbonButton SmallImageSource="/Views/Images/Menu/insertbefore_16x16.png"
+                    <RibbonButton SmallImageSource="/Views/Images/Menu/insertbefore_16x16.png"
                               Label="Insert before"
                               Command="{Binding TreeCommands.PasteBeforeCommand}"/>
-                <RibbonButton SmallImageSource="/Views/Images/Menu/insertafter_16x16.png"
+                    <RibbonButton SmallImageSource="/Views/Images/Menu/insertafter_16x16.png"
                               Label="Insert after"
                               Command="{Binding TreeCommands.PasteAfterCommand}"/>
-                <RibbonButton SmallImageSource="/Views/Images/Menu/insertlast_16x16.png"
+                    <RibbonButton SmallImageSource="/Views/Images/Menu/insertlast_16x16.png"
                               Label="Insert as last child"
                               Command="{Binding TreeCommands.PasteLastCommand}"/>
-                <RibbonButton SmallImageSource="/Views/Images/Menu/delete_16x16.png"
+                    <RibbonButton SmallImageSource="/Views/Images/Menu/delete_16x16.png"
                               Label="Delete node"
                               Command="{Binding TreeCommands.DeleteNodeCommand}"/>
-            </RibbonGroup>
-            <RibbonGroup Header="Miscellaneous">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Font Size: " VerticalAlignment="Center"/>
-                    <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}"
-                              MinWidth="50">
-                        <system:Int32>10</system:Int32>
-                        <system:Int32>11</system:Int32>
-                        <system:Int32>12</system:Int32>
-                        <system:Int32>13</system:Int32>
-                        <system:Int32>14</system:Int32>
-                        <system:Int32>15</system:Int32>
-                        <system:Int32>16</system:Int32>
-                    </ComboBox>
-                </StackPanel>
-            </RibbonGroup>
-        </RibbonTab>
-        <RibbonTab Header="View">
-            <RibbonGroup Header="View options">
-                <CheckBox Content="Show node offset"
+                </RibbonGroup>
+            </RibbonTab>
+            <RibbonTab Header="View">
+                <RibbonGroup Header="View options">
+                    <CheckBox Content="Show node offset"
                           IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
-                <RibbonToggleButton Label="Show node length"
-                                    IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
-                <RibbonToggleButton Label="Show tag number"
-                                    IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
-                <RibbonToggleButton Label="Show node path"
-                                    IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
-                <RibbonToggleButton Label="Show in hex"
-                                    IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
-                <RibbonToggleButton Label="Decode Integer as integer"
-                                    IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
-                <RibbonToggleButton Label="Show content"
-                                    IsChecked="{Binding NodeViewOptions.ShowContent}"/>
-            </RibbonGroup>
-        </RibbonTab>
-    </Ribbon>
+                    <CheckBox Content="Show node length"
+                          IsChecked="{Binding NodeViewOptions.ShowNodeLength}"/>
+                    <CheckBox Content="Show tag number"
+                          IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
+                    <CheckBox Content="Show node path"
+                          IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
+                    <CheckBox Content="Show in hex"
+                          IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
+                    <CheckBox Content="Decode Integer as integer"
+                          IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
+                    <CheckBox Content="Show content"
+                          IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+                </RibbonGroup>
+                <RibbonGroup Header="Miscellaneous">
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/classicmenu_32x32.png"
+                              Label="Classic Menu"
+                              Command="{Binding NodeViewOptions.ToggleToolbar}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Font Size: " VerticalAlignment="Center"/>
+                        <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}"
+                              MinWidth="50">
+                            <system:Int32>10</system:Int32>
+                            <system:Int32>11</system:Int32>
+                            <system:Int32>12</system:Int32>
+                            <system:Int32>13</system:Int32>
+                            <system:Int32>14</system:Int32>
+                            <system:Int32>15</system:Int32>
+                            <system:Int32>16</system:Int32>
+                        </ComboBox>
+                    </StackPanel>
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+        <Button x:Name="RibbonMinimizeButton"
+                Width="20" Height="20"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Right"
+                Margin="0,2,8,0"
+                Click="onRibbonExpandCollapseClick"
+                ToolTip="Minimize/Expand Ribbon"
+                Style="{StaticResource ToolBarButtonStyle}">
+            <Path Data="M0,0 L8,0 L4,4 Z" Fill="Gray"/>
+            
+        </Button>
+    </Grid>
 </UserControl>

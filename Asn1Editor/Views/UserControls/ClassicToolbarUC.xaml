@@ -34,7 +34,11 @@
                 </MenuItem>
                 <MenuItem Header="Save _As..." Command="{Binding SaveCommand}" CommandParameter="1"/>
                 <Separator/>
-                <MenuItem Header="_Exit" Click="onCloseClick" InputGestureText="Alt + F4"/>
+                <MenuItem Header="_Exit" Click="onCloseClick" InputGestureText="Alt + F4">
+                    <MenuItem.Icon>
+                        <Image Source="/Views/Images/Menu/exit_16x16.png" Height="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_View">
                 <MenuItem Header="Show node offset"
@@ -59,6 +63,9 @@
                 <MenuItem Header="Show content"
                           IsCheckable="True"
                           IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+                <Separator/>
+                <MenuItem Header="Use Ribbon menu"
+                          Command="{Binding NodeViewOptions.ToggleToolbar}"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="Edit node..."
