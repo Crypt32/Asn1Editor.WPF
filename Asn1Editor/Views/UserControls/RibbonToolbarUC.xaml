@@ -167,11 +167,29 @@
                 VerticalAlignment="Top"
                 HorizontalAlignment="Right"
                 Margin="0,2,8,0"
-                Click="onRibbonExpandCollapseClick"
-                ToolTip="Minimize/Expand Ribbon"
-                Style="{StaticResource ToolBarButtonStyle}">
-            <Path Data="M0,0 L8,0 L4,4 Z" Fill="Gray"/>
-            
+                Click="onRibbonExpandCollapseClick">
+            <Path Fill="Gray">
+                <Path.Style>
+                    <Style TargetType="Path">
+                        <Setter Property="Data" Value="M0,4 L8,4 L4,0 Z"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
+                                <Setter Property="Data" Value="M0,0 L8,0 L4,4 Z"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Path.Style>
+            </Path>
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource ToolBarButtonStyle}">
+                    <Setter Property="ToolTip" Value="Minimize the Ribbon"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsMinimized, ElementName=Ribbon}" Value="True">
+                            <Setter Property="ToolTip" Value="Expand the Ribbon"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
         </Button>
     </Grid>
 </UserControl>
