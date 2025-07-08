@@ -30,42 +30,47 @@
             <RibbonTab Header="Main">
                 <RibbonGroup Header="File">
                     <RibbonButton LargeImageSource="/Views/Images/Menu/new_32x32.png"
-                              Label="New tab"
-                              Command="{Binding NewCommand}"/>
+                                  Label="New tab"
+                                  Command="{Binding NewCommand}"
+                                  ToolTip="Create new tab"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/open_32x32.png"
-                              Label="Open file"
-                              Command="{Binding OpenCommand}"/>
+                                  Label="Open file"
+                                  Command="{Binding OpenCommand}"
+                                  ToolTip="Open existing file"/>
                     <RibbonMenuButton LargeImageSource="/Views/Images/Menu/save_32x32.png"
-                                  Label="Save"
-                                  KeyTip="S">
+                                      Label="Save"
+                                      KeyTip="S">
                         <RibbonMenuItem Header="Save"
-                                    ImageSource="/Views/Images/Menu/save_16x16.png"
-                                    InputGestureText="Ctrl+S"
-                                    Command="{Binding SaveCommand}"/>
+                                        ImageSource="/Views/Images/Menu/save_16x16.png"
+                                        InputGestureText="Ctrl+S"
+                                        Command="{Binding SaveCommand}"
+                                        ToolTip="Save current tab"/>
                         <RibbonMenuItem Header="Save All"
-                                    ImageSource="/Views/Images/Menu/saveall_16x16.png"
-                                    InputGestureText="Ctrl+Shift+S"
-                                    Command="{Binding SaveCommand}"
-                                    CommandParameter="2"/>
+                                        ImageSource="/Views/Images/Menu/saveall_16x16.png"
+                                        InputGestureText="Ctrl+Shift+S"
+                                        Command="{Binding SaveCommand}"
+                                        CommandParameter="2"
+                                        ToolTip="Save all tabs"/>
                         <RibbonMenuItem Header="Save _As"
-                                    ImageSource="/Views/Images/Menu/save_16x16.png"
-                                    Command="{Binding SaveCommand}"
-                                    CommandParameter="1"/>
+                                        ImageSource="/Views/Images/Menu/save_16x16.png"
+                                        Command="{Binding SaveCommand}"
+                                        CommandParameter="1"
+                                        ToolTip="Save current tab with different name"/>
                     </RibbonMenuButton>
                 </RibbonGroup>
                 <RibbonGroup Header="Dialogs">
                     <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
-                                    Label="Show hex"
-                                    IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
-                                    ToolTip="Show or hide hex viewer"/>
+                                        Label="Show hex"
+                                        IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
+                                        ToolTip="Show or hide hex viewer"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/converter_32x32.png"
-                              Label="Binary Converter"
-                              Command="{Binding AppCommands.ShowOidEditor}"
-                              ToolTip="Open data converter"/>
+                                  Label="Binary Converter"
+                                  Command="{Binding AppCommands.ShowOidEditor}"
+                                  ToolTip="Open data converter"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/book_32x32.png"
-                              Label="OID Editor"
-                              Command="{Binding AppCommands.ShowOidEditor}"
-                              ToolTip="Show OID editor"/>
+                                  Label="OID Editor"
+                                  Command="{Binding AppCommands.ShowOidEditor}"
+                                  ToolTip="Show OID editor"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Tree Commands">
                     <RibbonGroup.Resources>
@@ -78,25 +83,25 @@
                         </Style>
                     </RibbonGroup.Resources>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/edit_32x32.png"
-                              Label="Edit node"
-                              Command="{Binding TreeCommands.EditNodeCommand}"
-                              CommandParameter="{x:Static clr:NodeEditMode.Text}"
-                              ToolTip="Edit selected node"/>
+                                  Label="Edit node"
+                                  Command="{Binding TreeCommands.EditNodeCommand}"
+                                  CommandParameter="{x:Static clr:NodeEditMode.Text}"
+                                  ToolTip="Edit selected node"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/viewtext_32x32.png"
-                              Label="View node text"
-                              Command="{Binding TreeCommands.ShowNodeTextViewer}"
-                              ToolTip="Edit selected node"/>
+                                  Label="View node text"
+                                  Command="{Binding TreeCommands.ShowNodeTextViewer}"
+                                  ToolTip="Edit selected node"/>
                     <RibbonSeparator/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/newnode_32x32.png"
                               Label="New node"
-                              Command="{Binding TreeCommands.AddNewNodeCommand}"/>
-
+                              Command="{Binding TreeCommands.AddNewNodeCommand}"
+                              ToolTip="Create new tree node"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/cut_16x16.png"
-                              Label="Cut node"
-                              Command="{Binding TreeCommands.CutNodeCommand}"/>
+                                  Label="Cut node"
+                                  Command="{Binding TreeCommands.CutNodeCommand}"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/copy_16x16.png"
-                              Label="Copy node"
-                              Command="{Binding TreeCommands.CopyNodeCommand}"/>
+                                  Label="Copy node"
+                                  Command="{Binding TreeCommands.CopyNodeCommand}"/>
                     <!-- keep this just for reference as an option
                     <RibbonMenuButton LargeImageSource="/Views/Images/Menu/paste_32x32.png"
                                       Label="Paste"
@@ -112,40 +117,45 @@
                                         Command="{Binding TreeCommands.PasteLastCommand}"/>
                     </RibbonMenuButton>-->
                     <RibbonButton SmallImageSource="/Views/Images/Menu/insertbefore_16x16.png"
-                              Label="Insert before"
-                              Command="{Binding TreeCommands.PasteBeforeCommand}"/>
+                                  Label="Insert before"
+                                  Command="{Binding TreeCommands.PasteBeforeCommand}"
+                                  ToolTip="Insert copied node above selected node as sibling"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/insertafter_16x16.png"
-                              Label="Insert after"
-                              Command="{Binding TreeCommands.PasteAfterCommand}"/>
+                                  Label="Insert after"
+                                  Command="{Binding TreeCommands.PasteAfterCommand}"
+                                  ToolTip="Insert copied node below selected node as sibling"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/insertlast_16x16.png"
-                              Label="Insert as last child"
-                              Command="{Binding TreeCommands.PasteLastCommand}"/>
+                                  Label="Insert as last child"
+                                  Command="{Binding TreeCommands.PasteLastCommand}"
+                                  ToolTip="Add copied node as a child of the selected node"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/delete_16x16.png"
-                              Label="Delete node"
-                              Command="{Binding TreeCommands.DeleteNodeCommand}"/>
+                                  Label="Delete node"
+                                  Command="{Binding TreeCommands.DeleteNodeCommand}"
+                                  ToolTip="Removes selected node"/>
                 </RibbonGroup>
             </RibbonTab>
             <RibbonTab Header="View">
                 <RibbonGroup Header="View options">
                     <CheckBox Content="Show node offset"
-                          IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
+                              IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
                     <CheckBox Content="Show node length"
-                          IsChecked="{Binding NodeViewOptions.ShowNodeLength}"/>
+                              IsChecked="{Binding NodeViewOptions.ShowNodeLength}"/>
                     <CheckBox Content="Show tag number"
-                          IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
+                              IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
                     <CheckBox Content="Show node path"
-                          IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
+                              IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
                     <CheckBox Content="Show in hex"
-                          IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
+                              IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
                     <CheckBox Content="Decode Integer as integer"
-                          IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
-                    <CheckBox Content="Show content"
-                          IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+                              IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
+                    <CheckBox Content="Show node content"
+                              IsChecked="{Binding NodeViewOptions.ShowContent}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Miscellaneous">
                     <RibbonButton LargeImageSource="/Views/Images/Menu/classicmenu_32x32.png"
-                              Label="Classic Menu"
-                              Command="{Binding NodeViewOptions.ToggleToolbar}"/>
+                                  Label="Classic Menu"
+                                  Command="{Binding NodeViewOptions.ToggleToolbar}"
+                                  ToolTip="Switch to classic menu and toolbar"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Font Size: " VerticalAlignment="Center"/>
                         <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}"
