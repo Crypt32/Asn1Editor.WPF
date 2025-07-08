@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls;
 /// <summary>
@@ -15,5 +16,6 @@ public partial class RibbonToolbarUC {
     }
     void onRibbonExpandCollapseClick(Object sender, RoutedEventArgs args) {
         Ribbon.IsMinimized = !Ribbon.IsMinimized;
+        Keyboard.ClearFocus();
     }
 }
