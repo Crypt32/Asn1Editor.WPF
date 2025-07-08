@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using SysadminsLV.Asn1Editor.API.ViewModel;
 
 namespace SysadminsLV.Asn1Editor.Views.UserControls;
 /// <summary>
@@ -15,7 +16,9 @@ public partial class RibbonToolbarUC {
         myWindow?.Close();
     }
     void onRibbonExpandCollapseClick(Object sender, RoutedEventArgs args) {
-        Ribbon.IsMinimized = !Ribbon.IsMinimized;
+        if (DataContext is MainWindowVM vm) {
+            vm.NodeViewOptions.RibbonMinimized = !vm.NodeViewOptions.RibbonMinimized;
+        }
         Keyboard.ClearFocus();
     }
 }

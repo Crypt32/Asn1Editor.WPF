@@ -20,7 +20,8 @@ public class NodeViewOptions : ViewModelBase {
         showHexAddrPanel = true,
         showHexAsciiPanel = true,
         hexViewerColoringEnabled = true,
-        useRibbonToolbar = true;
+        useRibbonToolbar = true,
+        ribbonMinimized;
     Int32 fontSize = 12;
     Int32 maxStringLength = 150;
     
@@ -162,6 +163,17 @@ public class NodeViewOptions : ViewModelBase {
                 return;
             }
             useRibbonToolbar = value;
+            OnPropertyChanged();
+        }
+    }
+    [XmlElement(ElementName = "ribbonMinimized")]
+    public Boolean RibbonMinimized {
+        get => ribbonMinimized;
+        set {
+            if (value == ribbonMinimized) {
+                return;
+            }
+            ribbonMinimized = value;
             OnPropertyChanged();
         }
     }
