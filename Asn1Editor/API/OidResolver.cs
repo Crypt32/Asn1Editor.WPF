@@ -107,7 +107,7 @@ public static class OidResolver {
     /// <returns>Resolved value or null if no mapping defined for passed OID string.</returns>
     public static String? Resolve(String oidValueOrFriendlyName) {
         String resolvedOid = ResolveOid(oidValueOrFriendlyName);
-        if (resolvedOid == null) {
+        if (resolvedOid is null) {
             return ResolveFriendlyName(oidValueOrFriendlyName);
         }
 

@@ -14,7 +14,7 @@ class OpenSSLRenderer(Asn1TreeNode rootNode) : ITextRenderer {
     public String RenderText(Int32 textWidth) {
         width = textWidth;
         var sb = new StringBuilder("Offset|Length|LenByte|" + nl);
-        if (rootNode == null) {
+        if (rootNode is null) {
             return sb.ToString();
         }
             

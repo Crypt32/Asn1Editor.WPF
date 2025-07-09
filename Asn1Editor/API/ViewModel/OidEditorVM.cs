@@ -127,7 +127,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     }
     async Task save(Object o, CancellationToken token = default) {
         OidDto oidEntry = OidResolver.GetOidEntry(OidValue);
-        if (oidEntry == null) {
+        if (oidEntry is null) {
             _oidList.Add(new OidDto(OidValue, FriendlyName, true));
         } else {
             oidEntry.SetFriendlyName(friendlyName);
@@ -162,6 +162,6 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         }
     }
     Boolean canRemoveOid(Object o) {
-        return SelectedItem != null;
+        return SelectedItem is not null;
     }
 }

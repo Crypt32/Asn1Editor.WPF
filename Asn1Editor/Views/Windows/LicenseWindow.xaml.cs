@@ -25,7 +25,7 @@ public partial class LicenseWindow {
         const String resourceName = "SysadminsLV.Asn1Editor.EULA.rtf";
         Assembly assembly = Assembly.GetExecutingAssembly();
         using Stream resourceStream = assembly.GetManifestResourceStream(resourceName);
-        if (resourceStream != null) {
+        if (resourceStream is not null) {
             var textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
             textRange.Load(resourceStream, DataFormats.Rtf);
         } else {

@@ -44,7 +44,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     /// <summary>
     /// Gets the value that indicates whether the current node is root node. Root node is a node with no parent.
     /// </summary>
-    public Boolean IsRoot => Parent == null;
+    public Boolean IsRoot => Parent is null;
     /// <summary>
     /// Gets or sets a tree node value.
     /// </summary>
@@ -168,7 +168,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             t = t.Parent;
             source.Value.PayloadLength += difference;
             difference += diff;
-        } while (t != null);
+        } while (t is not null);
     }
     void updateOffset(Int32 difference) {
         Value.Offset += difference;
@@ -177,7 +177,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         }
     }
     void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {
-        if (e.PropertyName == nameof(Asn1Lite.OffsetChange) && Parent != null && Value.OffsetChange != 0) {
+        if (e.PropertyName == nameof(Asn1Lite.OffsetChange) && Parent is not null && Value.OffsetChange != 0) {
             Parent.notifySizeChanged(this, Value.OffsetChange);
         }
     }
@@ -197,7 +197,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         return String.Equals(Path, other.Path);
     }
     public override Int32 GetHashCode() {
-        return Path != null ? Path.GetHashCode() : 0;
+        return Path is not null ? Path.GetHashCode() : 0;
     }
     public override Boolean Equals(Object obj) {
         if (ReferenceEquals(null, obj)) { return false; }

@@ -34,7 +34,7 @@ class Logger : IDisposable {
         do {
             sessionStream.WriteLine($"\tError message: {ex.Message}\r\n\tStack trace:\r\n{ex.StackTrace.Replace("   ", "\t\t")}");
             ex = ex.InnerException;
-        } while (ex != null);
+        } while (ex is not null);
     }
     public void Dispose() {
         sessionStream?.Dispose();

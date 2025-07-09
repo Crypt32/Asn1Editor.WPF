@@ -85,7 +85,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     void showNodeInConverter(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        if (data?.SelectedNode != null) {
+        if (data?.SelectedNode is not null) {
             IEnumerable<Byte> nodeData = data.RawData.Skip(data.SelectedNode.Offset).Take(data.SelectedNode.TagLength);
 
             _windowFactory.ShowConverterWindow(nodeData, null);
@@ -93,13 +93,13 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     void editNodeContent(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        if (data?.SelectedNode != null) {
+        if (data?.SelectedNode is not null) {
             _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
         }
     }
     void registerOid(Object obj) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        if (data?.SelectedNode != null) {
+        if (data?.SelectedNode is not null) {
             Asn1TreeNode node = data.SelectedNode;
             String oidValue = AsnDecoder.GetEditValue(new Asn1Reader(data.RawData.Skip(node.Offset).Take(node.TagLength).ToArray())).TextValue;
             String friendlyName = OidResolver.Resolve(oidValue); // TODO: replace with ResolveFriendlyName
@@ -157,11 +157,11 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
 
     Boolean ensureNodeSelected(Object o) {
-        return isTabSelected(out IDataSource data) && data!.SelectedNode != null;
+        return isTabSelected(out IDataSource data) && data!.SelectedNode is not null;
     }
     Boolean canAddNewNode(Object o) {
         return isTabSelected(out IDataSource data)
-               && (data!.Tree.Count == 0 || (data.SelectedNode != null && !_excludedTags.Contains(data.SelectedNode.Value.Tag)));
+               && (data!.Tree.Count == 0 || (data.SelectedNode is not null && !_excludedTags.Contains(data.SelectedNode.Value.Tag)));
     }
     Boolean canCutNode(Object? o) {
         return isTabSelected(out IDataSource data)
@@ -176,7 +176,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
             return false;
         }
 
-        if (data!.SelectedNode == null) {
+        if (data!.SelectedNode is null) {
             return false;
         }
 
@@ -185,7 +185,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     Boolean isTabSelected(out IDataSource? dataSource) {
         dataSource = null;
-        if (_tabs.SelectedTab != null) {
+        if (_tabs.SelectedTab is not null) {
             dataSource = _tabs.SelectedTab.DataSource;
 
             return true;

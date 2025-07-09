@@ -26,7 +26,7 @@ sealed partial class AboutBox {
     /// <param name="sender">Object the sent the event.</param>
     /// <param name="e">Navigation events arguments.</param>
     void hyperlinkRequestNavigate(Object sender, RequestNavigateEventArgs e) {
-        if (e.Uri != null && String.IsNullOrEmpty(e.Uri.OriginalString) == false) {
+        if (e.Uri is not null && String.IsNullOrEmpty(e.Uri.OriginalString) == false) {
             String uri = e.Uri.AbsoluteUri;
             Process.Start(new ProcessStartInfo(uri));
             e.Handled = true;
@@ -70,7 +70,7 @@ sealed partial class AboutBox {
         get {
             // first, try to get the version string from the assembly.
             Version v = Assembly.GetExecutingAssembly().GetName().Version;
-            String result = v != null ? v.ToString() : GetLogicalResourceString(xPathVersion);
+            String result = v is not null ? v.ToString() : GetLogicalResourceString(xPathVersion);
             return result;
         }
     }
@@ -127,7 +127,7 @@ sealed partial class AboutBox {
         if (attributes.Length > 0) {
             T attrib = (T)attributes[0];
             PropertyInfo property = attrib.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
-            if (property != null) {
+            if (property is not null) {
                 result = property.GetValue(attributes[0], null) as String;
             }
         }
@@ -145,10 +145,10 @@ sealed partial class AboutBox {
     /// </summary>
     XmlDocument ResourceXmlDocument {
         get {
-            if (xmlDoc == null) {
+            if (xmlDoc is null) {
                 // if we haven't already found the resource XmlDocument, then try to find it.
                 XmlDataProvider provider = TryFindResource("aboutProvider") as XmlDataProvider;
-                if (provider != null) {
+                if (provider is not null) {
                     // save away the XmlDocument, so we don't have to get it multiple times.
                     xmlDoc = provider.Document;
                 }
@@ -167,10 +167,10 @@ sealed partial class AboutBox {
         String result = String.Empty;
         // get the About xml information from the resources.
         XmlDocument doc = ResourceXmlDocument;
-        if (doc != null) {
+        if (doc is not null) {
             // if we found the XmlDocument, then look for the specified data. 
             XmlNode node = doc.SelectSingleNode(xpathQuery);
-            if (node != null) {
+            if (node is not null) {
                 result = node is XmlAttribute ? node.Value : node.InnerText;
             }
         }

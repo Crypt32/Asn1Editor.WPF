@@ -83,7 +83,7 @@ class BinaryConverterVM : AsyncViewModel {
                 return;
             }
             selectedEncoding = value;
-            if (selectedEncoding != null) {
+            if (selectedEncoding is not null) {
                 Text = AsnFormatter.BinaryToString(RawData.ToArray(), selectedEncoding.EncodingType);
             }
             OnPropertyChanged();
@@ -244,7 +244,7 @@ class BinaryConverterVM : AsyncViewModel {
         SelectedEncoding = EncodingTypes[0];
     }
     public void SetBytes(IEnumerable<Byte> rawData) {
-        if (rawData == null) { return; }
+        if (rawData is null) { return; }
         RawData.Clear();
         RawData.AddRange(rawData);
         formatToSelectedEncoding();

@@ -114,7 +114,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     }
     void saveEditChanges() {
         Byte[] binValue = validateValue();
-        if (binValue == null) {
+        if (binValue is null) {
             return;
         }
         _data.UpdateNodeBinaryCopy(binValue);
@@ -153,7 +153,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         OnPropertyChanged(nameof(RbHex));
     }
     void editText() {
-        if (Node == null) {
+        if (Node is null) {
             return;
         }
 
@@ -164,7 +164,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         OnPropertyChanged(nameof(IsRbTextEnabled));
     }
     void editHex() {
-        if (Node == null) { return; }
+        if (Node is null) { return; }
         TagValue.TextValue = HexUtility.BinaryToHex(_data.RawData
             .Skip(Node.PayloadStartOffset)
             .Take(Node.PayloadLength)

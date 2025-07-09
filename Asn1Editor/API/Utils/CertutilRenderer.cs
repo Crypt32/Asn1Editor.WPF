@@ -38,7 +38,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
 
     public String RenderText(Int32 textWidth) {
         _sb.Clear();
-        if (baseNode == null) {
+        if (baseNode is null) {
             return _sb.ToString();
         }
         foreach (Asn1TreeNode node in baseNode.Flatten()) {
@@ -91,7 +91,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         CertutilRenderLine hexTable = getHexTable(node);
         IList<String> lines = hexTable.Lines;
         String padLeftContent = String.Empty;
-        if (node.Parent != null) {
+        if (node.Parent is not null) {
             padLeftContent = node.MyIndex < node.Parent.Children.Count - 1 ? "|  " : "   ";
         }
 
@@ -155,7 +155,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         return _dataSource.RawData.Skip(skip).Take(take).ToArray();
     }
     String getLeftPad(Asn1TreeNode node) {
-        if (node.Parent == null) {
+        if (node.Parent is null) {
             return String.Empty;
         }
         var sb = new StringBuilder();
@@ -170,7 +170,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         var depths = new List<Int32>();
         Asn1TreeNode n = node;
 
-        while (n.Parent != null) {
+        while (n.Parent is not null) {
             if (n.MyIndex < n.Parent.Children.Count - 1) {
                 depths.Add(n.Value.Depth);
             }

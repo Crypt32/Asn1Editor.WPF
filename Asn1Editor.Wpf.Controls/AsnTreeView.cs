@@ -118,7 +118,7 @@ public class AsnTreeView : TreeView {
     }
     void OnPreviewMouseRightButtonDown(Object sender, MouseButtonEventArgs e) {
         TreeViewItem? treeViewItem = visualUpwardSearch(e.OriginalSource as DependencyObject);
-        if (treeViewItem != null) {
+        if (treeViewItem is not null) {
             treeViewItem.Focus();
             e.Handled = true;
         }
@@ -132,7 +132,7 @@ public class AsnTreeView : TreeView {
             return;
         }
         String[]? file = e.Data.GetData(DataFormats.FileDrop, true) as String[];
-        if (FileDropCommand != null && file?.Length > 0) {
+        if (FileDropCommand is not null && file?.Length > 0) {
             FileDropCommand.Execute(file[0]);
             e.Handled = true;
         }
@@ -142,7 +142,7 @@ public class AsnTreeView : TreeView {
     }
 
     static TreeViewItem? visualUpwardSearch(DependencyObject? source) {
-        while (source != null && source is not TreeViewItem) {
+        while (source is not null && source is not TreeViewItem) {
             source = VisualTreeHelper.GetParent(source);
         }
         return source as TreeViewItem;

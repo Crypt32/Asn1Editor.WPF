@@ -65,7 +65,7 @@ class UIMessenger : IUIMessenger {
         if (windows.Count > 0) {
             hwnd = windows[windows.Count - 1];
         }
-        return hwnd == null
+        return hwnd is null
             ? MessageBox.Show(message, header, button, image)
             : MessageBox.Show(hwnd, message, header, button, image);
     }

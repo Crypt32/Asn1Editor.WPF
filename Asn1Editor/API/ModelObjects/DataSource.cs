@@ -96,7 +96,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         FinishBinaryUpdate();
     }
     public void RemoveSelectedNode() {
-        if (SelectedNode.Parent == null) {
+        if (SelectedNode.Parent is null) {
             Reset();
         } else {
             _rawData.RemoveRange(SelectedNode.Value.Offset, SelectedNode.Value.TagLength);

@@ -76,7 +76,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     /// </summary>
     /// <param name="o"></param>
     void showConverter(Object o) {
-        if (SelectedTab == null) {
+        if (SelectedTab is null) {
             _windowFactory.ShowConverterWindow(Array.Empty<Byte>(), openRawAsync);
         } else {
             _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
@@ -154,7 +154,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     // 1    - use current tab with custom name
     // 2    - save all tabs with default name.
     void saveFile(Object obj) {
-        if (obj == null) {
+        if (obj is null) {
             writeFile(SelectedTab);
         } else {
             switch (obj.ToString()) {
@@ -212,7 +212,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     #region Close Tab(s)
 
     void closeTab(Object o) {
-        if (o == null) {
+        if (o is null) {
             closeTab(SelectedTab);
         } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
             var vm = (Asn1DocumentVM)tabItem.Content;
@@ -227,7 +227,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         CloseAllTabs();
     }
     void closeAllButThisTab(Object o) {
-        if (o == null) {
+        if (o is null) {
             closeTabsWithPreservation(SelectedTab);
         } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
             var vm = (Asn1DocumentVM)tabItem.Content;
@@ -238,8 +238,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         if (Tabs.Count == 0) {
             return false;
         }
-        if (o == null) {
-            return SelectedTab != null;
+        if (o is null) {
+            return SelectedTab is not null;
         }
 
         return true;
@@ -257,7 +257,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         // loop over a copy of tabs since we are going to update source collection in a loop
         var tabs = Tabs.ToList();
         foreach (Asn1DocumentVM tab in tabs) {
-            if (preservedTab != null && Equals(tab, preservedTab)) {
+            if (preservedTab is not null && Equals(tab, preservedTab)) {
                 continue;
             }
             if (!tab.IsModified) {
