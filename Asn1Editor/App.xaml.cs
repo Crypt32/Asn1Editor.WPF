@@ -26,7 +26,7 @@ namespace SysadminsLV.Asn1Editor;
 /// </summary>
 public partial class App {
     static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
-    static readonly Logger _logger = new();
+    static readonly Logger _logger = new(_appDataPath);
 
     readonly NodeViewOptions _options;
 
@@ -52,6 +52,7 @@ public partial class App {
         _logger.Write($"Process: {Process.GetCurrentProcess().ProcessName}");
         _logger.Write($"PID    : {Process.GetCurrentProcess().Id}");
         _logger.Write($"Version: {Assembly.GetExecutingAssembly().GetName().Version}");
+        _logger.Write("*************************************************************************");
         configureUnity();
         IOidDbManager oidMgr = Container.Resolve<IOidDbManager>();
         oidMgr.ReloadLookup();
