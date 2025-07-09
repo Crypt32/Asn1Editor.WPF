@@ -31,6 +31,7 @@ class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
                 await stream.WriteLineAsync(oid.Value + "," + oid.FriendlyName);
             }
         } catch (Exception ex) {
+            App.Write(ex);
             uiMessenger.ShowError($"User OID lookup save failed:\n{ex.Message}");
 
             return false;
