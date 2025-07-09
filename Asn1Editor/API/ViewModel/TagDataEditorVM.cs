@@ -23,7 +23,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
 
 
     public TagDataEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
-        _data = appTabs.SelectedTab.DataSource;
+        _data = appTabs.SelectedTab!.DataSource;
         _uiMessenger = uiMessenger;
         NodeViewOptions = appTabs.NodeViewOptions;
         OkCommand = new RelayCommand(submitValues);
@@ -113,7 +113,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         DialogResult = true;
     }
     void saveEditChanges() {
-        Byte[] binValue = validateValue();
+        Byte[]? binValue = validateValue();
         if (binValue is null) {
             return;
         }
@@ -130,7 +130,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         _data.FinishBinaryUpdate();
         DialogResult = true;
     }
-    Byte[] validateValue() {
+    Byte[]? validateValue() {
         Byte[] binValue = null;
         try {
             // if we are in hex mode, or we are in text mode, but text is hex, go to hex
@@ -171,7 +171,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             .ToArray());
     }
     void copyValues() {
-        Node = _data.SelectedNode.Value;
+        Node = _data.SelectedNode!.Value;
         TagValue.UnusedBits = Node.UnusedBits;
         IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
         TagDetails = String.Format(Resources.TagEditorHeaderTemplate, Node.Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);

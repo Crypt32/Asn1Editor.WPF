@@ -108,7 +108,7 @@ static class AsnDecoder {
         }
     }
 
-    static Boolean tryGetUtfString(Byte[] payload, out String value) {
+    static Boolean tryGetUtfString(Byte[] payload, out String? value) {
         value = null;
         if (payload.Any(x => x is < 20 or > 127)) {
             return false;

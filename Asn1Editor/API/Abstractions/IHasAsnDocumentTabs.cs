@@ -8,7 +8,7 @@ namespace SysadminsLV.Asn1Editor.API.Abstractions;
 
 public interface IHasAsnDocumentTabs {
     NodeViewOptions NodeViewOptions { get; }
-    Asn1DocumentVM SelectedTab { get; }
+    Asn1DocumentVM? SelectedTab { get; }
 
     Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null);
 }

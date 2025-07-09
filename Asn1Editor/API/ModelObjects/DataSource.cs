@@ -14,7 +14,7 @@ namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
     readonly ObservableList<Byte> _rawData = new(true, false);
     readonly ObservableCollection<Asn1TreeNode> _tree = [];
-    Asn1TreeNode selectedNode;
+    Asn1TreeNode? selectedNode;
 
     protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e) {
         if (_rawData.IsNotifying && CollectionChanged is not null) {
@@ -26,7 +26,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
             }
         }
     }
-    public Asn1TreeNode SelectedNode {
+    public Asn1TreeNode? SelectedNode {
         get => selectedNode;
         set {
             selectedNode = value;
@@ -61,7 +61,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
             node = new Asn1TreeNode(nodeValue, this);
             setRootNode(node);
         } else {
-            node = SelectedNode.AddChild(nodeValue, true);
+            node = SelectedNode!.AddChild(nodeValue, true);
             FinishBinaryUpdate();
         }
 
@@ -80,7 +80,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         switch (option) {
             case NodeAddOption.Before:
             case NodeAddOption.After:
-                SelectedNode.Parent.InsertChildNode(childNode, SelectedNode, option);
+                SelectedNode.Parent!.InsertChildNode(childNode, SelectedNode, option);
                 break;
             case NodeAddOption.Last:
                 SelectedNode.InsertChildNode(
@@ -96,7 +96,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         FinishBinaryUpdate();
     }
     public void RemoveSelectedNode() {
-        if (SelectedNode.Parent is null) {
+        if (SelectedNode!.Parent is null) {
             Reset();
         } else {
             _rawData.RemoveRange(SelectedNode.Value.Offset, SelectedNode.Value.TagLength);
@@ -105,7 +105,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         FinishBinaryUpdate();
     }
     public void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes) {
-        _rawData.RemoveRange(SelectedNode.Value.Offset, SelectedNode.Value.TagLength);
+        _rawData.RemoveRange(SelectedNode!.Value.Offset, SelectedNode.Value.TagLength);
         _rawData.InsertRange(SelectedNode.Value.Offset, newBytes);
     }
     public void UpdateNodeLength(Asn1TreeNode node, Byte[] newLenBytes) {
@@ -131,6 +131,6 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         _rawData.Clear();
     }
 
-    public event NotifyCollectionChangedEventHandler CollectionChanged;
-    public event EventHandler RequireTreeRefresh;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+    public event EventHandler? RequireTreeRefresh;
 }

@@ -20,7 +20,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
 
     String oidValue, friendlyName, searchText;
     Boolean? dialogResult;
-    OidDto selectedItem;
+    OidDto? selectedItem;
     OidSearchScope searchScope;
 
     public OidEditorVM(IHasAsnDocumentTabs tabs, IOidDbManager oidMgr) {
@@ -101,7 +101,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
             OidView.Refresh();
         }
     }
-    public OidDto SelectedItem {
+    public OidDto? SelectedItem {
         get => selectedItem;
         set {
             selectedItem = value;
@@ -142,20 +142,20 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     Boolean canSave(Object o) {
         return !String.IsNullOrWhiteSpace(OidValue) && !String.IsNullOrWhiteSpace(FriendlyName) && _regex.IsMatch(OidValue);
     }
-    void reset(Object o) {
+    void reset(Object? o) {
         OidValue = null;
         FriendlyName = null;
     }
     async Task removeOid(Object o, CancellationToken token = default) {
-        OidDto backupOid = SelectedItem;
-        OidValue = SelectedItem.Value;
+        OidDto backupOid = SelectedItem!;
+        OidValue = SelectedItem!.Value;
         FriendlyName = SelectedItem.FriendlyName;
         _oidList.Remove(SelectedItem);
         OidResolver.Remove(OidValue);
         // fall-back
         if (!await _oidMgr.SaveUserLookup()) {
-            OidValue = null;
-            FriendlyName = null;
+            OidValue = String.Empty;
+            FriendlyName = String.Empty;
             OidResolver.Add(backupOid.Value, backupOid.FriendlyName, backupOid.UserDefined);
         } else {
             await _tabs.RefreshTabs(x => x.Value.Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER);

@@ -22,7 +22,7 @@ class BinaryConverterVM : AsyncViewModel {
     readonly String master = new('0', 78);
     readonly Func<Byte[], Task>? _action;
     Double width;
-    String text, path;
+    String? text, path;
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
 
@@ -48,14 +48,14 @@ class BinaryConverterVM : AsyncViewModel {
 
     public NodeViewOptions NodeViewOptions { get; }
 
-    public String Text {
+    public String? Text {
         get => text;
         set {
             text = value?.Trim();
             OnPropertyChanged();
         }
     }
-    public String Path {
+    public String? Path {
         get => path;
         set {
             path = value;
@@ -94,7 +94,7 @@ class BinaryConverterVM : AsyncViewModel {
     public ICollectionView EncodingTypesView { get; }
     // This is observable and public just in case if a list of radiobuttons is necessary,
     // so ItemsControl.ItemsSource can bind to a list of checkboxes
-    public ObservableCollection<EncodingTypeEntry> EncodingTypes { get; } = new();
+    public ObservableCollection<EncodingTypeEntry> EncodingTypes { get; } = [];
 
     void initialize() {
         addEncodingToTheList(EncodingType.Base64, "Base64", EncodingGroup.PEM);
@@ -223,14 +223,14 @@ class BinaryConverterVM : AsyncViewModel {
     }
     void saveText() {
         try {
-            File.WriteAllText(Path, Text);
+            File.WriteAllText(Path!, Text);
         } catch (Exception e) {
             _uiMessenger.ShowError(e.Message, "Save Error");
         }
     }
     void saveBinary() {
         try {
-            File.WriteAllBytes(Path, RawData.ToArray());
+            File.WriteAllBytes(Path!, RawData.ToArray());
         } catch (Exception e) {
             _uiMessenger.ShowError(e.Message, "Save Error");
         }

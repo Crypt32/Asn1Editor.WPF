@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace SysadminsLV.Asn1Editor.API.Utils.WPF;
 abstract class WindowFactoryBase {
-    protected Window hwnd;
+    protected Window? hwnd;
     void setParent(Boolean mainWindowAsParent = false) {
         Window[] windows = Application.Current.Windows
             .Cast<Window>()
@@ -17,15 +17,15 @@ abstract class WindowFactoryBase {
                 : windows[windows.Length - 1];
         }
 
-        hwnd.Owner = parent;
+        hwnd!.Owner = parent;
     }
 
     protected void ShowAsWindow(Boolean mainWindowAsParent = false) {
         setParent(mainWindowAsParent);
-        hwnd.Show();
+        hwnd!.Show();
     }
     protected void ShowAsDialog() {
         setParent();
-        hwnd.ShowDialog();
+        hwnd!.ShowDialog();
     }
 }

@@ -5,7 +5,7 @@ using SysadminsLV.Asn1Editor.API.ViewModel;
 namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface IMainWindowVM {
-    Asn1DocumentVM SelectedTab { get; }
+    Asn1DocumentVM? SelectedTab { get; }
 
     /// <summary>
     /// Raises UI prompt if user wants to save contents of unsaved file.

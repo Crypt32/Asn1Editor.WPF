@@ -24,7 +24,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     String currentLengthStr = "80";
 
     public TextViewerVM(IHasAsnDocumentTabs appTabs, NodeViewOptions options, IUIMessenger uiMessenger) {
-        rootNode = appTabs.SelectedTab.DataSource.SelectedNode;
+        rootNode = appTabs.SelectedTab!.DataSource.SelectedNode!;
         NodeViewOptions = options;
         _uiMessenger = uiMessenger;
         CurrentLength = defaultLength.ToString(CultureInfo.InvariantCulture);

@@ -10,7 +10,7 @@ public interface IDataSource : IBinarySource {
     /// <summary>
     /// Gets or sets active node.
     /// </summary>
-    Asn1TreeNode SelectedNode { get; set; }
+    Asn1TreeNode? SelectedNode { get; set; }
     /// <summary>
     /// Gets tree node view options.
     /// </summary>

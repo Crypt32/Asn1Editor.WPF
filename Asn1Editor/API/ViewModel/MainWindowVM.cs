@@ -19,7 +19,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
-    Asn1DocumentVM selectedTab;
+    Asn1DocumentVM? selectedTab;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
@@ -63,7 +63,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     public GlobalData GlobalData { get; }
     public NodeViewOptions NodeViewOptions { get; }
     public ObservableCollection<Asn1DocumentVM> Tabs { get; } = [];
-    public Asn1DocumentVM SelectedTab {
+    public Asn1DocumentVM? SelectedTab {
         get => selectedTab;
         set {
             selectedTab = value;
@@ -77,7 +77,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     /// <param name="o"></param>
     void showConverter(Object o) {
         if (SelectedTab is null) {
-            _windowFactory.ShowConverterWindow(Array.Empty<Byte>(), openRawAsync);
+            _windowFactory.ShowConverterWindow([], openRawAsync);
         } else {
             _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
         }
@@ -219,14 +219,14 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             closeTab(vm);
         }
     }
-    Boolean canCloseTab(Object o) {
+    Boolean canCloseTab(Object? o) {
         // TODO: need to eliminate explicit reference to UI elements
         return o is null or ClosableTabItem;
     }
-    void closeAllTabs(Object o) {
+    void closeAllTabs(Object? o) {
         CloseAllTabs();
     }
-    void closeAllButThisTab(Object o) {
+    void closeAllButThisTab(Object? o) {
         if (o is null) {
             closeTabsWithPreservation(SelectedTab);
         } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
@@ -234,7 +234,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             closeTabsWithPreservation(vm);
         }
     }
-    Boolean canCloseAllButThisTab(Object o) {
+    Boolean canCloseAllButThisTab(Object? o) {
         if (Tabs.Count == 0) {
             return false;
         }
@@ -253,7 +253,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             Tabs.Remove(tab);
         }
     }
-    Boolean closeTabsWithPreservation(Asn1DocumentVM preservedTab = null) {
+    Boolean closeTabsWithPreservation(Asn1DocumentVM? preservedTab = null) {
         // loop over a copy of tabs since we are going to update source collection in a loop
         var tabs = Tabs.ToList();
         foreach (Asn1DocumentVM tab in tabs) {

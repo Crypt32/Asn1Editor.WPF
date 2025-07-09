@@ -71,7 +71,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         }
         isTabSelected(out IDataSource data); // granted to be non-null
         try {
-            File.WriteAllBytes(filePath, data!.RawData.Skip(data.SelectedNode.Value.Offset).Take(data.SelectedNode.Value.TagLength).ToArray());
+            File.WriteAllBytes(filePath, data!.RawData.Skip(data.SelectedNode!.Value.Offset).Take(data.SelectedNode.Value.TagLength).ToArray());
         } catch (Exception e) {
             _uiMessenger.ShowError(e.Message, "Save Error");
         }
@@ -138,7 +138,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     void copyNodePrivate(IDataSource data) {
         ClipboardManager.SetClipboardData(
         data.RawData
-                .Skip(data.SelectedNode.Value.Offset)
+                .Skip(data.SelectedNode!.Value.Offset)
                 .Take(data.SelectedNode.Value.TagLength)
         );
         HasNodeClipboardData = true;
