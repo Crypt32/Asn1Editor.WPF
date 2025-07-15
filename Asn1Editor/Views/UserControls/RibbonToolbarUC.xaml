@@ -65,7 +65,7 @@
                                         ToolTip="Show or hide hex viewer"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/converter_32x32.png"
                                   Label="Binary Converter"
-                                  Command="{Binding AppCommands.ShowOidEditor}"
+                                  Command="{Binding AppCommands.ShowConverterWindow}"
                                   ToolTip="Open data converter"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/book_32x32.png"
                                   Label="OID Editor"
