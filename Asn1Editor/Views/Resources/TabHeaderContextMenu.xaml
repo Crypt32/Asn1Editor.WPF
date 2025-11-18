@@ -1,9 +1,46 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!--<ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="TabControlResources.xaml"/>
-    </ResourceDictionary.MergedDictionaries>-->
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:wpf="clr-namespace:SysadminsLV.Asn1Editor.API.Utils.WPF">
+    <wpf:CompareTabParamConverter x:Key="CompareTabParamConverter"/>
+    <wpf:NotSameTabConverter x:Key="NotSameTabConverter"/>
 
+    <Style x:Key="CompareMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+        <Setter Property="Header" Value="{Binding Header}"/>
+
+        <Setter Property="Command">
+            <Setter.Value>
+                <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
+                         Path="PlacementTarget.Tag.SelectedTab.StartCompareModeCommand"/>
+            </Setter.Value>
+        </Setter>
+
+        <!-- Params:
+            - Left - tab where menuitem is invoked
+            - Right - selected menu item
+        -->
+        <Setter Property="CommandParameter">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource CompareTabParamConverter}">
+                    <!-- Left -->
+                    <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
+                             Path="PlacementTarget.DataContext"/>
+                    <!-- Right -->
+                    <Binding/>
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+
+        <!-- Do not compare with self -->
+        <Setter Property="IsEnabled">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource NotSameTabConverter}">
+                    <Binding/>
+                    <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
+                             Path="PlacementTarget.DataContext"/>
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <ContextMenu x:Key="TabHeaderContextMenu" DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}"
                  MaxHeight="200">
         <MenuItem Header="_Save"
@@ -14,11 +51,11 @@
             </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <!--<MenuItem Header="Compare with..."
+        <MenuItem Header="Compare with..."
                   ItemsSource="{Binding Tabs}"
                   ItemContainerStyle="{StaticResource CompareMenuItemStyle}">
         </MenuItem>
-        <Separator/>-->
+        <Separator/>
         <MenuItem Header="_Close"
                   Command="{Binding Path=CloseTabCommand}"
                   InputGestureText="Ctrl + F4">
