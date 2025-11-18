@@ -23,7 +23,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
 
 
     public TagDataEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
-        _data = appTabs.SelectedTab!.DataSource;
+        _data = appTabs.SelectedTab!.GetPrimaryDocument().DataSource;
         _uiMessenger = uiMessenger;
         NodeViewOptions = appTabs.NodeViewOptions;
         OkCommand = new RelayCommand(submitValues);

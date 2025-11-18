@@ -9,25 +9,24 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 
 public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
-    readonly NodeViewOptions _nodeOptions;
-    readonly ITreeCommands _treeCommands;
-
     Asn1DocumentVM left;
     Asn1DocumentVM? right;
     Boolean isCompareMode;
     String header;
 
     public AsnDocumentHostVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
-        _nodeOptions = nodeViewOptions;
-        _treeCommands = treeCommands;
+        NodeViewOptions = nodeViewOptions;
+        TreeCommands = treeCommands;
         StartCommand = new RelayCommand(start);
         ExitCommand = new RelayCommand(exit, _ => IsCompareMode);
-        left = new Asn1DocumentVM(_nodeOptions, _treeCommands);
+        left = new Asn1DocumentVM(nodeViewOptions, treeCommands);
         left.PropertyChanged += onMainContentPropertyChanged;
     }
 
     public ICommand StartCommand { get; }
     public ICommand ExitCommand { get; }
+    public NodeViewOptions NodeViewOptions { get; }
+    public ITreeCommands TreeCommands { get; }
 
     public String Header =>
         isCompareMode
@@ -37,7 +36,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
         get => left;
         set {
             left.PropertyChanged -= onMainContentPropertyChanged;
-            left = value ?? new Asn1DocumentVM(_nodeOptions, _treeCommands);
+            left = value ?? new Asn1DocumentVM(NodeViewOptions, TreeCommands);
             left.PropertyChanged += onMainContentPropertyChanged;
             OnPropertyChanged();
         }
