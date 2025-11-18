@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="SysadminsLV.Asn1Editor.Views.UserControls.DocumentTabsUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
+             xmlns:wpf="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
+             xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
+             xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:MainWindowVM}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Views/Resources/AsnTreeViewContextMenu.xaml"/>
+                <ResourceDictionary Source="/Views/Resources/TabHeaderContextMenu.xaml"/>
+                <ResourceDictionary Source="/Views/Resources/TreeViewResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <wpf:ClosableTabControl ItemsSource="{Binding Tabs}"
+                            SelectedItem="{Binding SelectedTab}"
+                            AddTabCommand="{Binding NewCommand}"
+                            CloseTabCommand="{Binding CloseTabCommand}"
+                            ShowNewTabButton="False"
+                            BorderThickness="0"
+                            Style="{StaticResource ScrollableTabControl}">
+        <wpf:ClosableTabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Header}"
+                           ToolTip="{Binding Path=ToolTipText}"
+                           Tag="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=wpf:ClosableTabControl}}"
+                           ContextMenuOpening="onTabHeaderContextMenuOpening"
+                           ContextMenu="{StaticResource TabHeaderContextMenu}">
+                </TextBlock>
+            </DataTemplate>
+        </wpf:ClosableTabControl.ItemTemplate>
+        <wpf:ClosableTabControl.ContentTemplate>
+            <DataTemplate>
+                <DockPanel>
+                    <DockPanel Visibility="{Binding NodeViewOptions.ShowHexViewer, Converter={StaticResource BooleanToVisibility}}">
+                        <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
+                            <ToolBar>
+                                <ToggleButton x:Name="HexAddressToggle"
+                                              IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
+                                              ToolTip="Show or hide address panel">
+                                    <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
+                                </ToggleButton>
+                                <Separator/>
+                                <ToggleButton x:Name="AsciiToggle"
+                                              IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
+                                              ToolTip="Show or hide ASCII panel">
+                                    <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
+                                </ToggleButton>
+                                <Separator/>
+                                <ToggleButton x:Name="HexColorToggle"
+                                              IsChecked="{Binding NodeViewOptions.HexViewerColoringEnabled}"
+                                              ToolTip="Enable or disable hex coloring">
+                                    <Image Source="/Views/Images/Menu/textcolor_32x32.png"/>
+                                </ToggleButton>
+                            </ToolBar>
+                        </ToolBarTray>
+                        <c:AsnHexViewer DataSource="{Binding Left.DataSource.RawData, Mode=OneWay}"
+                                        SelectedNode="{Binding Left.DataSource.SelectedNode.Value, Mode=OneWay}"
+                                        FontFamily="Consolas"
+                                        FontSize="{Binding NodeViewOptions.FontSize}"
+                                        Background="#D5E7FE"
+                                        IsColoringEnabled="{Binding ElementName=HexColorToggle, Path=IsChecked}"
+                                        ShowAddressPane="{Binding ElementName=HexAddressToggle, Path=IsChecked}"
+                                        ShowAsciiPane="{Binding ElementName=AsciiToggle, Path=IsChecked}"
+                                        d:DataContext="{d:DesignInstance vm:AsnDocumentHostVM}"/>
+                    </DockPanel>
+                    <Grid>
+                        <c:AsnTreeView ItemsSource="{Binding Left.Tree}"
+                                       SelectedItem="{Binding Left.DataSource.SelectedNode, Mode=TwoWay}"
+                                       AllowDrop="True"
+                                       FontSize="{Binding NodeViewOptions.FontSize}"
+                                       MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
+                                       DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
+                                       DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
+                                       FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                       ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
+                                       ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
+                                       ContextMenu="{StaticResource AsnTreeViewContextMenu}"
+                                       d:DataContext="{d:DesignInstance vm:AsnDocumentHostVM}">
+                            <c:AsnTreeView.InputBindings>
+                                <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
+                                <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
+                                <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
+                                <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
+                                <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
+                                <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}"/>
+                            </c:AsnTreeView.InputBindings>
+                        </c:AsnTreeView>
+                        <c:BusyIndicator IsShown="{Binding IsBusy}"
+                                         HeaderText="{Binding ProgressText}"
+                                         Text="This may take a while"
+                                         d:DataContext="{d:DesignInstance vm:Asn1DocumentVM}"/>
+                    </Grid>
+                </DockPanel>
+            </DataTemplate>
+        </wpf:ClosableTabControl.ContentTemplate>
+    </wpf:ClosableTabControl>
+</UserControl>
