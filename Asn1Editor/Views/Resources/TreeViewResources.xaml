@@ -3,6 +3,7 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     mc:Ignorable="d"
+                    d:DataContext="{d:DesignInstance modelObjects:Asn1TreeNode}"
                     xmlns:modelObjects="clr-namespace:SysadminsLV.Asn1Editor.API.ModelObjects"
                     xmlns:behaviors="clr-namespace:SysadminsLV.Asn1Editor.Controls.Behaviors;assembly=SysadminsLV.Asn1Editor.Controls">
     <Style x:Key="AsnTreeIconStyle" TargetType="Image">

@@ -22,7 +22,7 @@
                 <Setter Property="WindowStyle" Value="SingleBorderWindow" />
                 <Setter Property="SizeToContent" Value="Height" />
             </Style>
-            <Style x:Key="TvStyle" TargetType="controls:AsnTreeView" BasedOn="{StaticResource {x:Type controls:AsnTreeView}}">
+            <Style x:Key="TvStyle" TargetType="controls:AsnTreeView">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsBusy}" Value="True">
                         <Setter Property="Opacity" Value="0.3"/>
