@@ -61,7 +61,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
         if (ReferenceEquals(param.Left, param.Right)) return;
 
         //Left = param.Left;
-        Right = param.Right;
+        Right = param.Right.GetPrimaryDocument();
 
         IsCompareMode = true;
     }
