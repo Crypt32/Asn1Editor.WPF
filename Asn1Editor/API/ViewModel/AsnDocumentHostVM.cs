@@ -8,7 +8,7 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 
-class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
+public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     readonly NodeViewOptions _nodeOptions;
     readonly ITreeCommands _treeCommands;
 
