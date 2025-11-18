@@ -9,17 +9,20 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 
 class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
-    readonly MainWindowVM _owner;
+    readonly NodeViewOptions _nodeOptions;
+    readonly ITreeCommands _treeCommands;
+
     Asn1DocumentVM left;
     Asn1DocumentVM? right;
     Boolean isCompareMode;
     String header;
 
-    public AsnDocumentHostVM(MainWindowVM owner) {
-        _owner = owner;
+    public AsnDocumentHostVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
+        _nodeOptions = nodeViewOptions;
+        _treeCommands = treeCommands;
         StartCommand = new RelayCommand(start);
         ExitCommand = new RelayCommand(exit, _ => IsCompareMode);
-        left = new Asn1DocumentVM(_owner.NodeViewOptions, _owner.TreeCommands);
+        left = new Asn1DocumentVM(_nodeOptions, _treeCommands);
         left.PropertyChanged += onMainContentPropertyChanged;
     }
 
@@ -34,7 +37,7 @@ class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
         get => left;
         set {
             left.PropertyChanged -= onMainContentPropertyChanged;
-            left = value ?? new Asn1DocumentVM(_owner.NodeViewOptions, _owner.TreeCommands);
+            left = value ?? new Asn1DocumentVM(_nodeOptions, _treeCommands);
             left.PropertyChanged += onMainContentPropertyChanged;
             OnPropertyChanged();
         }
@@ -60,9 +63,6 @@ class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
 
         //Left = param.Left;
         Right = param.Right;
-
-        // слева активным делаем левый документ
-        _owner.SelectedTab = param.Left;
 
         IsCompareMode = true;
     }
