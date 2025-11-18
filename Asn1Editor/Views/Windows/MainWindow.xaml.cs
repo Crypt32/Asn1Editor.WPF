@@ -22,7 +22,7 @@ public partial class MainWindow {
         e.Cancel = !_vm.CloseAllTabs();
     }
     void onTabHeaderContextMenuOpening(Object sender, ContextMenuEventArgs e) {
-        var vm = (Asn1DocumentVM)((FrameworkElement)sender).DataContext;
+        var vm = (AsnDocumentHostVM)((FrameworkElement)sender).DataContext;
         e.Handled = _vm.SelectedTab != vm;
     }
 }

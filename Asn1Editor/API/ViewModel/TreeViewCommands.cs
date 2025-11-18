@@ -186,7 +186,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     Boolean isTabSelected(out IDataSource? dataSource) {
         dataSource = null;
         if (_tabs.SelectedTab is not null) {
-            dataSource = _tabs.SelectedTab.DataSource;
+            dataSource = _tabs.SelectedTab.GetPrimaryDocument().DataSource;
 
             return true;
         }

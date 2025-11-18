@@ -19,7 +19,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
-    Asn1DocumentVM? selectedTab;
+    AsnDocumentHostVM? selectedTab;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
@@ -40,7 +40,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
         DropFileCommand = new AsyncCommand(dropFileAsync);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-        addTabToList(new Asn1DocumentVM(NodeViewOptions, TreeCommands));
+        addTabToList(new AsnDocumentHostVM(NodeViewOptions, TreeCommands));
     }
 
     async void onNodeViewOptionsChanged(Object sender, RequireTreeRefreshEventArgs args) {
@@ -62,8 +62,8 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     public GlobalData GlobalData { get; }
     public NodeViewOptions NodeViewOptions { get; }
-    public ObservableCollection<Asn1DocumentVM> Tabs { get; } = [];
-    public Asn1DocumentVM? SelectedTab {
+    public ObservableCollection<AsnDocumentHostVM> Tabs { get; } = [];
+    public AsnDocumentHostVM? SelectedTab {
         get => selectedTab;
         set {
             selectedTab = value;
@@ -79,11 +79,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         if (SelectedTab is null) {
             _windowFactory.ShowConverterWindow([], openRawAsync);
         } else {
-            _windowFactory.ShowConverterWindow(SelectedTab.DataSource.RawData, openRawAsync);
+            _windowFactory.ShowConverterWindow(SelectedTab.GetPrimaryDocument().DataSource.RawData, openRawAsync);
         }
     }
     void newTab(Object o) {
-        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+        var tab = new AsnDocumentHostVM(NodeViewOptions, TreeCommands);
         addTabToList(tab);
     }
     /// <summary>
@@ -91,7 +91,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     /// active (sets to <see cref="SelectedTab"/> property).
     /// </summary>
     /// <param name="tab">Tab document to add.</param>
-    void addTabToList(Asn1DocumentVM tab) {
+    void addTabToList(AsnDocumentHostVM tab) {
         Tabs.Add(tab);
         SelectedTab = tab;
     }
@@ -104,15 +104,15 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     ///     created tab can be closed should decode fail.
     /// </param>
     /// <returns>Blank tab document instance.</returns>
-    Asn1DocumentVM getAvailableTab(out Boolean isNew) {
+    AsnDocumentHostVM getAvailableTab(out Boolean isNew) {
         isNew = false;
-        Boolean useExistingTab = SelectedTab is not null && SelectedTab.CanReuse;
+        Boolean useExistingTab = SelectedTab is not null && SelectedTab.GetPrimaryDocument().CanReuse;
         if (useExistingTab && Tabs.Any()) {
             return SelectedTab;
         }
 
         isNew = true;
-        var tab = new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+        var tab = new AsnDocumentHostVM(NodeViewOptions, TreeCommands);
         addTabToList(tab);
 
         return tab;
@@ -125,10 +125,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     /// <remarks>If new tab was created, but file decoding fails, this temporary tab document will be closed.</remarks>
     async Task createTabFromFile(String file) {
         var tab = getAvailableTab(out Boolean useExistingTab);
-        tab.Path = file;
+        var doc = tab.GetPrimaryDocument();
+        doc.Path = file;
         try {
             IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(file);
-            await tab.Decode(bytes, true);
+            await doc.Decode(bytes, true);
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
             if (!useExistingTab) {
@@ -172,22 +173,23 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
     Boolean canPrintSave(Object obj) {
-        return SelectedTab?.DataSource.RawData.Count > 0;
+        return SelectedTab?.Left.DataSource.RawData.Count > 0;
     }
 
     // general method to write arbitrary tab to a file.
-    Boolean writeFile(Asn1DocumentVM tab, String filePath = null) {
+    Boolean writeFile(AsnDocumentHostVM tab, String filePath = null) {
+        Asn1DocumentVM doc = tab.GetPrimaryDocument();
         // use default path if no custom file path specified
-        filePath ??= tab.Path;
+        filePath ??= doc.Path;
         // if file path is still null, then it came from "untitled" tab with default file path
         // so prompt for file to save and abort if cancelled.
         if (String.IsNullOrEmpty(filePath) && !getSaveFilePath(out filePath)) {
             return false;
         }
         try {
-            File.WriteAllBytes(filePath, tab.DataSource.RawData.ToArray());
-            tab.Path = filePath;
-            tab.IsModified = false;
+            File.WriteAllBytes(filePath, doc.DataSource.RawData.ToArray());
+            doc.Path = filePath;
+            doc.IsModified = false;
 
             return true;
         } catch (Exception e) {
@@ -199,7 +201,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         return _uiMessenger.TryGetSaveFileName(out saveFilePath);
     }
 
-    public Boolean RequestFileSave(Asn1DocumentVM tab) {
+    public Boolean RequestFileSave(AsnDocumentHostVM tab) {
         Boolean? result = _uiMessenger.YesNoCancel("Current file was modified. Save changes?", "Unsaved Data");
         return result switch {
             false => true,
@@ -211,11 +213,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     #region Close Tab(s)
 
-    void closeTab(Object o) {
+    void closeTab(Object? o) {
         if (o is null) {
             closeTab(SelectedTab);
         } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (Asn1DocumentVM)tabItem.Content;
+            var vm = (AsnDocumentHostVM)tabItem.Content;
             closeTab(vm);
         }
     }
@@ -230,7 +232,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         if (o is null) {
             closeTabsWithPreservation(SelectedTab);
         } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (Asn1DocumentVM)tabItem.Content;
+            var vm = (AsnDocumentHostVM)tabItem.Content;
             closeTabsWithPreservation(vm);
         }
     }
@@ -245,22 +247,24 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         return true;
     }
 
-    void closeTab(Asn1DocumentVM tab) {
-        if (!tab.IsModified) {
+    void closeTab(AsnDocumentHostVM tab) {
+        Asn1DocumentVM doc = tab.GetPrimaryDocument();
+        if (!doc.IsModified) {
             Tabs.Remove(tab);
         }
-        if (tab.IsModified && RequestFileSave(tab)) {
+        if (doc.IsModified && RequestFileSave(tab)) {
             Tabs.Remove(tab);
         }
     }
-    Boolean closeTabsWithPreservation(Asn1DocumentVM? preservedTab = null) {
+    Boolean closeTabsWithPreservation(AsnDocumentHostVM? preservedTab = null) {
         // loop over a copy of tabs since we are going to update source collection in a loop
         var tabs = Tabs.ToList();
-        foreach (Asn1DocumentVM tab in tabs) {
+        foreach (AsnDocumentHostVM tab in tabs) {
+            Asn1DocumentVM doc = tab.GetPrimaryDocument();
             if (preservedTab is not null && Equals(tab, preservedTab)) {
                 continue;
             }
-            if (!tab.IsModified) {
+            if (!doc.IsModified) {
                 Tabs.Remove(tab);
 
                 continue;
@@ -303,9 +307,9 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         {
             asn.BuildOffsetMap();
             // at this point, raw data is granted to be valid DER encoding and should not fail.
-            Asn1DocumentVM tab = getAvailableTab(out _);
+            var tab = getAvailableTab(out _);
 
-            return tab.Decode(rawBytes, false);
+            return tab.GetPrimaryDocument().Decode(rawBytes, false);
         }
         catch (Exception ex)
         {
@@ -316,6 +320,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     }
 
     public Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null) {
-        return Task.WhenAll(Tabs.Select(x => x.RefreshTreeView(filter)));
+        return Task.WhenAll(Tabs.Select(x => x.GetPrimaryDocument().RefreshTreeView(filter)));
     }
 }

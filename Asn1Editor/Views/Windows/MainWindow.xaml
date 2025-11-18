@@ -42,32 +42,32 @@
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock Text="Tag: ">
-                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=0x{0:X2}}"/>
-                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=(0)}"/>
+                    <Run Text="{Binding SelectedTab.Left.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=0x{0:X2}}"/>
+                    <Run Text="{Binding SelectedTab.Left.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=(0)}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
                 <TextBlock Text="Tag name: ">
-                    <Run Text="{Binding  SelectedTab.DataSource.SelectedNode.Value.TagName, Mode=OneWay}"/>
+                    <Run Text="{Binding  SelectedTab.Left.DataSource.SelectedNode.Value.TagName, Mode=OneWay}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
                 <TextBlock Text="Payload length: ">
-                    <Run Text="{Binding  SelectedTab.DataSource.SelectedNode.Value.PayloadLength, Mode=OneWay}"/>
+                    <Run Text="{Binding  SelectedTab.Left.DataSource.SelectedNode.Value.PayloadLength, Mode=OneWay}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
                 <TextBlock Text="Child nodes: ">
-                    <Run Text="{Binding SelectedTab.DataSource.SelectedNode.Children.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding SelectedTab.Left.DataSource.SelectedNode.Children.Count, Mode=OneWay}"/>
                 </TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
                 <TextBlock Text="Size: ">
-                    <Run Text="{Binding SelectedTab.DataSource.RawData.Count, Mode=OneWay}"/>
+                    <Run Text="{Binding SelectedTab.Left.DataSource.RawData.Count, Mode=OneWay}"/>
                     <Run Text="bytes"/>
                 </TextBlock>
             </StatusBarItem>
@@ -150,8 +150,8 @@
                                     </ToggleButton>
                                 </ToolBar>
                             </ToolBarTray>
-                            <c:AsnHexViewer DataSource="{Binding DataSource.RawData, Mode=OneWay}"
-                                            SelectedNode="{Binding DataSource.SelectedNode.Value, Mode=OneWay}"
+                            <c:AsnHexViewer DataSource="{Binding Left.DataSource.RawData, Mode=OneWay}"
+                                            SelectedNode="{Binding Left.DataSource.SelectedNode.Value, Mode=OneWay}"
                                             FontFamily="Consolas"
                                             FontSize="{Binding NodeViewOptions.FontSize}"
                                             Background="#D5E7FE"
@@ -167,8 +167,8 @@
                                     </ResourceDictionary.MergedDictionaries>
                                 </ResourceDictionary>
                             </Grid.Resources>
-                            <c:AsnTreeView ItemsSource="{Binding Tree}"
-                                           SelectedItem="{Binding DataSource.SelectedNode, Mode=TwoWay}"
+                            <c:AsnTreeView ItemsSource="{Binding Left.Tree}"
+                                           SelectedItem="{Binding Left.DataSource.SelectedNode, Mode=TwoWay}"
                                            AllowDrop="True"
                                            FontSize="{Binding NodeViewOptions.FontSize}"
                                            MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
@@ -219,7 +219,7 @@
                                                 <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding DataSource.SelectedNode.Value.Tag}" Value="6">
+                                                        <DataTrigger Binding="{Binding Left.DataSource.SelectedNode.Value.Tag}" Value="6">
                                                             <Setter Property="Visibility" Value="Visible"/>
                                                         </DataTrigger>
                                                     </Style.Triggers>
