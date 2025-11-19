@@ -28,6 +28,9 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     public ICommand ExitCompareModeCommand { get; }
     public NodeViewOptions NodeViewOptions { get; }
     public ITreeCommands TreeCommands { get; }
+    // Unique identifier for scroll synchronization between compare tabs
+    public String ScrollGroupId { get; } = Guid.NewGuid().ToString("N");
+
 
     public String Header =>
         isCompareMode
@@ -60,7 +63,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     void refreshHeader() {
         OnPropertyChanged(nameof(Header));
     }
-    void start(object? o) {
+    void start(Object? o) {
         if (o is not TabCompareParam param || param.Left is null || ReferenceEquals(param.Left, param.Right)) {
             return;
         }
