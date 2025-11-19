@@ -74,7 +74,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="5" Style="{StaticResource DynamicColumnDefinitionStyle}"/>
+                            <ColumnDefinition Width="4" Style="{StaticResource DynamicColumnDefinitionStyle}"/>
                             <ColumnDefinition Style="{StaticResource DynamicColumnDefinitionStyle}"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Grid.Column="0">
