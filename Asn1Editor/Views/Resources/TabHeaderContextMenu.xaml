@@ -51,7 +51,7 @@
             </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="Compare with..."
+        <MenuItem Header="View side-by-side..."
                   ItemsSource="{Binding Tabs}"
                   ItemContainerStyle="{StaticResource CompareMenuItemStyle}">
         </MenuItem>
