@@ -122,6 +122,6 @@
         </StackPanel>
     </HierarchicalDataTemplate>
     <Style x:Key="AsnTreeViewItemStyle" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-        <Setter Property="IsExpanded" Value="True"/>
+        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
     </Style>
 </ResourceDictionary>

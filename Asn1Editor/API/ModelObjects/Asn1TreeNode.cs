@@ -15,7 +15,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     readonly IDataSource _dataSource;
     readonly ObservableCollection<Asn1TreeNode> _children = [];
 
-    Boolean isSelected;
+    Boolean isSelected, isExpanded = true;
     Byte tag, unusedBits;
     Int32 offset, offsetChange, payloadLength, depth;
 
@@ -33,6 +33,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         Value.PropertyChanged += valuePropertyChanged;
     }
     public Asn1TreeNode this[Int32 index] => Children[index];
+
     /// <summary>
     /// Gets or sets the indexed path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.
     /// </summary>
@@ -226,6 +227,14 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     public Int32 TagLength => HeaderLength + PayloadLength;
     public Boolean IsContainer { get; set; }
     public Boolean IsContextSpecific { get; set; }
+
+    public Boolean IsExpanded {
+        get => isExpanded;
+        set {
+            isExpanded = value;
+            OnPropertyChanged();
+        }
+    }
 
     // tree-specific properties
     public Int32 Depth { get; private set; }
