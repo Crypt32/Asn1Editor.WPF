@@ -11,7 +11,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
     String path, fileName, pbHeaderText;
-    Boolean isModified, suppressModified;
+    Boolean isModified, suppressModified, isEnabled = true;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         DataSource = new DataSource(nodeViewOptions);
@@ -85,6 +85,13 @@ public class Asn1DocumentVM : AsyncViewModel {
             OnPropertyChanged();
         }
     }
+    public Boolean IsEnabled {
+        get => isEnabled;
+        set {
+            isEnabled = value;
+            OnPropertyChanged();
+        }
+    }
 
     public Task RefreshTreeView(Func<Asn1TreeNode, Boolean>? filter = null) {
         if (Tree.Count == 0) {
@@ -100,7 +107,7 @@ public class Asn1DocumentVM : AsyncViewModel {
     }
 
     async Task refreshTree(Func<Func<Asn1TreeNode, Boolean>?, Task> action, Func<Asn1TreeNode, Boolean>? filter = null) {
-        
+
         ProgressText = "Refreshing view...";
         IsBusy = true;
         await action.Invoke(filter);
