@@ -68,15 +68,15 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
             return;
         }
 
-        //Left = param.Left;
         Right = param.Right!.GetPrimaryDocument();
+        Right.IsEnabled = false;
 
         IsCompareMode = true;
         refreshHeader();
     }
     void exit(Object o) {
         IsCompareMode = false;
-        //Left = null;
+        Right!.IsEnabled = true;
         Right = null;
         refreshHeader();
     }

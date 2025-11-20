@@ -133,7 +133,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
             if (!useExistingTab) {
-                Tabs.Remove(tab);
+                removeTab(tab);
             }
         }
     }
@@ -212,6 +212,12 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     #endregion
 
     #region Close Tab(s)
+    
+    void removeTab(AsnDocumentHostVM tab) {
+        // unlock Right ASN.1 document if in compare mode
+        tab.Right?.IsEnabled = true;
+        Tabs.Remove(tab);
+    }
 
     void closeTab(Object? o) {
         if (o is null) {
@@ -250,10 +256,10 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     void closeTab(AsnDocumentHostVM tab) {
         Asn1DocumentVM doc = tab.GetPrimaryDocument();
         if (!doc.IsModified) {
-            Tabs.Remove(tab);
+            removeTab(tab);
         }
         if (doc.IsModified && RequestFileSave(tab)) {
-            Tabs.Remove(tab);
+            removeTab(tab);
         }
     }
     Boolean closeTabsWithPreservation(AsnDocumentHostVM? preservedTab = null) {
@@ -265,7 +271,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
                 continue;
             }
             if (!doc.IsModified) {
-                Tabs.Remove(tab);
+                removeTab(tab);
 
                 continue;
             }
@@ -273,7 +279,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             if (!RequestFileSave(tab)) {
                 return false;
             }
-            Tabs.Remove(tab);
+            removeTab(tab);
         }
 
         return true;

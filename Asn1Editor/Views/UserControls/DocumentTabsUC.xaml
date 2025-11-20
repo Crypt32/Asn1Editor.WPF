@@ -150,7 +150,6 @@
                                        MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
                                        ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                        ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
-                                       ContextMenu="{StaticResource AsnTreeViewContextMenu}"
                                        Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibility}}"
                                        behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}"/>
                     </Grid>
