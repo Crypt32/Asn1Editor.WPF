@@ -34,7 +34,7 @@
                 <DockPanel Background="#D5E7FE">
                     <RichTextBox x:Name="PART_AddressHeader"
                                  Style="{StaticResource RtbHeaderStyle}"
-                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibility}}">
+                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAddressPane, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <RichTextBox.Document>
                             <FlowDocument>
                                 <Paragraph>
@@ -55,7 +55,7 @@
                     </RichTextBox>
                     <RichTextBox x:Name="PART_AsciiHeader"
                                  Style="{StaticResource RtbHeaderStyle}"
-                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}">
+                                 Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <RichTextBox.Document>
                             <FlowDocument>
                                 <Paragraph>
@@ -72,7 +72,7 @@
                            Visibility="Visible"/>
                 <wpflib:BindableRichTextBox x:Name="PART_AddressBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Visibility="{TemplateBinding ShowAddressPane, Converter={StaticResource BooleanToVisibility}}"
+                                            Visibility="{TemplateBinding ShowAddressPane, Converter={StaticResource BooleanToVisibilityConverter}}"
                                             Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_HexBody"
                                             Style="{StaticResource RtbPaneStyle}"
@@ -80,7 +80,7 @@
                                             Width="{Binding ElementName=PART_HexHeader, Path=Width}"/>
                 <wpflib:BindableRichTextBox x:Name="PART_AsciiBody"
                                             Style="{StaticResource RtbPaneStyle}"
-                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibility}}"
+                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibilityConverter}}"
                                             Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
             </DockPanel>
         </DockPanel>
