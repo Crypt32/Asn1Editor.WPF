@@ -54,24 +54,18 @@
                     <DockPanel.InputBindings>
                         <KeyBinding Key="Escape" Command="{Binding ExitCompareModeCommand}"/>
                     </DockPanel.InputBindings>
-                    <StackPanel DockPanel.Dock="Top"
-                                Orientation="Horizontal"
-                                Background="#FFFDFAB1"
-                                VerticalAlignment="Center"
-                                Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibility}}">
-                        <Image Width="16"
-                               Height="16"
-                               Margin="3"
-                               VerticalAlignment="Center"
-                               Source="/Views/Images/Menu/info_16x16.png"/>
-                        <TextBlock VerticalAlignment="Center"
-                                   FontSize="{Binding NodeViewOptions.FontSize}"
-                                   Margin="0,3,3,3">
-                            <Run Text="You are in a side-by-side view mode. Click"/>
-                            <Hyperlink Command="{Binding ExitCompareModeCommand}">Close</Hyperlink>
-                            <Run Text="or press Esc button to exit from this view."/>
-                        </TextBlock>
-                    </StackPanel>
+                    <c:NotificationPanel DockPanel.Dock="Top">
+                        <c:NotificationItem Kind="Warning"
+                                            Icon="/Views/Images/Menu/info_16x16.png"
+                                            IsDismissable="False"
+                                            Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibility}}">
+                            <TextBlock FontSize="{Binding NodeViewOptions.FontSize}">
+                                <Run Text="You are in a side-by-side view mode. Click"/>
+                                <Hyperlink Command="{Binding ExitCompareModeCommand}">Close</Hyperlink>
+                                <Run Text="or press Esc button to exit from this view."/>
+                            </TextBlock>
+                        </c:NotificationItem>
+                    </c:NotificationPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
