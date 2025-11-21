@@ -4,7 +4,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
     <Style TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
         <Setter Property="Padding" Value="0"/>
