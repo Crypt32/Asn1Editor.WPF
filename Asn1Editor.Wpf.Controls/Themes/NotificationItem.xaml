@@ -5,7 +5,21 @@
         <ResourceDictionary Source="Shared.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <Style x:Key="NotificationItemFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="2"
+                               StrokeThickness="1"
+                               Stroke="Black"
+                               StrokeDashArray="1 2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type controls:NotificationItem}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource NotificationItemFocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:NotificationItem}">
