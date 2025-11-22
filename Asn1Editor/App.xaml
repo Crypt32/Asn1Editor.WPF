@@ -10,7 +10,8 @@
                 <ResourceDictionary Source="/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
                 <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnTypeSprites.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:BooleanToVisibilityReversedConverter x:Key="BooleanToVisibilityReversedConverter"/>
             <converters:IntegerToEnumConverter x:Key="IntegerToEnum"/>
 
             <SolidColorBrush x:Key="LightBorderBrush" Color="#f2f8ff"/>

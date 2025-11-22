@@ -8,6 +8,7 @@
              xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
              xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
              xmlns:behaviors="clr-namespace:SysadminsLV.Asn1Editor.Controls.Behaviors;assembly=SysadminsLV.Asn1Editor.Controls"
+             xmlns:converters="clr-namespace:SysadminsLV.Asn1Editor.Controls.Converters;assembly=SysadminsLV.Asn1Editor.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -58,12 +59,19 @@
                         <c:NotificationItem Kind="Warning"
                                             Icon="/Views/Images/Menu/info_16x16.png"
                                             IsDismissable="False"
-                                            Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibility}}">
+                                            Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock FontSize="{Binding NodeViewOptions.FontSize}">
                                 <Run Text="You are in a side-by-side view mode. Click"/>
                                 <Hyperlink Command="{Binding ExitCompareModeCommand}">Close</Hyperlink>
                                 <Run Text="or press Esc button to exit from this view."/>
                             </TextBlock>
+                        </c:NotificationItem>
+                        <c:NotificationItem Kind="Warning"
+                                            Icon="/Views/Images/Menu/info_16x16.png"
+                                            IsDismissable="False"
+                                            Visibility="{Binding Left.IsEnabled, Converter={StaticResource BooleanToVisibilityReversedConverter}}">
+                            <TextBlock TextWrapping="Wrap"
+                                       Text="This document is opened in another side-by-side view. Editing functionality is disabled. Exit from side-by-side mode first."/>
                         </c:NotificationItem>
                     </c:NotificationPanel>
                     <Grid>
@@ -73,7 +81,7 @@
                             <ColumnDefinition Style="{StaticResource DynamicColumnDefinitionStyle}"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Grid.Column="0">
-                            <DockPanel Visibility="{Binding NodeViewOptions.ShowHexViewer, Converter={StaticResource BooleanToVisibility}}">
+                            <DockPanel Visibility="{Binding NodeViewOptions.ShowHexViewer, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
                                     <ToolBar>
                                         <ToggleButton x:Name="HexAddressToggle"
@@ -136,7 +144,7 @@
                         <GridSplitter Grid.Column="1"
                                       ResizeDirection="Columns"
                                       ResizeBehavior="PreviousAndNext"
-                                      Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibility}}"/>
+                                      Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <c:AsnTreeView Grid.Column="2"
                                        ItemsSource="{Binding Right.Tree, FallbackValue=[]}"
                                        SelectedItem="{Binding Right.DataSource.SelectedNode}"
@@ -144,7 +152,7 @@
                                        MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
                                        ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                        ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
-                                       Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibility}}"
+                                       Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                                        behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}"/>
                     </Grid>
                 </DockPanel>
