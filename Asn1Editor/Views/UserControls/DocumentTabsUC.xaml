@@ -8,7 +8,6 @@
              xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
              xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
              xmlns:behaviors="clr-namespace:SysadminsLV.Asn1Editor.Controls.Behaviors;assembly=SysadminsLV.Asn1Editor.Controls"
-             xmlns:converters="clr-namespace:SysadminsLV.Asn1Editor.Controls.Converters;assembly=SysadminsLV.Asn1Editor.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="450" d:DesignWidth="800">
