@@ -44,7 +44,7 @@
                    FontSize="{Binding NodeViewOptions.FontSize}">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal"
-                            Visibility="{Binding UnusedBitsVisible, Converter={StaticResource BooleanToVisibility}}">
+                            Visibility="{Binding UnusedBitsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="Unused bits:"
                                VerticalAlignment="Center" Margin="2,0"/>
                     <c:AutoSizeTextBox Text="{Binding TagValue.UnusedBits}"
@@ -73,7 +73,7 @@
                 <StackPanel DockPanel.Dock="Top"
                             Orientation="Horizontal"
                             MinHeight="25"
-                            Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibility}}">
+                            Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <RadioButton Content="Text"
                                  VerticalAlignment="Center"
                                  IsChecked="{Binding RbText}"
@@ -88,7 +88,7 @@
                 <Border DockPanel.Dock="Top"
                         BorderBrush="{StaticResource PanelBorderBrush}"
                         BorderThickness="0,1,0,0"
-                        Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibility}}"/>
+                        Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <TextBox Text="{Binding TagValue.TextValue}"
                          BorderThickness="0"
                          IsReadOnly="{Binding IsReadOnly}"
