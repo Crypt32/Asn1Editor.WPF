@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using SysadminsLV.WPF.OfficeTheme.Controls;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.Controls; 
@@ -114,6 +115,10 @@ public class AsnTreeView : TreeView {
     #endregion
 
     void OnTreeViewDoubleClick(Object sender, MouseButtonEventArgs e) {
+        if (e.OriginalSource is ScrollChrome) {
+            return;
+        }
+
         DoubleClickCommand?.Execute(DoubleClickCommandParameter);
     }
     void OnPreviewMouseRightButtonDown(Object sender, MouseButtonEventArgs e) {
