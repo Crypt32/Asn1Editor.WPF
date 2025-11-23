@@ -1,5 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
+        <!-- ASN Value Editors -->
+        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnBooleanValueEditor.xaml"/>
+        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnHexValueEditor.xaml"/>
+        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnNonEditableValueEditor.xaml"/>
+
+        <!-- The rest -->
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnHexViewer.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnTreeView.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AutoSizeTextBox.xaml"/>
