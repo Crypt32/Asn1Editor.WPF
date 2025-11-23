@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AsnValueEditor.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <Style TargetType="c:AsnHexValueEditor" BasedOn="{StaticResource {x:Type c:AsnValueEditor}}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:AsnHexValueEditor">
+                    <TextBox Style="{StaticResource AsnValueEditorLargeTextBoxStyle}"
+                             Text="{TemplateBinding Value}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
