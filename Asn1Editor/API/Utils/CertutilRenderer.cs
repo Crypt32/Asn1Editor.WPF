@@ -127,7 +127,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
     CertutilRenderLine getHexTable(Asn1TreeNode node) {
         Asn1Lite value = node.Value;
 
-        Byte[] binValue = getTagBinaryValue(node.Value);
+        Byte[] binValue = node.GetEncodedValue();
         Byte? highByte = null;
         Byte shift = 0;
         if (node.Value.Tag == (Byte)Asn1Type.INTEGER && binValue[0] == 0) {
@@ -149,11 +149,6 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         }
 
         return new CertutilRenderLine(shift, lines);
-    }
-    Byte[] getTagBinaryValue(Asn1Lite node) {
-        Int32 skip = node.Tag == (Byte)Asn1Type.BIT_STRING ? node.PayloadStartOffset + 1 : node.PayloadStartOffset;
-        Int32 take = node.Tag == (Byte)Asn1Type.BIT_STRING ? node.PayloadLength - 1 : node.PayloadLength;
-        return _dataSource.RawData.Skip(skip).Take(take).ToArray();
     }
     String getLeftPad(Asn1TreeNode node) {
         if (node.Parent is null) {

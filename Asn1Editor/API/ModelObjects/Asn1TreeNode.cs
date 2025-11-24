@@ -112,8 +112,11 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     public IEnumerable<Asn1TreeNode> Flatten() {
         return new[] { this }.Union(Children.SelectMany(x => x.Flatten()));
     }
-    public IDataSource GetDataSource() {
-        return _dataSource;
+    
+    public Byte[] GetEncodedValue() {
+        Int32 skip = Value.Tag == (Byte)Asn1Type.BIT_STRING ? Value.PayloadStartOffset + 1 : Value.PayloadStartOffset;
+        Int32 take = Value.Tag == (Byte)Asn1Type.BIT_STRING ? Value.PayloadLength - 1 : Value.PayloadLength;
+        return _dataSource.RawData.Skip(skip).Take(take).ToArray();
     }
 
     public void UpdateNodeView(Func<Asn1TreeNode, Boolean>? filter) {
