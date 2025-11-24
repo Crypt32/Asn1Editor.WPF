@@ -117,7 +117,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         if (binValue is null) {
             return;
         }
-        _data.UpdateNodeBinaryCopy(binValue);
+        _data.UpdateNodeBinaryCopy(binValue, Node);
         Node.UnusedBits = TagValue.UnusedBits;
         var asn = new Asn1Reader(binValue);
         Int32 oldHeaderLength = Node.HeaderLength;

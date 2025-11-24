@@ -25,20 +25,23 @@ public interface IDataSource : IBinarySource {
     /// Appends new node to the end of selected node's children list.
     /// </summary>
     /// <param name="nodeRawData">Node binary data.</param>
+    /// <param name="parent">Parent node to add child to.</param>
     /// <returns>Inserted node.</returns>
-    Asn1TreeNode AddNode(Byte[] nodeRawData);
+    Asn1TreeNode AddNode(Byte[] nodeRawData, Asn1TreeNode? parent);
     /// <summary>
     /// Inserts a new node under currently selected node.
     /// </summary>
     /// <param name="nodeRawData">Node binary data.</param>
+    /// <param name="node"></param>
     /// <param name="option">Insertion option.</param>
-    Task InsertNode(Byte[] nodeRawData, NodeAddOption option);
+    Task InsertNode(Byte[] nodeRawData, Asn1TreeNode node, NodeAddOption option);
     /// <summary>
-    /// Removes currently selected node which is obtained via <see cref="SelectedNode"/> member.
+    /// Removes specified node from the tree.
     /// </summary>
-    void RemoveSelectedNode();
+    /// <param name="nodeToRemove">Node to remove.</param>
+    void RemoveNode(Asn1TreeNode nodeToRemove);
 
-    void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes);
+    void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes, Asn1Lite nodeValue);
     void UpdateNodeLength(Asn1TreeNode node, Byte[] newLenBytes);
     void FinishBinaryUpdate();
     /// <summary>
