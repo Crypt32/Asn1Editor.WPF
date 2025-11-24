@@ -89,6 +89,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Asn1Editor.Wpf.Controls\Asn1Editor.Wpf.Controls.csproj" />
+    <ProjectReference Include="..\src\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
