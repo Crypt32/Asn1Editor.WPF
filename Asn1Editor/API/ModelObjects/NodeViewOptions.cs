@@ -2,13 +2,14 @@
 using System.Windows.Input;
 using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ModelObjects; 
+namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 [XmlRoot("appSettings")]
-public class NodeViewOptions : ViewModelBase {
+public class NodeViewOptions : ViewModelBase, INodeViewOptions {
     Boolean showTagNumber,
         showNodeOffset = true,
         showNodeLength = true,
@@ -24,7 +25,7 @@ public class NodeViewOptions : ViewModelBase {
         ribbonMinimized;
     Int32 fontSize = 12;
     Int32 maxStringLength = 150;
-    
+
     public ICommand ToggleToolbar => new RelayCommand(_ => UseRibbonToolbar = !UseRibbonToolbar);
 
     [XmlElement("showTagNum")]
