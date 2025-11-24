@@ -1,4 +1,3 @@
-﻿#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,16 +16,11 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     readonly ObservableCollection<Asn1TreeNode> _children = [];
 
     Boolean isSelected, isExpanded = true;
-    Byte tag, unusedBits;
-    Int32 offset, offsetChange, payloadLength, depth;
 
     public Asn1TreeNode(Asn1Lite value, IDataSource dataSource) {
         _dataSource = dataSource;
         Children = new ReadOnlyObservableCollection<Asn1TreeNode>(_children);
-        setNodeValues(value);
-
         Value = value;
-        Path = value.Path;
         String[] tokens = Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
         MyIndex = String.IsNullOrEmpty(Path)
             ? 0
@@ -209,27 +203,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
     #endregion
 
-    #region V2 properties
-    // value-specific properties
-    public Byte Tag {
-        get => tag;
-        private set {
-            tag = value;
-            if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
-                IsContextSpecific = true;
-            }
-            OnPropertyChanged();
-        }
-    }
-    public String TagName { get; private set; }
-    public Int32 Offset { get; private set; }
-    public Int32 PayloadStartOffset { get; private set; }
-    public Int32 HeaderLength => PayloadStartOffset - Offset;
-    public Int32 PayloadLength { get; private set; }
-    public Int32 TagLength => HeaderLength + PayloadLength;
-    public Boolean IsContainer { get; set; }
-    public Boolean IsContextSpecific { get; set; }
-
     public Boolean IsExpanded {
         get => isExpanded;
         set {
@@ -239,7 +212,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
 
     // tree-specific properties
-    public Int32 Depth { get; private set; }
     public Asn1TreeNode? Parent { get; private set; }
     public Asn1TreeNode? NextSibling {
         get {
@@ -267,49 +239,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
                 : Parent!.Children[MyIndex - 1];
         }
     }
-
-    #endregion
-
-    #region V2 methods
-
-    public void AppendNode(Asn1TreeNode node) {
-
-    }
-    public void AppendNodes(IEnumerable<Asn1TreeNode> collection) {
-
-    }
-    public void InsertNode(Int32 index, Asn1TreeNode node) {
-
-    }
-    public void RemoveNode(Asn1TreeNode node) {
-
-    }
-    public void RemoveSelf() {
-
-    }
-    public void Clear() {
-
-    }
-    public Asn1TreeNode Clone() {
-        return null;
-    }
-
-    #endregion
-
-    #region private methods
-
-    void setNodeValues(Asn1Lite asn) {
-        Offset = asn.Offset;
-        Tag = asn.Tag;
-        TagName = asn.TagName;
-        PayloadLength = asn.PayloadLength;
-        PayloadStartOffset = asn.PayloadStartOffset;
-        IsContainer = asn.IsContainer;
-        Depth = 0;
-        Path = String.Empty;
-    }
-
-    #endregion
 
     #region INotifyPropertyChanged
 
