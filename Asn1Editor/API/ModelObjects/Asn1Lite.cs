@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.Utils.ASN;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Core.ASN;
@@ -16,7 +15,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     Byte tag;
     Boolean invalidData;
     Int32 offset, offsetChange;
-    String header, toolTip;
+    String path, header, toolTip;
 
     public Asn1Lite(Asn1Reader asn) {
         initialize(asn);
@@ -59,7 +58,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         }
     }
     public Byte UnusedBits { get; set; }
-    public String TagName { get;  private set; }
+    public String TagName { get; private set; }
     public Int32 Offset {
         get => offset;
         set {
@@ -90,8 +89,14 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
             OnPropertyChanged();
         }
     } //TODO
-    public Int32 Depth { get; set; }
-    public String Path { get; set; }
+    public Int32 Depth { get; private set; }
+    public String Path {
+        get => path;
+        set {
+            path = value ?? String.Empty;
+            Depth = Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries).Length;
+        }
+    }
     public String ExplicitValue { get; set; }
 
     void initialize(Asn1Reader asn) {
