@@ -15,6 +15,7 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Core;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 using Path = System.IO.Path;
@@ -56,6 +57,7 @@ public partial class App {
         configureUnity();
         IOidDbManager oidMgr = Container.Resolve<IOidDbManager>();
         oidMgr.ReloadLookup();
+        OidServices.Resolver = new OidResolverWrapper();
         parseArguments(e.Args);
         base.OnStartup(e);
         Container.Resolve<MainWindow>().Show();
