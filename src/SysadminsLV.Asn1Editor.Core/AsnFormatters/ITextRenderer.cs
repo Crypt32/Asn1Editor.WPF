@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SysadminsLV.Asn1Editor.API.Utils;
+namespace SysadminsLV.Asn1Editor.Core.AsnFormatters;
 
 /// <summary>
 /// Represents decoded ASN.1 binary dump.
