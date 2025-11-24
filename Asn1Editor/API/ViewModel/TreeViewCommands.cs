@@ -115,7 +115,8 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
             return;
         }
 
-        Asn1TreeNode node = data.AddNode(nodeRawData);
+        Asn1TreeNode node = data.AddNode(nodeRawData, data.SelectedNode);
+        data.SelectedNode = node;
         if (node.Value is { IsContainer: false, Tag: not ((Byte)Asn1Type.NULL or (Byte)Asn1Type.SEQUENCE or (Byte)Asn1Type.SET) }) {
             EditNodeCommand.Execute(NodeEditMode.Text);
         }
@@ -124,13 +125,13 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         isTabSelected(out IDataSource data); // granted to be non-null
         Boolean response = _uiMessenger.YesNo("Do you want to delete the node?\nThis action cannot be undone.", "Delete");
         if (response) {
-            data!.RemoveSelectedNode();
+            data!.RemoveNode(data.SelectedNode);
         }
     }
     void cutNode(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
         copyNodePrivate(data);
-        data.RemoveSelectedNode();
+        data.RemoveNode(data.SelectedNode);
     }
     void copyNode(Object o) {
         isTabSelected(out IDataSource data); // granted to be non-null
@@ -146,15 +147,15 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     Task pasteBefore(Object o, CancellationToken token) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), NodeAddOption.Before);
+        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.Before);
     }
     Task pasteAfter(Object o, CancellationToken token) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), NodeAddOption.After);
+        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.After);
     }
     Task pasteLast(Object o, CancellationToken token) {
         isTabSelected(out IDataSource data); // granted to be non-null
-        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), NodeAddOption.Last);
+        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.Last);
     }
 
     Boolean ensureNodeSelected(Object o) {

@@ -27,6 +27,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
             }
         }
     }
+    // TODO: this doesn't really belong here
     public Asn1TreeNode? SelectedNode {
         get => selectedNode;
         set {
@@ -34,19 +35,20 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
             OnPropertyChanged();
         }
     }
+    // TODO: this doesn't really belong here?
     public NodeViewOptions NodeViewOptions { get; } = viewOptions;
     public ReadOnlyObservableCollection<Asn1TreeNode> Tree => new(_tree);
 
 
-    Asn1Lite createNewNode(Byte[] nodeRawData) {
-        var node = new Asn1Lite(new Asn1Reader(nodeRawData));
-        if (SelectedNode is not null) {
-            node.Offset = SelectedNode.Value.Offset + SelectedNode.Value.TagLength;
-            node.Depth += SelectedNode.Value.Depth;
+    Asn1Lite createNewNode(Byte[] nodeRawData, Asn1TreeNode? node) {
+        var nodeValue = new Asn1Lite(new Asn1Reader(nodeRawData));
+        if (node is not null) {
+            nodeValue.Offset = node.Value.Offset + node.Value.TagLength;
+            //node.Depth += SelectedNode.Value.Depth;
         }
-        _rawData.InsertRange(node.Offset, nodeRawData);
+        _rawData.InsertRange(nodeValue.Offset, nodeRawData);
 
-        return node;
+        return nodeValue;
     }
     void setRootNode(Asn1TreeNode node) {
         _tree.Clear();
@@ -54,39 +56,39 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         FinishBinaryUpdate();
     }
 
-    public Asn1TreeNode AddNode(Byte[] nodeRawData) {
-        var nodeValue = createNewNode(nodeRawData);
+    public Asn1TreeNode AddNode(Byte[] nodeRawData, Asn1TreeNode? parent) {
+        var nodeValue = createNewNode(nodeRawData, parent);
         Asn1TreeNode node;
         if (Tree.Count == 0) {
             // add new root node
             node = new Asn1TreeNode(nodeValue, this);
             setRootNode(node);
         } else {
-            node = SelectedNode!.AddChild(nodeValue, true);
+            node = parent!.AddChild(nodeValue, true);
             FinishBinaryUpdate();
         }
 
-        return SelectedNode = node;
+        return node;
     }
-    public async Task InsertNode(Byte[] nodeRawData, NodeAddOption option) {
-        if (SelectedNode is null) {
-            throw new ArgumentNullException(nameof(SelectedNode));
+    public async Task InsertNode(Byte[] nodeRawData, Asn1TreeNode node, NodeAddOption option) {
+        if (node is null) {
+            throw new ArgumentNullException(nameof(node));
         }
         var childNode = await AsnTreeBuilder.BuildTreeAsync(nodeRawData, this);
-        Int32 newOffset = SelectedNode.Value.Offset;
+        Int32 newOffset = node.Value.Offset;
         if (option != NodeAddOption.Before) {
-            newOffset += SelectedNode.Value.TagLength;
+            newOffset += node.Value.TagLength;
         }
         _rawData.InsertRange(newOffset, nodeRawData);
         switch (option) {
             case NodeAddOption.Before:
             case NodeAddOption.After:
-                SelectedNode.Parent!.InsertChildNode(childNode, SelectedNode, option);
+                node.Parent!.InsertChildNode(childNode, node, option);
                 break;
             case NodeAddOption.Last:
-                SelectedNode.InsertChildNode(
+                node.InsertChildNode(
                     childNode,
-                    SelectedNode,
+                    node,
                     option
                 );
                 break;
@@ -96,18 +98,18 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         
         FinishBinaryUpdate();
     }
-    public void RemoveSelectedNode() {
-        if (SelectedNode!.Parent is null) {
+    public void RemoveNode(Asn1TreeNode nodeToRemove) {
+        if (nodeToRemove!.Parent is null) {
             Reset();
         } else {
-            _rawData.RemoveRange(SelectedNode.Value.Offset, SelectedNode.Value.TagLength);
-            SelectedNode.Parent.RemoveChild(SelectedNode);
+            _rawData.RemoveRange(nodeToRemove.Value.Offset, nodeToRemove.Value.TagLength);
+            nodeToRemove.Parent.RemoveChild(nodeToRemove);
         }
         FinishBinaryUpdate();
     }
-    public void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes) {
-        _rawData.RemoveRange(SelectedNode!.Value.Offset, SelectedNode.Value.TagLength);
-        _rawData.InsertRange(SelectedNode.Value.Offset, newBytes);
+    public void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes, Asn1Lite nodeValue) {
+        _rawData.RemoveRange(nodeValue.Offset, nodeValue.TagLength);
+        _rawData.InsertRange(nodeValue.Offset, newBytes);
     }
     public void UpdateNodeLength(Asn1TreeNode node, Byte[] newLenBytes) {
         _rawData.RemoveRange(node.Value.Offset + 1, node.Value.HeaderLength - 1);
@@ -128,7 +130,6 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
 
     public void Reset() {
         _tree.Clear();
-        SelectedNode = null;
         _rawData.Clear();
     }
 
