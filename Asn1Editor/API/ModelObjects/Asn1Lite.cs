@@ -62,6 +62,9 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
             if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
                 IsContextSpecific = true;
             }
+            if ((tag & (Byte)Asn1Class.CONSTRUCTED) > 0) {
+                IsContainer = true;
+            }
             OnPropertyChanged();
         }
     }
@@ -88,6 +91,15 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     public Int32 HeaderLength => PayloadStartOffset - Offset;
     public Int32 PayloadLength { get; set; }
     public Int32 TagLength => HeaderLength + PayloadLength;
+    /// <summary>
+    /// Gets or sets a value indicating whether the current ASN.1 node is a container.
+    /// </summary>
+    /// <remarks>
+    /// A container node typically has child nodes and represents a structured ASN.1 element,
+    /// such as a SEQUENCE or SET, or BIT_STRING and OCTET_STRING in certain cases.
+    /// This property is used to determine if the node can hold other nodes as children.
+    /// <para>Note, this property does <strong>not</strong> directly reflect the CONSTRUCTED bit in tag.</para>
+    /// </remarks>
     public Boolean IsContainer { get; set; }
     public Boolean IsContextSpecific { get; private set; }
     public Boolean InvalidData {
