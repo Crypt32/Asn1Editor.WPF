@@ -4,13 +4,12 @@ using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.Asn1Parser.Universal;
 
-namespace SysadminsLV.Asn1Editor.API.Utils.ASN;
+namespace SysadminsLV.Asn1Editor.Core.ASN;
 
-static class AsnDecoder {
+public static class AsnDecoder {
     public static AsnViewValue GetEditValue(Asn1Reader asn) {
         var retValue = new AsnViewValue {
             Options = AsnViewValueOptions.SupportsPrintableText
@@ -55,7 +54,8 @@ static class AsnDecoder {
 
                 if ((asn.Tag & (Byte)Asn1Type.TAG_MASK) == 6) {
                     retValue.TextValue = Encoding.UTF8.GetString(asn.GetPayload());
-                } else {
+                }
+                else {
                     retValue.TextValue = HexUtility.GetHexEditString(asn.GetPayload());
                     retValue.Options = AsnViewValueOptions.None;
                 }
@@ -220,7 +220,7 @@ static class AsnDecoder {
     }
     static String DecodeObjectIdentifier(Asn1Reader asn) {
         Oid oid = new Asn1ObjectIdentifier(asn).Value;
-        String friendlyName = OidResolver.ResolveOid(oid.Value);
+        String friendlyName = OidServices.Resolver.ResolveOid(oid.Value);
         if (friendlyName is null) {
             return oid.Value;
         }

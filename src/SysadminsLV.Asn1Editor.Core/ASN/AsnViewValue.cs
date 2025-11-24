@@ -1,13 +1,11 @@
-﻿#nullable enable
-using System;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.ViewModels;
+﻿using System;
 
-namespace SysadminsLV.Asn1Editor.API.ModelObjects;
+namespace SysadminsLV.Asn1Editor.Core.ASN;
 
 /// <summary>
 /// Represents ASN.1 node text value object. Is used by TreeView and TagDataEditor controls.
 /// </summary>
-class AsnViewValue : ViewModelBase {
+public class AsnViewValue : NotifyPropertyChanged {
     String? textValue;
     Byte unusedBits;
     AsnViewValueOptions options;
