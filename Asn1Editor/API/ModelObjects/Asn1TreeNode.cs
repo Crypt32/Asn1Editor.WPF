@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -29,6 +29,45 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
     public Asn1TreeNode this[Int32 index] => Children[index];
 
+    public Boolean IsExpanded {
+        get => isExpanded;
+        set {
+            isExpanded = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public Asn1TreeNode? Parent { get; private set; }
+    /// <summary>
+    /// Gets a collection of child nodes.
+    /// </summary>
+    public ReadOnlyObservableCollection<Asn1TreeNode> Children { get; }
+    public Asn1TreeNode? NextSibling {
+        get {
+            // there is no siblings for root node
+            if (IsRoot) {
+                return null;
+            }
+
+            // this node is last element in parent node. No next sibling.
+            return MyIndex + 1 > Parent!.Children.Count
+                ? null
+                : Parent.Children[MyIndex + 1];
+        }
+    }
+    public Asn1TreeNode? PreviousSibling {
+        get {
+            // there is no siblings for root node
+            if (IsRoot) {
+                return null;
+            }
+
+            // this node is first element in parent node. No previous sibling.
+            return MyIndex == 0
+                ? null
+                : Parent!.Children[MyIndex - 1];
+        }
+    }
     /// <summary>
     /// Gets or sets the indexed path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.
     /// </summary>
@@ -45,10 +84,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     /// Gets or sets a tree node value.
     /// </summary>
     public Asn1Lite Value { get; }
-    /// <summary>
-    /// Gets a collection of child nodes.
-    /// </summary>
-    public ReadOnlyObservableCollection<Asn1TreeNode> Children { get; }
 
     public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
         Int32 indexToInsert, newOffset;
@@ -203,42 +238,6 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
     #endregion
 
-    public Boolean IsExpanded {
-        get => isExpanded;
-        set {
-            isExpanded = value;
-            OnPropertyChanged();
-        }
-    }
-
-    // tree-specific properties
-    public Asn1TreeNode? Parent { get; private set; }
-    public Asn1TreeNode? NextSibling {
-        get {
-            // there is no siblings for root node
-            if (IsRoot) {
-                return null;
-            }
-
-            // this node is last element in parent node. No next sibling.
-            return MyIndex + 1 > Parent!.Children.Count
-                ? null
-                : Parent.Children[MyIndex + 1];
-        }
-    }
-    public Asn1TreeNode? PreviousSibling {
-        get {
-            // there is no siblings for root node
-            if (IsRoot) {
-                return null;
-            }
-
-            // this node is first element in parent node. No previous sibling.
-            return MyIndex == 0
-                ? null
-                : Parent!.Children[MyIndex - 1];
-        }
-    }
 
     #region INotifyPropertyChanged
 
