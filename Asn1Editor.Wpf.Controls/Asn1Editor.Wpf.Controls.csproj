@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\src\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Wpf.OfficeTheme">
       <HintPath>..\Asn1Editor\_ExternalReferences\Wpf.OfficeTheme.dll</HintPath>
     </Reference>

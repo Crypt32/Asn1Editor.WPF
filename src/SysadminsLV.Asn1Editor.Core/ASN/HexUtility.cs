@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using SysadminsLV.Asn1Parser;
 
-namespace SysadminsLV.Asn1Editor.API.Utils;
+namespace SysadminsLV.Asn1Editor.Core.ASN;
 
-static class HexUtility {
+public static class HexUtility {
     public static String GetHexEditString(Byte[] rawData) {
         return AsnFormatter.BinaryToString(rawData, EncodingType.Hex);
     }

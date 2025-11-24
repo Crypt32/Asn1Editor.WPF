@@ -9,4 +9,5 @@
     <Platform Solution="*|x86" Project="x86" />
     <Platform Solution="*|x64" Project="x64" />
   </Project>
+  <Project Path="src/SysadminsLV.Asn1Editor.Core/SysadminsLV.Asn1Editor.Core.csproj" />
 </Solution>
