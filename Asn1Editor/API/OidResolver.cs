@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.Core;
 
 namespace SysadminsLV.Asn1Editor.API;
 
@@ -17,7 +17,7 @@ interface IOidDbManager {
 class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
 
     const String oidFileName = "OID.txt";
-    public String[] OidLookupLocations { get; set; } = [];
+    public String[] OidLookupLocations { get; init; } = [];
 
     public void ReloadLookup() {
         OidResolver.Reset();
@@ -62,6 +62,16 @@ class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
         }
     }
 }
+
+/// <summary>
+/// Represents an OID resolver wrapper class used by Core project to provide an external OID resolution functionality.
+/// </summary>
+public class OidResolverWrapper : IOidResolver {
+    public String? ResolveOid(String oidValue) {
+        return OidResolver.ResolveOid(oidValue);
+    }
+}
+
 /// <summary>
 /// Represents object identifier (OID) resolver helper class.
 /// </summary>
