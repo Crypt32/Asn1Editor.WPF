@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
 using SysadminsLV.Asn1Parser;
@@ -10,7 +9,6 @@ using SysadminsLV.Asn1Parser;
 namespace SysadminsLV.Asn1Editor.API.Utils;
 
 class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
-    readonly IDataSource _dataSource = baseNode.GetDataSource();
     readonly StringBuilder _sb = new();
     readonly StringBuilder _line = new();
     readonly String nl = Environment.NewLine;
@@ -70,7 +68,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         _line.AppendFormat("; {0} ({1:x} Bytes)", value.TagName, value.PayloadLength);
         _line.Append(nl);
         _sb.Append(_line);
-        if (value.Tag == (Byte)Asn1Type.BIT_STRING && node.IsContainer) {
+        if (value.Tag == (Byte)Asn1Type.BIT_STRING && node.Value.IsContainer) {
             writeLeadingNumber(leftPadString, value.PayloadStartOffset, value.UnusedBits);
         }
     }
@@ -141,7 +139,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         List<String> lines = strValue.Split([nl], StringSplitOptions.RemoveEmptyEntries).ToList();
         if (node.Value.Tag == (Byte)Asn1Type.BIT_STRING) {
             shift = 1;
-            if (!node.IsContainer) {
+            if (!node.Value.IsContainer) {
                 lines.Insert(0, $"{node.Value.UnusedBits:x2} ; UNUSED BITS");
             }
         } else if (highByte.HasValue) {
