@@ -50,7 +50,7 @@ public static class AsnTreeBuilder {
         root.MoveNext();
         Int32 index = 0;
         do {
-            tree.AddChild(new Asn1Lite(root, tree, index));
+            tree.AddChild(new Asn1Lite(root, tree.Value.Depth, tree.Value.Path, index));
             index++;
         } while (root.MoveNextSibling());
         root.Reset();

@@ -43,9 +43,9 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         Depth = 0;
         Path = String.Empty;
     }
-    public Asn1Lite(Asn1Reader asnReader, Asn1TreeNode tree, Int32 index) : this(asnReader) {
-        Depth = tree.Value.Depth + 1;
-        Path = $"{tree.Value.Path}/{index}";
+    public Asn1Lite(Asn1Reader asnReader, Int32 parentDepth, String parentPath, Int32 index) : this(asnReader) {
+        Depth = parentDepth + 1;
+        Path = $"{parentPath}/{index}";
         if (Tag == (Byte)Asn1Type.BIT_STRING) {
             if (asnReader.PayloadLength > 0) {
                 UnusedBits = asnReader[asnReader.PayloadStartOffset];
