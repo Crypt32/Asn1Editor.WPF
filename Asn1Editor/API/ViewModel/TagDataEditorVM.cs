@@ -6,7 +6,6 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Core.ASN;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
@@ -174,7 +173,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         Node = _data.SelectedNode!.Value;
         TagValue.UnusedBits = Node.UnusedBits;
         IsReadOnly = Node.IsContainer || Node.Tag == (Byte)Asn1Type.NULL;
-        TagDetails = String.Format(Resources.TagEditorHeaderTemplate, Node.Tag, Node.TagName, Node.Offset, Node.PayloadLength, Node.Depth, Node.Path);
+        TagDetails = Node.GetFormattedMetadata();
         OnPropertyChanged(nameof(UnusedBitsVisible));
     }
 

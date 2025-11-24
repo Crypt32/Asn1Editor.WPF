@@ -6,12 +6,20 @@ using System.Text;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Core.ASN;
-using SysadminsLV.Asn1Editor.Properties;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 public class Asn1Lite : ViewModelBase, IHexAsnNode {
+    const String METADATA_TEMPLATE = """
+                                     Tag    : {0} (0x{0:X2}) : {1}
+                                     Offset : {2} (0x{2:X2})
+                                     Length : {3} (0x{3:X2})
+                                     Depth  : {4}
+                                     Path   : {5}
+                                     
+                                     """;
+
     Byte tag;
     Boolean invalidData;
     Int32 offset, offsetChange;
@@ -116,6 +124,22 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     }
 
     /// <summary>
+    /// Retrieves a formatted metadata string for the current ASN.1 node.
+    /// </summary>
+    /// <returns>
+    /// A string containing metadata information about the node, including its tag, offset, length,
+    /// depth, and path, formatted according to a predefined template.
+    /// </returns>
+    public String GetFormattedMetadata() {
+        return String.Format(METADATA_TEMPLATE,
+            Tag,
+            TagName,
+            Offset,
+            TagLength,
+            Depth,
+            Path);
+    }
+    /// <summary>
     /// Performs node header update. This method does not perform expensive display value (except for
     /// <strong>INTEGER</strong> and <strong>OBJECT_IDENTIFIER</strong> tags) or tooltip (all tags)
     /// re-calculation and do not raise <see cref="DataChanged"/> event.
@@ -194,15 +218,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     }
     String getToolTip(IEnumerable<Byte> rawData) {
         var sb = new StringBuilder();
-        sb.AppendFormat(
-            Resources.TagEditorHeaderTemplate,
-            Tag,
-            TagName,
-            Offset,
-            TagLength,
-            Depth,
-            Path);
-        sb.AppendLine();
+        sb.AppendLine(GetFormattedMetadata());
         if (!IsContainer) {
             sb.Append("Value:");
             if (PayloadLength == 0) {
