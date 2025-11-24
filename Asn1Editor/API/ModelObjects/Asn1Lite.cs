@@ -25,18 +25,30 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     Int32 offset, offsetChange;
     String path, header, toolTip;
 
-    public Asn1Lite(Asn1Reader asn) {
-        initialize(asn);
+    public Asn1Lite(Asn1Reader asnReader) {
+        Offset = asnReader.Offset;
+        Tag = asnReader.Tag;
+        TagName = asnReader.TagName;
+        PayloadLength = asnReader.PayloadLength;
+        PayloadStartOffset = asnReader.PayloadStartOffset;
+        IsContainer = asnReader.IsConstructed;
+        if (!asnReader.IsConstructed) {
+            try {
+                ExplicitValue = AsnDecoder.GetViewValue(asnReader);
+            }
+            catch {
+                InvalidData = true;
+            }
+        }
         Depth = 0;
         Path = String.Empty;
     }
-    public Asn1Lite(Asn1Reader root, Asn1TreeNode tree, Int32 index) {
-        initialize(root);
+    public Asn1Lite(Asn1Reader asnReader, Asn1TreeNode tree, Int32 index) : this(asnReader) {
         Depth = tree.Value.Depth + 1;
         Path = $"{tree.Value.Path}/{index}";
         if (Tag == (Byte)Asn1Type.BIT_STRING) {
-            if (root.PayloadLength > 0) {
-                UnusedBits = root[root.PayloadStartOffset];
+            if (asnReader.PayloadLength > 0) {
+                UnusedBits = asnReader[asnReader.PayloadStartOffset];
             }
         }
     }
@@ -118,22 +130,6 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
         }
     }
     public String ExplicitValue { get; set; }
-
-    void initialize(Asn1Reader asn) {
-        Offset = asn.Offset;
-        Tag = asn.Tag;
-        TagName = asn.TagName;
-        PayloadLength = asn.PayloadLength;
-        PayloadStartOffset = asn.PayloadStartOffset;
-        IsContainer = asn.IsConstructed;
-        if (!asn.IsConstructed) {
-            try {
-                ExplicitValue = AsnDecoder.GetViewValue(asn);
-            } catch {
-                InvalidData = true;
-            }
-        }
-    }
 
     /// <summary>
     /// Retrieves a formatted metadata string for the current ASN.1 node.
