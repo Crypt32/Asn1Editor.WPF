@@ -174,8 +174,5 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         }
         return depths;
     }
-    record CertutilRenderLine(Int32 Shift, IList<String> Lines) {
-        public Int32 Shift { get; } = Shift;
-        public IList<String> Lines { get; } = Lines;
-    }
+    record CertutilRenderLine(Int32 Shift, IList<String> Lines);
 }
