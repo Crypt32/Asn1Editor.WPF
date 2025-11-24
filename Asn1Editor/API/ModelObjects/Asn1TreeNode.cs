@@ -38,7 +38,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     /// <summary>
     /// Gets or sets the indexed path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.
     /// </summary>
-    public String Path { get; private set; }
+    public String Path => Value.Path;
     /// <summary>
     /// Gets the index of current node in parent's children collection.
     /// </summary>
@@ -188,10 +188,8 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     }
 
     static void updatePath(Asn1TreeNode source, String path, Int32 index) {
-        source.Value.Path = source.Path = path + "/" + index;
+        source.Value.Path = path + "/" + index;
         source.MyIndex = index;
-        Int32 deepness = source.Value.Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries).Length;
-        source.Value.Depth = deepness;
         for (Int32 i = 0; i < source.Children.Count; i++) {
             updatePath(source.Children[i], source.Path, i);
         }
