@@ -6,6 +6,7 @@ using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.Utils.ASN;
