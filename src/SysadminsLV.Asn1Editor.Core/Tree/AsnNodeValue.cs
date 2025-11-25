@@ -8,7 +8,7 @@ using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.Core.Tree;
 
-public class Asn1Lite : NotifyPropertyChanged, IHexAsnNode {
+public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     const String METADATA_TEMPLATE = """
                                      Tag    : {0} (0x{0:X2}) : {1}
                                      Offset : {2} (0x{2:X2})
@@ -23,7 +23,7 @@ public class Asn1Lite : NotifyPropertyChanged, IHexAsnNode {
     Int32 offset, offsetChange;
     String path, header, toolTip;
 
-    public Asn1Lite(Asn1Reader asnReader) {
+    public AsnNodeValue(Asn1Reader asnReader) {
         Offset = asnReader.Offset;
         Tag = asnReader.Tag;
         TagName = asnReader.TagName;
@@ -41,7 +41,7 @@ public class Asn1Lite : NotifyPropertyChanged, IHexAsnNode {
         Depth = 0;
         Path = String.Empty;
     }
-    public Asn1Lite(Asn1Reader asnReader, Int32 parentDepth, String parentPath, Int32 index) : this(asnReader) {
+    public AsnNodeValue(Asn1Reader asnReader, Int32 parentDepth, String parentPath, Int32 index) : this(asnReader) {
         Depth = parentDepth + 1;
         Path = $"{parentPath}/{index}";
         if (Tag == (Byte)Asn1Type.BIT_STRING) {
@@ -256,9 +256,9 @@ public class Asn1Lite : NotifyPropertyChanged, IHexAsnNode {
     public override Boolean Equals(Object obj) {
         if (ReferenceEquals(null, obj)) { return false; }
         if (ReferenceEquals(this, obj)) { return true; }
-        return obj.GetType() == typeof(Asn1Lite) && Equals((Asn1Lite)obj);
+        return obj.GetType() == typeof(AsnNodeValue) && Equals((AsnNodeValue)obj);
     }
-    protected Boolean Equals(Asn1Lite other) {
+    protected Boolean Equals(AsnNodeValue other) {
         return offset == other.offset && tag == other.tag;
     }
     public override Int32 GetHashCode() {

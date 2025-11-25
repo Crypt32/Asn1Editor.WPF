@@ -13,7 +13,7 @@ interface IWindowFactory {
     IUIMessenger GetUIMessenger();
     void ShowLicenseDialog();
     void ShowAboutDialog();
-    Asn1Lite ShowNodeContentEditor(NodeEditMode editMode);
+    AsnNodeValue ShowNodeContentEditor(NodeEditMode editMode);
     void ShowNodeTextViewer();
     void ShowConverterWindow(IEnumerable<Byte> data, Func<Byte[], Task>? action);
     void ShowOidEditor(OidDto? oidValue = null);

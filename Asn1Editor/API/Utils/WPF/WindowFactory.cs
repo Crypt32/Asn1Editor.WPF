@@ -27,7 +27,7 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd = App.Container.Resolve<AboutBox>();
         ShowAsDialog();
     }
-    public Asn1Lite ShowNodeContentEditor(NodeEditMode editMode) {
+    public AsnNodeValue ShowNodeContentEditor(NodeEditMode editMode) {
         hwnd = App.Container.Resolve<TagDataEditor>();
         ((ITagDataEditorVM)hwnd.DataContext).SetBinding(editMode);
         ShowAsDialog();

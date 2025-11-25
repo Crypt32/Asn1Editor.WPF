@@ -21,7 +21,7 @@ class OpenSSLRenderer(Asn1TreeNode rootNode) : ITextRenderer {
         }
             
         sb.AppendLine("======+======+=======+" + new String('=', width + 10));
-        foreach (Asn1Lite node in rootNode.Flatten().Select(x => x.Value)) {
+        foreach (AsnNodeValue node in rootNode.Flatten().Select(x => x.Value)) {
             String padding = new(' ', (node.Depth - rootNode.Value.Depth + 1) * 3);
             String str = String.Format("{0,6}|{1,6}|{2,7}|{3}{4} : ",
                 node.Offset,
@@ -33,7 +33,7 @@ class OpenSSLRenderer(Asn1TreeNode rootNode) : ITextRenderer {
         }
         return sb.ToString();
     }
-    String calculateValue(Asn1Lite node, Int32 padding) {
+    String calculateValue(AsnNodeValue node, Int32 padding) {
         if (String.IsNullOrEmpty(node.ExplicitValue)) { return nl; }
         if (24 + padding + node.ExplicitValue.Length <= width) {
             return $"'{node.ExplicitValue.Trim()}'{nl}";

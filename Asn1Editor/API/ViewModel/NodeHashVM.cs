@@ -56,7 +56,7 @@ class NodeHashVM : ClosableWindowVM {
     }
 
     void calculateAllHashes() {
-        Asn1Lite value = _dataSource.SelectedNode!.Value;
+        AsnNodeValue value = _dataSource.SelectedNode!.Value;
         Byte[] data = _dataSource.RawData.Skip(value.Offset).Take(value.TagLength).ToArray();
         calculateHashes(data, 0);
         data = _dataSource.RawData.Skip(value.PayloadStartOffset).Take(value.PayloadLength).ToArray();

@@ -17,7 +17,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
 
     Boolean isSelected, isExpanded = true;
 
-    public Asn1TreeNode(Asn1Lite value, IDataSource dataSource) {
+    public Asn1TreeNode(AsnNodeValue value, IDataSource dataSource) {
         _dataSource = dataSource;
         Children = new ReadOnlyObservableCollection<Asn1TreeNode>(_children);
         Value = value;
@@ -83,7 +83,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
     /// <summary>
     /// Gets or sets a tree node value.
     /// </summary>
-    public Asn1Lite Value { get; }
+    public AsnNodeValue Value { get; }
 
     public void InsertChildNode(Asn1TreeNode nodeToInsert, Asn1TreeNode caller, NodeAddOption option) {
         Int32 indexToInsert, newOffset;
@@ -116,7 +116,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
             child.updateOffset(newOffset);
         }
     }
-    public Asn1TreeNode AddChild(Asn1Lite value, Boolean forcePathUpdate = false) {
+    public Asn1TreeNode AddChild(AsnNodeValue value, Boolean forcePathUpdate = false) {
         var node = new Asn1TreeNode(value, _dataSource) { Parent = this };
         _children.Add(node);
         if (forcePathUpdate) {
@@ -211,7 +211,7 @@ public class Asn1TreeNode : INotifyPropertyChanged {
         }
     }
     void valuePropertyChanged(Object sender, PropertyChangedEventArgs e) {
-        if (e.PropertyName == nameof(Asn1Lite.OffsetChange) && Parent is not null && Value.OffsetChange != 0) {
+        if (e.PropertyName == nameof(AsnNodeValue.OffsetChange) && Parent is not null && Value.OffsetChange != 0) {
             Parent.notifySizeChanged(this, Value.OffsetChange);
         }
     }

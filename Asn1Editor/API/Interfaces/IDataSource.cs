@@ -41,7 +41,7 @@ public interface IDataSource : IBinarySource {
     /// <param name="nodeToRemove">Node to remove.</param>
     void RemoveNode(Asn1TreeNode nodeToRemove);
 
-    void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes, Asn1Lite nodeValue);
+    void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes, AsnNodeValue nodeValue);
     void UpdateNodeLength(Asn1TreeNode node, Byte[] newLenBytes);
     void FinishBinaryUpdate();
     /// <summary>

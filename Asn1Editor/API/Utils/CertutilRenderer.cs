@@ -52,7 +52,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
     }
 
     void writeTagHeader(Asn1TreeNode node, String leftPadString) {
-        Asn1Lite value = node.Value;
+        AsnNodeValue value = node.Value;
         _line.Clear();
         _headList.Clear();
         _headList.Add(value.Tag);
@@ -85,7 +85,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         _sb.Append(_line);
     }
     void writeContent(Asn1TreeNode node, String leftPadString) {
-        Asn1Lite value = node.Value;
+        AsnNodeValue value = node.Value;
         _line.Clear();
 
         CertutilRenderLine hexTable = getHexTable(node);
@@ -124,7 +124,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         _sb.Append(_line);
     }
     CertutilRenderLine getHexTable(Asn1TreeNode node) {
-        Asn1Lite value = node.Value;
+        AsnNodeValue value = node.Value;
 
         Byte[] binValue = node.GetEncodedValue();
         Byte? highByte = null;
