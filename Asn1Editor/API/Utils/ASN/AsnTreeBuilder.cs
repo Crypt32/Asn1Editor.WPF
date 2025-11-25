@@ -19,7 +19,7 @@ public static class AsnTreeBuilder {
     public static Asn1TreeNode BuildTree(Byte[] rawData, IDataSource dataSource) {
         var asn = new Asn1Reader(rawData);
         asn.BuildOffsetMap();
-        var rootValue = new Asn1Lite(asn);
+        var rootValue = new AsnNodeValue(asn);
         var rootNode = new Asn1TreeNode(rootValue, dataSource);
         if (asn.NextOffset == 0) {
             return rootNode;
@@ -51,7 +51,7 @@ public static class AsnTreeBuilder {
         root.MoveNext();
         Int32 index = 0;
         do {
-            tree.AddChild(new Asn1Lite(root, tree.Value.Depth, tree.Value.Path, index));
+            tree.AddChild(new AsnNodeValue(root, tree.Value.Depth, tree.Value.Path, index));
             index++;
         } while (root.MoveNextSibling());
         root.Reset();

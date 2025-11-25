@@ -40,8 +40,8 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
     public ReadOnlyObservableCollection<Asn1TreeNode> Tree => new(_tree);
 
 
-    Asn1Lite createNewNode(Byte[] nodeRawData, Asn1TreeNode? node) {
-        var nodeValue = new Asn1Lite(new Asn1Reader(nodeRawData));
+    AsnNodeValue createNewNode(Byte[] nodeRawData, Asn1TreeNode? node) {
+        var nodeValue = new AsnNodeValue(new Asn1Reader(nodeRawData));
         if (node is not null) {
             nodeValue.Offset = node.Value.Offset + node.Value.TagLength;
             //node.Depth += SelectedNode.Value.Depth;
@@ -107,7 +107,7 @@ class DataSource(NodeViewOptions viewOptions) : ViewModelBase, IDataSource {
         }
         FinishBinaryUpdate();
     }
-    public void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes, Asn1Lite nodeValue) {
+    public void UpdateNodeBinaryCopy(IEnumerable<Byte> newBytes, AsnNodeValue nodeValue) {
         _rawData.RemoveRange(nodeValue.Offset, nodeValue.TagLength);
         _rawData.InsertRange(nodeValue.Offset, newBytes);
     }

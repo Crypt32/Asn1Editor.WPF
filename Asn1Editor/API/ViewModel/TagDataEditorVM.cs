@@ -33,7 +33,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
 
     public ICommand OkCommand { get; }
     public ICommand CloseCommand { get; }
-    public Asn1Lite Node { get; private set; }
+    public AsnNodeValue Node { get; private set; }
     public NodeViewOptions NodeViewOptions { get; }
 
     /// <summary>
