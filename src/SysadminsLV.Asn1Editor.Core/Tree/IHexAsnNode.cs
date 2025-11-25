@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SysadminsLV.Asn1Editor.Controls;
+namespace SysadminsLV.Asn1Editor.Core.Tree;
 
 /// <summary>
 /// Represents ASN node value members necessary for built-in hex viewer.
