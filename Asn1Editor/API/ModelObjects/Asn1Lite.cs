@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Core;
 using SysadminsLV.Asn1Editor.Core.ASN;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
-public class Asn1Lite : ViewModelBase, IHexAsnNode {
+public class Asn1Lite : NotifyPropertyChanged, IHexAsnNode {
     const String METADATA_TEMPLATE = """
                                      Tag    : {0} (0x{0:X2}) : {1}
                                      Offset : {2} (0x{2:X2})
@@ -155,7 +155,7 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     /// <param name="rawData">Node raw data.</param>
     /// <param name="options">Node view options.</param>
     /// <remarks></remarks>
-    public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
+    public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
         Header = getNodeHeader(rawData, options);
     }
     /// <summary>
@@ -164,12 +164,12 @@ public class Asn1Lite : ViewModelBase, IHexAsnNode {
     /// </summary>
     /// <param name="rawData">Node raw data.</param>
     /// <param name="options">Node view options.</param>
-    public void UpdateNode(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
+    public void UpdateNode(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
         Header = getNodeHeader(rawData, options);
         ToolTip = getToolTip(rawData);
         DataChanged?.Invoke(this, EventArgs.Empty);
     }
-    String getNodeHeader(IReadOnlyList<Byte> rawData, NodeViewOptions options) {
+    String getNodeHeader(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
         if (Tag == (Byte)Asn1Type.INTEGER) {
             updateIntValue(rawData, options.IntegerAsInteger);
         }
