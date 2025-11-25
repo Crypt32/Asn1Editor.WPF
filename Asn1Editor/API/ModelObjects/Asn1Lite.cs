@@ -4,8 +4,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using SysadminsLV.Asn1Editor.API.ViewModel;
-using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Core.ASN;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
