@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using SysadminsLV.Asn1Editor.Core;
 using SysadminsLV.Asn1Editor.Core.ASN;
-using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
-namespace SysadminsLV.Asn1Editor.API.ModelObjects;
+namespace SysadminsLV.Asn1Editor.Core.Tree;
 
 public class Asn1Lite : NotifyPropertyChanged, IHexAsnNode {
     const String METADATA_TEMPLATE = """

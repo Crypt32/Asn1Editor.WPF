@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.Utils;
