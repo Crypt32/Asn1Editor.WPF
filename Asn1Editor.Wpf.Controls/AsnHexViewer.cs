@@ -10,7 +10,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
 using SysadminsLV.Asn1Editor.Controls.Extensions;
-using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 
 namespace SysadminsLV.Asn1Editor.Controls;
@@ -50,7 +49,7 @@ public class AsnHexViewer : Control {
         nameof(ShowAddressPane),
         typeof(Boolean),
         typeof(AsnHexViewer),
-        new PropertyMetadata(default(Boolean)));
+        new PropertyMetadata(true));
 
     public Boolean ShowAddressPane {
         get => (Boolean)GetValue(ShowAddressPaneProperty);
@@ -65,7 +64,7 @@ public class AsnHexViewer : Control {
         nameof(ShowAsciiPane),
         typeof(Boolean),
         typeof(AsnHexViewer),
-        new PropertyMetadata(default(Boolean)));
+        new PropertyMetadata(true));
 
     public Boolean ShowAsciiPane {
         get => (Boolean)GetValue(ShowAsciiPaneProperty);
@@ -81,7 +80,7 @@ public class AsnHexViewer : Control {
         typeof(IList<Byte>),
         typeof(AsnHexViewer),
         new FrameworkPropertyMetadata(OnDataSourcePropertyChanged));
-    public IList<Byte> DataSource {
+    public IList<Byte>? DataSource {
         get => (IList<Byte>)GetValue(DataSourceProperty);
         set => SetValue(DataSourceProperty, value);
     }
@@ -116,27 +115,18 @@ public class AsnHexViewer : Control {
             oldValue.DataChanged -= ctrl.onNodeDataChanged;
         }
         if (e.NewValue is null) {
+            ctrl.rebuildPanes(null);
             if (ctrl.IsColoringEnabled) {
-                ctrl.ResetColors();
+                //ctrl.ResetColors();
             }
             return;
         }
         var treeNode = (IHexAsnNode)e.NewValue;
-        ctrl.reColorHex(treeNode);
+        if (ctrl.IsColoringEnabled) {
+            ctrl.rebuildPanes(treeNode);
+        }
+
         treeNode.DataChanged += ctrl.onNodeDataChanged;
-    }
-    void reColorHex(IHexAsnNode treeNode) {
-        if (!controlInitialized) {
-            return;
-        }
-        if (IsColoringEnabled) {
-            ResetColors();
-        }
-        ranges[0] = GetSelectionPointers(treeNode, HexRawPane, getOffset);
-        HexRawPane.CaretPosition = ranges[0][0].Start;
-        ranges[1] = GetSelectionPointers(treeNode, HexAsciiPane, getAsciiOffset);
-        Colorize();
-        scrollPanes(null);
     }
     void onNodeDataChanged(Object sender, EventArgs args) {
         // this event handler is potentially triggered from a different thread than UI thread which
@@ -144,10 +134,12 @@ public class AsnHexViewer : Control {
         // different thread owns it. So, check if event fired in UI thread. If so, continue as expected,
         // otherwise invoke this handler in UI thread.
         if (Thread.CurrentThread == Dispatcher.Thread) {
-            if (sender is IHexAsnNode node) {
-                reColorHex(node);
-            }
-        } else {
+            rebuildPanes(sender as IHexAsnNode);
+            //if (sender is IHexAsnNode node) {
+            //    reColorHex(node);
+            //}
+        }
+        else {
             Dispatcher.Invoke(new Action<Object, EventArgs>(onNodeDataChanged), sender, args);
         }
     }
@@ -220,13 +212,7 @@ public class AsnHexViewer : Control {
 
     static void onIsColoringEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         var ctrl = (AsnHexViewer)d;
-        Boolean newValue = (Boolean)e.NewValue;
-        if (newValue && ctrl.SelectedNode is not null) {
-            ctrl.reColorHex(ctrl.SelectedNode);
-        } else {
-            ctrl.ResetColors();
-        }
-
+        ctrl.rebuildPanes(ctrl.SelectedNode);
     }
 
     #endregion
@@ -238,33 +224,11 @@ public class AsnHexViewer : Control {
     }
     void buildAddress() {
         var addressParagraph = new Paragraph();
-        foreach (Int32 row in Enumerable.Range(0, (Int32)Math.Ceiling((Double)DataSource.Count / 16))) {
+        foreach (Int32 row in Enumerable.Range(0, (Int32)Math.Ceiling((Double)DataSource!.Count / 16))) {
             addressParagraph.Inlines.Add(new Run($"{row * 16:X8}" + Environment.NewLine));
         }
         HexAddressPane.Document.Blocks.Clear();
         HexAddressPane.Document.Blocks.Add(addressParagraph);
-    }
-    void buildHex() {
-        var hexParagraph = new Paragraph();
-        hexParagraph.Inlines.Add(new Run(AsnFormatter.BinaryToString(DataSource.ToArray(), EncodingType.Hex).ToUpper()));
-        HexRawPane.Document.Blocks.Clear();
-        HexRawPane.Document.Blocks.Add(hexParagraph);
-    }
-    void buildAscii() {
-        var asciiParagraph = new Paragraph();
-        var SB = new StringBuilder();
-        for (Int32 index = 0; index < DataSource.Count; index++) {
-            Char c = DataSource[index] < 32 || DataSource[index] > 126
-                ? '.'
-                : (Char)DataSource[index];
-            if (index != 0 && index % 16 == 0) {
-                SB.Append(Environment.NewLine);
-            }
-            SB.Append(c);
-        }
-        asciiParagraph.Inlines.Add(new Run(SB + Environment.NewLine));
-        HexAsciiPane.Document.Blocks.Clear();
-        HexAsciiPane.Document.Blocks.Add(asciiParagraph);
     }
     void onRtbScrollChanged(Object sender, ScrollChangedEventArgs e) {
         if (scrollLocked) {
@@ -328,8 +292,7 @@ public class AsnHexViewer : Control {
         }
 
         buildAddress();
-        buildHex();
-        buildAscii();
+        rebuildPanes(SelectedNode);
     }
 
     public override void OnApplyTemplate() {
@@ -354,9 +317,7 @@ public class AsnHexViewer : Control {
         controlInitialized = true;
         calculateWidths();
         refreshView();
-        if (SelectedNode is not null) {
-            reColorHex(SelectedNode);
-        }
+
         base.OnApplyTemplate();
     }
 
@@ -379,78 +340,182 @@ public class AsnHexViewer : Control {
 
     #region Hex Colorizer
 
-    static Int32 getOffset(Int32 offset) {
-        Int32 line = (Int32)Math.Floor(offset / 16d);
-        return (offset - 16 * line) * 3 + 50 * line + 2;
-    }
-    static Int32 getAsciiOffset(Int32 offset) {
-        Int32 line = (Int32)Math.Floor(offset / 16d);
-        return (offset - 16 * line) + 18 * line + 2;
-    }
-    static TextRange[] GetRanges(IList<TextPointer> pointers) {
-        TextRange[] ranges =
-        [
-            new(pointers[0], pointers[1]),
-            new(pointers[2], pointers[3]),
-            new(pointers[4], pointers[5]),
-        ];
-        return ranges;
-    }
-
-    static TextRange[] GetSelectionPointers(IHexAsnNode treeNode, RichTextBox rtb, Func<Int32, Int32> offsetCalculator) {
-        TextPointer[] pointers =
-        [
-            // tag
-            rtb.Document.ContentStart.GetPositionAtOffset(
-                offsetCalculator.Invoke(treeNode.Offset)
-            ),
-            rtb.Document.ContentStart.GetPositionAtOffset(
-                offsetCalculator.Invoke(treeNode.Offset + 1)
-            ),
-            // length bytes
-            rtb.Document.ContentStart.GetPositionAtOffset(
-                offsetCalculator.Invoke(treeNode.Offset + 1)
-            ),
-            rtb.Document.ContentStart.GetPositionAtOffset(
-                offsetCalculator.Invoke(treeNode.PayloadStartOffset)
-            ),
-            // payload
-            rtb.Document.ContentStart.GetPositionAtOffset(
-                offsetCalculator.Invoke(treeNode.PayloadStartOffset)
-            ),
-            rtb.Document.ContentStart.GetPositionAtOffset(
-                offsetCalculator.Invoke(treeNode.PayloadStartOffset + treeNode.PayloadLength)
-            )
-        ];
-        return GetRanges(pointers);
-    }
-    void Colorize() {
-        if (!IsColoringEnabled) {
+    void rebuildPanes(IHexAsnNode? node) {
+        if (!controlInitialized) {
             return;
         }
-        foreach (TextRange[] top in ranges) {
-            foreach (TextRange range in top) {
-                range.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
+
+        var tokenizer = new AsnHexTokenizer(DataSource, node);
+        IReadOnlyCollection<HexSegment> segments = tokenizer.GetColorSegments();
+        var hexParagraph = new Paragraph();
+        var asciiParagraph = new Paragraph();
+        Run anchorRun = null;
+
+        foreach (HexSegment segment in segments) {
+            var hexRun = buildRun(segment.HexText, segment.Kind);
+            if (segment.Kind == HexDecorationKind.Tag) {
+                anchorRun = hexRun;
+            }
+            hexParagraph.Inlines.Add(hexRun);
+            asciiParagraph.Inlines.Add(buildRun(segment.AsciiText, segment.Kind));
+        }
+        HexRawPane.Document = new FlowDocument(hexParagraph);
+        HexAsciiPane.Document = new FlowDocument(asciiParagraph);
+
+        if (anchorRun is not null) {
+            HexRawPane.CaretPosition = anchorRun.ContentStart;
+        }
+        scrollPanes(null);
+    }
+
+    Run buildRun(String text, HexDecorationKind kind) {
+        var run = new Run(text);
+        if (IsColoringEnabled) {
+            switch (kind) {
+                case HexDecorationKind.Tag:
+                    run.FontWeight = FontWeights.Bold;
+                    run.Foreground = TagOctetBrush;
+                    break;
+                case HexDecorationKind.Length:
+                    run.FontWeight = FontWeights.Bold;
+                    run.Foreground = TagLengthOctetBrush;
+                    break;
+                case HexDecorationKind.Value:
+                    run.FontWeight = FontWeights.Bold;
+                    run.Foreground = TagPayloadOctetBrush;
+                    break;
             }
         }
 
-        foreach (TextRange[] range in ranges) {
-            range[0].ApplyPropertyValue(TextElement.ForegroundProperty, TagOctetBrush);
-            range[1].ApplyPropertyValue(TextElement.ForegroundProperty, TagLengthOctetBrush);
-            range[2].ApplyPropertyValue(TextElement.ForegroundProperty, TagPayloadOctetBrush);
-        }
-
-    }
-    void ResetColors() {
-        if (ranges[0] is null) {
-            return;
-        }
-        foreach (TextRange[] top in ranges) {
-            foreach (TextRange range in top.Where(range => range is not null)) {
-                range.ClearAllProperties();
-            }
-        }
+        return run;
     }
 
     #endregion
+}
+class AsnHexTokenizer {
+    const String EOL = "\r\n";
+
+    readonly IList<Byte>? _buffer;
+    readonly HexDecorationRange[] _decorations;
+
+    public AsnHexTokenizer(IList<Byte>? buffer, IHexAsnNode? node) {
+        _buffer = buffer;
+        _decorations = getDecorationRanges(node);
+    }
+
+    public IReadOnlyCollection<HexSegment> GetColorSegments() {
+        if (_buffer is null) {
+            return [];
+        }
+
+        var hexSb = new StringBuilder();
+        var asciiSb = new StringBuilder();
+        var segments = new List<HexSegment>(5);
+        var currentKind = HexDecorationKind.None;
+        for (Int32 index = 0; index < _buffer!.Count; index++) {
+            Int32 col = index % 16;
+
+            var kind = GetKindForByte(index);
+
+            // if decoration kind changed, finish it and store.
+            if (kind != currentKind) {
+                FlushSegment();
+                currentKind = kind;
+            }
+
+            // new line, except for the very first line
+            if (col == 0 && index > 0) {
+                hexSb.Append(EOL);
+                asciiSb.Append(EOL);
+            }
+
+            // write current octet into string builders
+            // hex
+            hexSb.Append(_buffer[index].ToString("X2"));
+            hexSb.Append(' ');
+            // extra space after 8th octet
+            if (col == 7) {
+                hexSb.Append(' ');
+            }
+
+            // ASCII
+            Char c = _buffer[index] < 32 || _buffer[index] > 126
+                ? '.'
+                : (Char)_buffer[index];
+            asciiSb.Append(c);
+        }
+        // flush final segment
+        FlushSegment();
+
+        return segments;
+
+        void FlushSegment() {
+            if (hexSb.Length == 0) {
+                return;
+            }
+
+            segments.Add(new HexSegment {
+                HexText = hexSb.ToString(),
+                AsciiText = asciiSb.ToString(),
+                Kind = currentKind
+            });
+            hexSb.Clear();
+            asciiSb.Clear();
+        }
+    }
+
+    HexDecorationKind GetKindForByte(Int32 byteOffset) {
+        foreach (HexDecorationRange d in _decorations) {
+            if (d.Length > 0 && byteOffset >= d.Start && byteOffset < d.End) {
+                return d.Kind;
+            }
+        }
+        return HexDecorationKind.None;
+    }
+
+    HexDecorationRange[] getDecorationRanges(IHexAsnNode? node) {
+        if (_buffer is null) {
+            return [];
+        }
+        if (node is null) {
+            return [new HexDecorationRange(0, _buffer.Count, HexDecorationKind.None)];
+        }
+
+        Int32 lengthStartOffset = node.Offset + 1;
+        Int32 lengthLength = node.PayloadStartOffset - node.Offset - 1; // -1 for tag
+        Int32 restStartOffset = node.PayloadStartOffset + node.PayloadLength;
+        Int32 restLength = _buffer.Count - restStartOffset;
+
+        return [
+            // before selected node
+            new HexDecorationRange(0, node.Offset, HexDecorationKind.None),
+            // tag
+            new HexDecorationRange(node.Offset, 1, HexDecorationKind.Tag),
+            // length
+            new HexDecorationRange(lengthStartOffset, lengthLength, HexDecorationKind.Length),
+            // value
+            new HexDecorationRange(node.PayloadStartOffset, node.PayloadLength, HexDecorationKind.Value),
+            // after selected node
+            new HexDecorationRange(restStartOffset, restLength, HexDecorationKind.None)
+        ];
+    }
+
+    readonly struct HexDecorationRange(Int32 Start, Int32 Length, HexDecorationKind Kind) {
+        public readonly Int32 Start = Start;
+        public readonly Int32 Length = Length;
+
+        public Int32 End => Start + Length;   // non-inclusive
+        public readonly HexDecorationKind Kind = Kind;
+    }
+}
+struct HexSegment {
+    public String HexText;
+    public String AsciiText;
+    public HexDecorationKind Kind;
+}
+enum HexDecorationKind {
+    None,
+    Tag,
+    Length,
+    Value
 }
