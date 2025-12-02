@@ -8,7 +8,7 @@
     <RootNamespace>SysadminsLV.Asn1Editor</RootNamespace>
     <PackageId>$(AssemblyName)</PackageId>
     <Product>ASN.1 Editor</Product>
-    <Version>25.08.07</Version>
+    <Version>25.12.02</Version>
     <Authors>Vadims Podāns</Authors>
     <Company>Sysadmins LV</Company>
     <Title>ASN.1 Editor</Title>
