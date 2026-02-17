@@ -46,7 +46,7 @@ public interface IAsn1DocumentContext : INotifyCollectionChanged {
     /// <param name="nodeRawData">Node binary data.</param>
     /// <param name="parent">Parent node to add child to.</param>
     /// <returns>Inserted node.</returns>
-    AsnTreeNode AddNode(Byte[] nodeRawData, AsnTreeNode? parent);
+    Task<AsnTreeNode> AddNode(Byte[] nodeRawData, AsnTreeNode? parent);
     /// <summary>
     /// Inserts a new node under currently selected node.
     /// </summary>

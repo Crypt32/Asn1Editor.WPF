@@ -61,8 +61,8 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
 
     #region Tree operations (delegated to TreeCoordinator)
 
-    public AsnTreeNode AddNode(Byte[] nodeRawData, AsnTreeNode? parent) {
-        AsnTreeNode result = _coordinator.AddNode(nodeRawData, parent);
+    public async Task<AsnTreeNode> AddNode(Byte[] nodeRawData, AsnTreeNode? parent) {
+        AsnTreeNode result = await _coordinator.AddNode(nodeRawData, parent);
         syncTreeCollection();
 
         return result;

@@ -26,7 +26,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         }
     }
 
-    public AsnTreeNode AddNode(Byte[] nodeRawData, AsnTreeNode parent) {
+    public async Task<AsnTreeNode> AddNode(Byte[] nodeRawData, AsnTreeNode parent) {
         if (Root is null) {
             var asn = new Asn1Reader(nodeRawData);
             var rootValue = new AsnNodeValue(asn);
