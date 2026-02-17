@@ -2,10 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:behaviors="clr-namespace:SysadminsLV.Asn1Editor.Controls.Behaviors;assembly=SysadminsLV.Asn1Editor.Controls"
+                    xmlns:tree="clr-namespace:SysadminsLV.Asn1Editor.Core.Tree;assembly=SysadminsLV.Asn1Editor.Core"
+                    xmlns:local="clr-namespace:SysadminsLV.Asn1Editor.API.Utils.WPF"
                     mc:Ignorable="d"
-                    d:DataContext="{d:DesignInstance modelObjects:Asn1TreeNode}"
-                    xmlns:modelObjects="clr-namespace:SysadminsLV.Asn1Editor.API.ModelObjects"
-                    xmlns:behaviors="clr-namespace:SysadminsLV.Asn1Editor.Controls.Behaviors;assembly=SysadminsLV.Asn1Editor.Controls">
+                    d:DataContext="{d:DesignInstance tree:AsnTreeNode}">
     <Style x:Key="AsnTreeIconStyle" TargetType="Image">
         <Style.Setters>
             <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -102,7 +103,7 @@
         </Style.Triggers>
     </Style>
     <HierarchicalDataTemplate x:Key="AsnTreeViewDataTemplate"
-                              DataType="{x:Type modelObjects:Asn1TreeNode}"
+                              DataType="{x:Type tree:AsnTreeNode}"
                               ItemsSource="{Binding Children}">
         <StackPanel Orientation="Horizontal">
             <Image VerticalAlignment="Center"
@@ -122,6 +123,6 @@
         </StackPanel>
     </HierarchicalDataTemplate>
     <Style x:Key="AsnTreeViewItemStyle" TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+        <Setter Property="IsExpanded" Value="True"/>
     </Style>
 </ResourceDictionary>
