@@ -70,7 +70,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         if (!_uiMessenger.TryGetSaveFileName(out String filePath)) {
             return;
         }
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         try {
             File.WriteAllBytes(filePath, data!.RawData.Skip(data.SelectedNode!.Value.Offset).Take(data.SelectedNode.Value.TagLength).ToArray());
         } catch (Exception e) {
@@ -81,11 +81,11 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         _windowFactory.ShowNodeTextViewer();
     }
     void showNodeHashes(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         _windowFactory.ShowNodeHashesDialog(data);
     }
     void showNodeInConverter(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         if (data?.SelectedNode is not null) {
             IEnumerable<Byte> nodeData = data.RawData.Skip(data.SelectedNode.Value.Offset).Take(data.SelectedNode.Value.TagLength);
 
@@ -93,13 +93,13 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         }
     }
     void editNodeContent(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         if (data?.SelectedNode is not null) {
             _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
         }
     }
     void registerOid(Object obj) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         if (data?.SelectedNode is not null) {
             Asn1TreeNode node = data.SelectedNode;
             String oidValue = AsnDecoder.GetEditValue(new Asn1Reader(data.RawData.Skip(node.Value.Offset).Take(node.Value.TagLength).ToArray())).TextValue;
@@ -108,7 +108,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         }
     }
     void addNewNode(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         Byte[]? nodeRawData = _windowFactory.ShowNewAsnNodeEditor(data);
         //Asn1Lite nodeValue = _windowFactory.ShowNodeContentEditor(NodeEditMode.NewNode);
         if (nodeRawData is null) {
@@ -122,22 +122,22 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         }
     }
     void removeNode(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         Boolean response = _uiMessenger.YesNo("Do you want to delete the node?\nThis action cannot be undone.", "Delete");
         if (response) {
             data!.RemoveNode(data.SelectedNode);
         }
     }
     void cutNode(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         copyNodePrivate(data);
         data.RemoveNode(data.SelectedNode);
     }
     void copyNode(Object o) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         copyNodePrivate(data);
     }
-    void copyNodePrivate(IDataSource data) {
+    void copyNodePrivate(IAsn1DocumentContext data) {
         ClipboardManager.SetClipboardData(
         data.RawData
                 .Skip(data.SelectedNode!.Value.Offset)
@@ -146,34 +146,34 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         HasNodeClipboardData = true;
     }
     Task pasteBefore(Object o, CancellationToken token) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.Before);
     }
     Task pasteAfter(Object o, CancellationToken token) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.After);
     }
     Task pasteLast(Object o, CancellationToken token) {
-        isTabSelected(out IDataSource data); // granted to be non-null
+        isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.Last);
     }
 
     Boolean ensureNodeSelected(Object o) {
-        return isTabSelected(out IDataSource data) && data!.SelectedNode is not null;
+        return isTabSelected(out IAsn1DocumentContext data) && data!.SelectedNode is not null;
     }
     Boolean canAddNewNode(Object o) {
-        return isTabSelected(out IDataSource data)
+        return isTabSelected(out IAsn1DocumentContext data)
                && (data!.Tree.Count == 0 || (data.SelectedNode is not null && !_excludedTags.Contains(data.SelectedNode.Value.Tag)));
     }
     Boolean canCutNode(Object? o) {
-        return isTabSelected(out IDataSource data)
+        return isTabSelected(out IAsn1DocumentContext data)
                && data!.SelectedNode is { Parent: not null };
     }
     Boolean canPasteBeforeAfter(Object o) {
-        return isTabSelected(out IDataSource _) && HasNodeClipboardData && canCutNode(null);
+        return isTabSelected(out IAsn1DocumentContext _) && HasNodeClipboardData && canCutNode(null);
     }
     Boolean canPasteLast(Object o) {
-        Boolean preCondition = isTabSelected(out IDataSource data) && HasNodeClipboardData;
+        Boolean preCondition = isTabSelected(out IAsn1DocumentContext data) && HasNodeClipboardData;
         if (!preCondition) {
             return false;
         }
@@ -185,12 +185,12 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         return !_excludedTags.Contains(data.SelectedNode.Value.Tag) &&
                String.IsNullOrEmpty(data.SelectedNode.Value.ExplicitValue);
     }
-    Boolean isTabSelected(out IDataSource? dataSource) {
+    Boolean isTabSelected(out IAsn1DocumentContext? dataSource) {
         dataSource = null;
         if (_tabs.SelectedTab is not null) {
             Asn1DocumentVM document = _tabs.SelectedTab.GetPrimaryDocument();
             if (document.IsEnabled) {
-                dataSource = _tabs.SelectedTab.GetPrimaryDocument().DataSource;
+                dataSource = _tabs.SelectedTab.GetPrimaryDocument().AsnDocContext;
 
                 return true;
             }

@@ -102,8 +102,8 @@
                                         </ToggleButton>
                                     </ToolBar>
                                 </ToolBarTray>
-                                <c:AsnHexViewer DataSource="{Binding Left.DataSource.RawData, Mode=OneWay}"
-                                                SelectedNode="{Binding Left.DataSource.SelectedNode.Value, Mode=OneWay}"
+                                <c:AsnHexViewer DataSource="{Binding Left.AsnDocContext.RawData, Mode=OneWay}"
+                                                SelectedNode="{Binding Left.AsnDocContext.SelectedNode.Value, Mode=OneWay}"
                                                 FontFamily="Consolas"
                                                 FontSize="{Binding NodeViewOptions.FontSize}"
                                                 Background="#D5E7FE"
@@ -114,7 +114,7 @@
                             </DockPanel>
                             <Grid>
                                 <c:AsnTreeView ItemsSource="{Binding Left.Tree}"
-                                               SelectedItem="{Binding Left.DataSource.SelectedNode, Mode=TwoWay}"
+                                               SelectedItem="{Binding Left.AsnDocContext.SelectedNode, Mode=TwoWay}"
                                                AllowDrop="True"
                                                FontSize="{Binding NodeViewOptions.FontSize}"
                                                MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
@@ -146,7 +146,7 @@
                                       Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <c:AsnTreeView Grid.Column="2"
                                        ItemsSource="{Binding Right.Tree, FallbackValue=[]}"
-                                       SelectedItem="{Binding Right.DataSource.SelectedNode}"
+                                       SelectedItem="{Binding Right.AsnDocContext.SelectedNode}"
                                        FontSize="{Binding NodeViewOptions.FontSize}"
                                        MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
                                        ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"

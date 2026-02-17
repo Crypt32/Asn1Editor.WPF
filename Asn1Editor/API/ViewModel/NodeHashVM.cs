@@ -16,18 +16,18 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 // bind to the collection by fixed indexes.
 
 class NodeHashVM : ClosableWindowVM {
-    readonly IDataSource _dataSource;
+    readonly IAsn1DocumentContext _asnDocContext;
     readonly StringBuilder _sb = new(128);
     readonly String[] _algorithms = ["MD5", "SHA1", "SHA256", "SHA384", "SHA512"];
 
     Boolean isHexChecked, isBase64Checked;
 
-    public NodeHashVM(IDataSource dataSource) {
+    public NodeHashVM(IAsn1DocumentContext asnDocContext) {
         for (Int32 i = 0; i < 10; i++) {
             Hashes.Add(String.Empty);
         }
-        _dataSource = dataSource;
-        NodeViewOptions = dataSource.NodeViewOptions;
+        _asnDocContext = asnDocContext;
+        NodeViewOptions = asnDocContext.NodeViewOptions;
         CopyValueCommand = new RelayCommand(copyValue);
         IsHexChecked = true;
         calculateAllHashes();
@@ -56,10 +56,10 @@ class NodeHashVM : ClosableWindowVM {
     }
 
     void calculateAllHashes() {
-        AsnNodeValue value = _dataSource.SelectedNode!.Value;
-        Byte[] data = _dataSource.RawData.Skip(value.Offset).Take(value.TagLength).ToArray();
+        AsnNodeValue value = _asnDocContext.SelectedNode!.Value;
+        Byte[] data = _asnDocContext.RawData.Skip(value.Offset).Take(value.TagLength).ToArray();
         calculateHashes(data, 0);
-        data = _dataSource.RawData.Skip(value.PayloadStartOffset).Take(value.PayloadLength).ToArray();
+        data = _asnDocContext.RawData.Skip(value.PayloadStartOffset).Take(value.PayloadLength).ToArray();
         calculateHashes(data, _algorithms.Length);
 
     }

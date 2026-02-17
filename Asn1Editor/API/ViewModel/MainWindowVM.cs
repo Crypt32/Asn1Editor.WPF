@@ -10,6 +10,7 @@ using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
@@ -79,7 +80,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         if (SelectedTab is null) {
             _windowFactory.ShowConverterWindow([], openRawAsync);
         } else {
-            _windowFactory.ShowConverterWindow(SelectedTab.GetPrimaryDocument().DataSource.RawData, openRawAsync);
+            _windowFactory.ShowConverterWindow(SelectedTab.GetPrimaryDocument().AsnDocContext.RawData, openRawAsync);
         }
     }
     void newTab(Object o) {
@@ -173,7 +174,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
     Boolean canPrintSave(Object obj) {
-        return SelectedTab?.Left.DataSource.RawData.Count > 0;
+        return SelectedTab?.Left.AsnDocContext.RawData.Count > 0;
     }
 
     // general method to write arbitrary tab to a file.
@@ -187,7 +188,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
             return false;
         }
         try {
-            File.WriteAllBytes(filePath, doc.DataSource.RawData.ToArray());
+            File.WriteAllBytes(filePath, doc.AsnDocContext.RawData.ToArray());
             doc.Path = filePath;
             doc.IsModified = false;
 
@@ -325,7 +326,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
 
-    public Task RefreshTabs(Func<Asn1TreeNode, Boolean>? filter = null) {
+    public Task RefreshTabs(Func<AsnTreeNode, Boolean>? filter = null) {
         return Task.WhenAll(Tabs.Select(x => x.GetPrimaryDocument().RefreshTreeView(filter)));
     }
 }

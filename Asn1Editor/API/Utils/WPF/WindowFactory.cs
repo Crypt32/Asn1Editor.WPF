@@ -60,16 +60,16 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         hwnd.DataContext = vm;
         ShowAsDialog();
     }
-    public Byte[]? ShowNewAsnNodeEditor(IDataSource dataSource) {
+    public Byte[]? ShowNewAsnNodeEditor(IAsn1DocumentContext asnDocContext) {
         hwnd = App.Container.Resolve<NewTreeNodeWindow>();
         INewAsnNodeEditorVM vm = App.Container.Resolve<INewAsnNodeEditorVM>();
         hwnd.DataContext = vm;
         ShowAsDialog();
         return vm.GetAsnNode();
     }
-    public void ShowNodeHashesDialog(IDataSource dataSource) {
+    public void ShowNodeHashesDialog(IAsn1DocumentContext asnDocContext) {
         hwnd = App.Container.Resolve<NodeHashWindow>();
-        hwnd.DataContext = new NodeHashVM(dataSource);
+        hwnd.DataContext = new NodeHashVM(asnDocContext);
         ShowAsDialog();
     }
 }
