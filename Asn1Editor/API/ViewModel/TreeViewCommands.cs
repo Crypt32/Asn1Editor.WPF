@@ -101,7 +101,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     void registerOid(Object obj) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         if (data?.SelectedNode is not null) {
-            Asn1TreeNode node = data.SelectedNode;
+            AsnTreeNode node = data.SelectedNode;
             String oidValue = AsnDecoder.GetEditValue(new Asn1Reader(data.RawData.Skip(node.Value.Offset).Take(node.Value.TagLength).ToArray())).TextValue;
             String friendlyName = OidResolver.Resolve(oidValue); // TODO: replace with ResolveFriendlyName
             _windowFactory.ShowOidEditor(new OidDto(oidValue, friendlyName, false));
@@ -115,7 +115,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
             return;
         }
 
-        Asn1TreeNode node = data.AddNode(nodeRawData, data.SelectedNode);
+        AsnTreeNode node = data.AddNode(nodeRawData, data.SelectedNode);
         data.SelectedNode = node;
         if (node.Value is { IsContainer: false, Tag: not ((Byte)Asn1Type.NULL or (Byte)Asn1Type.SEQUENCE or (Byte)Asn1Type.SET) }) {
             EditNodeCommand.Execute(NodeEditMode.Text);

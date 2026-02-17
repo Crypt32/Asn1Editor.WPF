@@ -202,12 +202,12 @@ public class NodeViewOptions : ViewModelBase, INodeViewOptions {
         }
     }
 
-    void triggerRequireTreeRefresh(Func<Asn1TreeNode, Boolean>? filter = null) {
+    void triggerRequireTreeRefresh(Func<AsnTreeNode, Boolean>? filter = null) {
         RequireTreeRefresh?.Invoke(this, new RequireTreeRefreshEventArgs(filter));
     }
 
     public event EventHandler<RequireTreeRefreshEventArgs> RequireTreeRefresh;
 }
-public class RequireTreeRefreshEventArgs(Func<Asn1TreeNode, Boolean>? filter = null) : EventArgs {
-    public Func<Asn1TreeNode, Boolean>? Filter { get; } = filter;
+public class RequireTreeRefreshEventArgs(Func<AsnTreeNode, Boolean>? filter = null) : EventArgs {
+    public Func<AsnTreeNode, Boolean>? Filter { get; } = filter;
 }

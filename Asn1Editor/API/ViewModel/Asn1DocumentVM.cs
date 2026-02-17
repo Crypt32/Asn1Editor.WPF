@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.Core.Tree;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -14,24 +15,21 @@ public class Asn1DocumentVM : AsyncViewModel {
     Boolean isModified, suppressModified, isEnabled = true;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
-        DataSource = new DataSource(nodeViewOptions);
-        DataSource.CollectionChanged += onDataSourceCollectionChanged;
-        DataSource.RequireTreeRefresh += onTreeRefreshRequired;
+        AsnDocContext = new Asn1DocumentContext(nodeViewOptions);
+        AsnDocContext.CollectionChanged += onAsnDocContextCollectionChanged;
         TreeCommands = treeCommands;
     }
-    async void onTreeRefreshRequired(Object sender, EventArgs e) {
-        await RefreshTreeView();
-    }
-    void onDataSourceCollectionChanged(Object sender, NotifyCollectionChangedEventArgs args) {
+
+    void onAsnDocContextCollectionChanged(Object sender, NotifyCollectionChangedEventArgs args) {
         if (!suppressModified) {
             IsModified = true;
         }
     }
 
-    public IDataSource DataSource { get; }
+    public IAsn1DocumentContext AsnDocContext { get; }
     public ITreeCommands TreeCommands { get; }
-    public NodeViewOptions NodeViewOptions => DataSource.NodeViewOptions;
-    public ReadOnlyObservableCollection<Asn1TreeNode> Tree => DataSource.Tree;
+    public NodeViewOptions NodeViewOptions => AsnDocContext.NodeViewOptions;
+    public ReadOnlyObservableCollection<AsnTreeNode> Tree => AsnDocContext.Tree;
 
     /// <summary>
     /// Determines if current ASN.1 document instance can be re-used.
@@ -93,20 +91,20 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
     }
 
-    public Task RefreshTreeView(Func<Asn1TreeNode, Boolean>? filter = null) {
+    public Task RefreshTreeView(Func<AsnTreeNode, Boolean>? filter = null) {
         if (Tree.Count == 0) {
             return Task.CompletedTask;
         }
         return refreshTree(Tree[0].UpdateNodeViewAsync, filter);
     }
-    public Task RefreshTreeHeaders(Func<Asn1TreeNode, Boolean>? filter = null) {
+    public Task RefreshTreeHeaders(Func<AsnTreeNode, Boolean>? filter = null) {
         if (Tree.Count == 0) {
             return Task.CompletedTask;
         }
         return refreshTree(Tree[0].UpdateNodeHeaderAsync, filter);
     }
 
-    async Task refreshTree(Func<Func<Asn1TreeNode, Boolean>?, Task> action, Func<Asn1TreeNode, Boolean>? filter = null) {
+    async Task refreshTree(Func<Func<AsnTreeNode, Boolean>?, Task> action, Func<AsnTreeNode, Boolean>? filter = null) {
 
         ProgressText = "Refreshing view...";
         IsBusy = true;
@@ -121,17 +119,17 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
 
         try {
-            if (DataSource.RawData.Count > 0) {
+            if (AsnDocContext.RawData.Count > 0) {
                 return;
             }
-            await DataSource.InitializeFromRawData(bytes);
+            await AsnDocContext.InitializeFromRawData(bytes);
         } finally {
             suppressModified = false;
             IsBusy = false;
         }
     }
     public void Reset() {
-        DataSource.Reset();
+        AsnDocContext.Reset();
         Path = String.Empty;
         IsModified = false;
     }

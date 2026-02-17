@@ -7,13 +7,14 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
+using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TextViewerVM : ViewModelBase, ITextViewerVM {
     readonly IUIMessenger _uiMessenger;
-    readonly Asn1TreeNode rootNode;
+    readonly AsnTreeNode rootNode;
     const Int32 minLength = 60;
     const Int32 defaultLength = 80;
     const Int32 maxLength = 400;
