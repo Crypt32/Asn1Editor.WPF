@@ -5,7 +5,6 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
@@ -18,7 +17,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     const Int32 minLength = 60;
     const Int32 defaultLength = 80;
     const Int32 maxLength = 400;
-    ITextRenderer renderer;
+    IAsnDumpFormatter formatter;
     Boolean certutilChecked, openSSLChecked;
 
     String text;
@@ -64,7 +63,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
             }
             certutilChecked = value;
             if (certutilChecked) {
-                renderer = new CertutilRenderer(rootNode);
+                formatter = new CertutilFormatter(rootNode);
                 refreshView();
             }
             OnPropertyChanged();
@@ -78,7 +77,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
             }
             openSSLChecked = value;
             if (openSSLChecked) {
-                renderer = new OpenSSLRenderer(rootNode);
+                formatter = new OpenSSLFormatter(rootNode);
                 refreshView();
             }
             OnPropertyChanged();
@@ -86,7 +85,7 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
     }
 
     void refreshView() {
-        Text = renderer.RenderText(currentLength);
+        Text = formatter.RenderText(currentLength);
     }
 
     void print(Object obj) {

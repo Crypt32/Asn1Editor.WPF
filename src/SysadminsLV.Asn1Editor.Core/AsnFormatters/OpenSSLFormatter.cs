@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.Utils.Extensions;
-using SysadminsLV.Asn1Editor.Core.AsnFormatters;
+using SysadminsLV.Asn1Editor.Core.Extensions;
 using SysadminsLV.Asn1Editor.Core.Tree;
 
-namespace SysadminsLV.Asn1Editor.API.Utils;
+namespace SysadminsLV.Asn1Editor.Core.AsnFormatters;
 
-class OpenSSLRenderer(AsnTreeNode rootNode) : ITextRenderer {
+public class OpenSSLFormatter(AsnTreeNode rootNode) : IAsnDumpFormatter {
     const String delimiter = "      |      |       |";
     readonly String nl = Environment.NewLine;
     Int32 width = 80;
@@ -15,9 +14,6 @@ class OpenSSLRenderer(AsnTreeNode rootNode) : ITextRenderer {
     public String RenderText(Int32 textWidth) {
         width = textWidth;
         var sb = new StringBuilder("Offset|Length|LenByte|" + nl);
-        if (rootNode is null) {
-            return sb.ToString();
-        }
             
         sb.AppendLine("======+======+=======+" + new String('=', width + 10));
         foreach (AsnNodeValue node in rootNode.Flatten().Select(x => x.Value)) {
@@ -50,7 +46,6 @@ class OpenSSLRenderer(AsnTreeNode rootNode) : ITextRenderer {
         }
         return node.ExplicitValue
             .SplitByLength(width - padding)
-            .Aggregate(nl, (current, line) =>
-                               current + $"{delimiter}{new String(' ', padding + 3)}{line.Trim()}{nl}");
+            .Aggregate(nl, (current, line) => current + $"{delimiter}{new String(' ', padding + 3)}{line.Trim()}{nl}");
     }
 }
