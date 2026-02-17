@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Numerics;
 
 namespace SysadminsLV.Asn1Editor.Core.Tree;
@@ -6,7 +7,7 @@ namespace SysadminsLV.Asn1Editor.Core.Tree;
 /// <summary>
 /// Represents the options for displaying and formatting nodes in the ASN.1 tree view.
 /// </summary>
-public interface INodeViewOptions {
+public interface INodeViewOptions : INotifyPropertyChanged {
     /// <summary>
     /// Gets or sets a value indicating whether INTEGER values in the ASN.1 tree view
     /// should be displayed as <see cref="BigInteger"/> instead of Hex string.
