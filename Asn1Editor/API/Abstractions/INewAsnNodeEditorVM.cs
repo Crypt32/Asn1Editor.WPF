@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 
 namespace SysadminsLV.Asn1Editor.API.Abstractions;
 
