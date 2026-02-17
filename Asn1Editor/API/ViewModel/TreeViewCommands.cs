@@ -35,7 +35,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         ShowNodeHashCommand = new RelayCommand(showNodeHashes, ensureNodeSelected);
         EditNodeCommand = new RelayCommand(editNodeContent, ensureNodeSelected);
         RegisterOidCommand = new RelayCommand(registerOid, ensureNodeSelected);
-        AddNewNodeCommand = new RelayCommand(addNewNode, canAddNewNode);
+        AddNewNodeCommand = new AsyncCommand(addNewNode, canAddNewNode);
         DeleteNodeCommand = new RelayCommand(removeNode, ensureNodeSelected);
         CutNodeCommand = new RelayCommand(cutNode, canCutNode);
         CopyNodeCommand = new RelayCommand(copyNode, ensureNodeSelected);
@@ -107,7 +107,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
             _windowFactory.ShowOidEditor(new OidDto(oidValue, friendlyName, false));
         }
     }
-    void addNewNode(Object o) {
+    async Task addNewNode(Object o, CancellationToken ct) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         Byte[]? nodeRawData = _windowFactory.ShowNewAsnNodeEditor(data);
         //Asn1Lite nodeValue = _windowFactory.ShowNodeContentEditor(NodeEditMode.NewNode);
@@ -115,7 +115,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
             return;
         }
 
-        AsnTreeNode node = data.AddNode(nodeRawData, data.SelectedNode);
+        AsnTreeNode node = await data.AddNode(nodeRawData, data.SelectedNode);
         data.SelectedNode = node;
         if (node.Value is { IsContainer: false, Tag: not ((Byte)Asn1Type.NULL or (Byte)Asn1Type.SEQUENCE or (Byte)Asn1Type.SET) }) {
             EditNodeCommand.Execute(NodeEditMode.Text);
