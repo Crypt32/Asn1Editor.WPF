@@ -39,7 +39,7 @@
                 <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Left.DataSource.SelectedNode.Value.Tag}" Value="6">
+                        <DataTrigger Binding="{Binding Left.AsnDocContext.SelectedNode.Value.Tag}" Value="6">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>

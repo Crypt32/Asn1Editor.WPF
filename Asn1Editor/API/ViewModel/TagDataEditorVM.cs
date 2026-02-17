@@ -14,7 +14,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
     readonly IUIMessenger _uiMessenger;
-    readonly IDataSource _data;
+    readonly IAsn1DocumentContext _data;
     NodeEditMode mode;
     Boolean? dialogResult;
     String tagDetails;
@@ -23,7 +23,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
 
 
     public TagDataEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
-        _data = appTabs.SelectedTab!.GetPrimaryDocument().DataSource;
+        _data = appTabs.SelectedTab!.GetPrimaryDocument().AsnDocContext;
         _uiMessenger = uiMessenger;
         NodeViewOptions = appTabs.NodeViewOptions;
         OkCommand = new RelayCommand(submitValues);

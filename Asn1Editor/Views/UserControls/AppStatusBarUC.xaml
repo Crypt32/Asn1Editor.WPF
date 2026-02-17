@@ -8,32 +8,32 @@
     <StatusBar>
         <StatusBarItem>
             <TextBlock Text="Tag: ">
-                <Run Text="{Binding SelectedTab.Left.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=0x{0:X2}}"/>
-                <Run Text="{Binding SelectedTab.Left.DataSource.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=(0)}"/>
+                <Run Text="{Binding SelectedTab.Left.AsnDocContext.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=0x{0:X2}}"/>
+                <Run Text="{Binding SelectedTab.Left.AsnDocContext.SelectedNode.Value.Tag, Mode=OneWay, StringFormat=(0)}"/>
             </TextBlock>
         </StatusBarItem>
         <Separator/>
         <StatusBarItem>
             <TextBlock Text="Tag name: ">
-                <Run Text="{Binding  SelectedTab.Left.DataSource.SelectedNode.Value.TagName, Mode=OneWay}"/>
+                <Run Text="{Binding  SelectedTab.Left.AsnDocContext.SelectedNode.Value.TagName, Mode=OneWay}"/>
             </TextBlock>
         </StatusBarItem>
         <Separator/>
         <StatusBarItem>
             <TextBlock Text="Payload length: ">
-                <Run Text="{Binding  SelectedTab.Left.DataSource.SelectedNode.Value.PayloadLength, Mode=OneWay}"/>
+                <Run Text="{Binding  SelectedTab.Left.AsnDocContext.SelectedNode.Value.PayloadLength, Mode=OneWay}"/>
             </TextBlock>
         </StatusBarItem>
         <Separator/>
         <StatusBarItem>
             <TextBlock Text="Child nodes: ">
-                <Run Text="{Binding SelectedTab.Left.DataSource.SelectedNode.Children.Count, Mode=OneWay}"/>
+                <Run Text="{Binding SelectedTab.Left.AsnDocContext.SelectedNode.Children.Count, Mode=OneWay}"/>
             </TextBlock>
         </StatusBarItem>
         <Separator/>
         <StatusBarItem>
             <TextBlock Text="Size: ">
-                <Run Text="{Binding SelectedTab.Left.DataSource.RawData.Count, Mode=OneWay}"/>
+                <Run Text="{Binding SelectedTab.Left.AsnDocContext.RawData.Count, Mode=OneWay}"/>
                 <Run Text="bytes"/>
             </TextBlock>
         </StatusBarItem>
