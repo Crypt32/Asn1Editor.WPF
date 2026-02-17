@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SysadminsLV.Asn1Editor.Core.AsnFormatters;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
-namespace SysadminsLV.Asn1Editor.API.Utils;
+namespace SysadminsLV.Asn1Editor.Core.AsnFormatters;
 
-class CertutilRenderer(AsnTreeNode baseNode) : ITextRenderer {
+public class CertutilFormatter(AsnTreeNode baseNode) : IAsnDumpFormatter {
     readonly StringBuilder _sb = new();
     readonly StringBuilder _line = new();
     readonly String nl = Environment.NewLine;
@@ -37,9 +36,6 @@ class CertutilRenderer(AsnTreeNode baseNode) : ITextRenderer {
 
     public String RenderText(Int32 textWidth) {
         _sb.Clear();
-        if (baseNode is null) {
-            return _sb.ToString();
-        }
         foreach (AsnTreeNode node in baseNode.Flatten()) {
             String leftPad = getLeftPad(node);
             writeTagHeader(node, leftPad);

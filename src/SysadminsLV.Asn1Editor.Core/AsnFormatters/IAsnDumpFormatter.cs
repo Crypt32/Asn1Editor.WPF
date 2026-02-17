@@ -5,7 +5,7 @@ namespace SysadminsLV.Asn1Editor.Core.AsnFormatters;
 /// <summary>
 /// Represents decoded ASN.1 binary dump.
 /// </summary>
-public interface ITextRenderer {
+public interface IAsnDumpFormatter {
     /// <summary>
     /// Generates decoded ASN.1 binary dump.
     /// </summary>
