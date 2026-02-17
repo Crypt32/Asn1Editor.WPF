@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils.Extensions;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
 using SysadminsLV.Asn1Editor.Core.Tree;
 
 namespace SysadminsLV.Asn1Editor.API.Utils;
 
-class OpenSSLRenderer(Asn1TreeNode rootNode) : ITextRenderer {
+class OpenSSLRenderer(AsnTreeNode rootNode) : ITextRenderer {
     const String delimiter = "      |      |       |";
     readonly String nl = Environment.NewLine;
     Int32 width = 80;

@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.API.Utils;
 
-class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
+class CertutilRenderer(AsnTreeNode baseNode) : ITextRenderer {
     readonly StringBuilder _sb = new();
     readonly StringBuilder _line = new();
     readonly String nl = Environment.NewLine;
@@ -41,7 +40,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         if (baseNode is null) {
             return _sb.ToString();
         }
-        foreach (Asn1TreeNode node in baseNode.Flatten()) {
+        foreach (AsnTreeNode node in baseNode.Flatten()) {
             String leftPad = getLeftPad(node);
             writeTagHeader(node, leftPad);
             if (node.Value is { IsContainer: false, PayloadLength: > 0 }) {
@@ -51,7 +50,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         return _sb.ToString();
     }
 
-    void writeTagHeader(Asn1TreeNode node, String leftPadString) {
+    void writeTagHeader(AsnTreeNode node, String leftPadString) {
         AsnNodeValue value = node.Value;
         _line.Clear();
         _headList.Clear();
@@ -84,7 +83,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         _line.Append(AsnFormatter.BinaryToString([leadingByte], EncodingType.Hex));
         _sb.Append(_line);
     }
-    void writeContent(Asn1TreeNode node, String leftPadString) {
+    void writeContent(AsnTreeNode node, String leftPadString) {
         AsnNodeValue value = node.Value;
         _line.Clear();
 
@@ -123,7 +122,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         }
         _sb.Append(_line);
     }
-    CertutilRenderLine getHexTable(Asn1TreeNode node) {
+    CertutilRenderLine getHexTable(AsnTreeNode node) {
         AsnNodeValue value = node.Value;
 
         Byte[] binValue = node.GetEncodedValue();
@@ -149,7 +148,7 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
 
         return new CertutilRenderLine(shift, lines);
     }
-    String getLeftPad(Asn1TreeNode node) {
+    String getLeftPad(AsnTreeNode node) {
         if (node.Parent is null) {
             return String.Empty;
         }
@@ -161,9 +160,9 @@ class CertutilRenderer(Asn1TreeNode baseNode) : ITextRenderer {
         return sb.ToString();
     }
 
-    static List<Int32> getParents(Asn1TreeNode node) {
+    static List<Int32> getParents(AsnTreeNode node) {
         var depths = new List<Int32>();
-        Asn1TreeNode n = node;
+        AsnTreeNode n = node;
 
         while (n.Parent is not null) {
             if (n.MyIndex < n.Parent.Children.Count - 1) {
