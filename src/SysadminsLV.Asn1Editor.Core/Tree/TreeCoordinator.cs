@@ -32,6 +32,8 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
             var rootValue = new AsnNodeValue(asn);
             Root = new AsnTreeNode(rootValue, _binarySource, viewOptions);
             _binarySource.InsertRange(0, nodeRawData);
+            await Root.UpdateNodeViewAsync();
+
             return Root;
         }
 
@@ -45,6 +47,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
 
         propagateSizeChange(parent, node, nodeRawData.Length);
         updatePathsFrom(parent, parent.Children.Count - 1);
+        await node.UpdateNodeViewAsync();
 
         return node;
     }
@@ -52,6 +55,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
     public async Task InsertNode(Byte[] nodeRawData, AsnTreeNode targetNode, NodeAddOption option) {
         (AsnTreeNode parent, Int32 insertIndex, Int32 binaryOffset) = calculateInsertPosition(targetNode, option);
         AsnTreeNode childNode = await AsnTreeBuilder.BuildTreeAsync(nodeRawData, _binarySource, viewOptions);
+        await childNode.UpdateNodeViewAsync();
 
         childNode.Value.Offset = binaryOffset;
         _binarySource.InsertRange(binaryOffset, nodeRawData);
