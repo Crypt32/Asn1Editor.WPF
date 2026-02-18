@@ -77,7 +77,7 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
         return result;
     }
     public async Task InsertNode(AsnTreeNode node, NodeAddOption option, Byte[] nodeRawData) {
-        await _coordinator.InsertNode(nodeRawData, node, option);
+        await _coordinator.InsertNode(node, option, nodeRawData);
         syncTreeCollection();
     }
     public void RemoveNode(AsnTreeNode nodeToRemove) {
@@ -92,9 +92,9 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
         syncTreeCollection();
     }
     public void Reset() {
+        SelectedNode = null;
         _coordinator.Reset();
         syncTreeCollection();
-        SelectedNode = null;
     }
 
     #endregion
