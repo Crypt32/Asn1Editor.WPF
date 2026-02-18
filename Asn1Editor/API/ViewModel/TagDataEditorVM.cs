@@ -117,17 +117,8 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
         if (binValue is null) {
             return;
         }
-        _data.UpdateNodeBinaryCopy(binValue, Node);
-        Node.UnusedBits = TagValue.UnusedBits;
-        var asn = new Asn1Reader(binValue);
-        Int32 oldHeaderLength = Node.HeaderLength;
-        Node.PayloadStartOffset = Node.Offset + asn.TagLength - asn.PayloadLength;
-        Node.ExplicitValue = AsnDecoder.GetViewValue(asn);
-        Int32 offsetChange = Node.HeaderLength - oldHeaderLength
-                             + asn.PayloadLength - Node.PayloadLength;
-        Node.OffsetChange = offsetChange;
-        Node.PayloadLength = asn.PayloadLength;
-        _data.FinishBinaryUpdate();
+
+        _data.UpdateNode(binValue, _data.SelectedNode!);
         DialogResult = true;
     }
     Byte[]? validateValue() {

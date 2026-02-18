@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SysadminsLV.Asn1Editor.Core.ASN;
 using SysadminsLV.Asn1Editor.Core.Data;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.Asn1Parser.Universal;
 
 namespace SysadminsLV.Asn1Editor.Core.Tree;
 
@@ -83,6 +85,47 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         propagateSizeChange(parent, nodeToRemove, -nodeLength);
         updatePathsFrom(parent, nodeIndex);
         updateOffsetsFrom(parent, nodeIndex, -nodeLength);
+    }
+
+    public void UpdateNode(AsnTreeNode node, Byte[] newData) {
+        if (node is null) {
+            throw new ArgumentNullException(nameof(node));
+        }
+
+        // Parse the new encoded data to extract metadata
+        var asn = new Asn1Reader(newData);
+
+        // Calculate size difference
+        Int32 oldNodeSize = node.Value.TagLength;
+        Int32 newNodeSize = newData.Length;
+        Int32 sizeDifference = newNodeSize - oldNodeSize;
+
+        // Replace binary data
+        _binarySource.ReplaceRange(node.Value.Offset, oldNodeSize, newData);
+
+        // Update node metadata
+        node.Value.PayloadLength = asn.PayloadLength;
+        node.Value.PayloadStartOffset = node.Value.Offset + asn.TagLength - asn.PayloadLength;
+        node.Value.ExplicitValue = AsnDecoder.GetViewValue(asn);
+
+        // Handle BIT_STRING unused bits
+        if (asn.Tag == (Byte)Asn1Type.BIT_STRING) {
+            var bitString = (Asn1BitString)asn.GetTagObject();
+            node.Value.UnusedBits = bitString.UnusedBits;
+        } else {
+            node.Value.UnusedBits = 0;
+        }
+
+        // If the node size changed, propagate the change up the tree
+        if (sizeDifference != 0 && node.Parent is not null) {
+            propagateSizeChange(node.Parent, node, sizeDifference);
+
+            // Update siblings that come after this node
+            updateOffsetsFrom(node.Parent, node.MyIndex + 1, sizeDifference);
+        }
+    }
+    public void ReplaceRange(Int32 offset, Int32 bytesToRemove, IReadOnlyCollection<Byte> newData) {
+        _binarySource.ReplaceRange(offset, bytesToRemove, newData);
     }
 
     public void Reset() {
