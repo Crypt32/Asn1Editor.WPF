@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.Controls;
 
-public class AsnHexValueEditor :AsnValueEditor {
+public class AsnHexValueEditor : AsnValueEditor {
 
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
@@ -18,16 +20,15 @@ public class AsnHexValueEditor :AsnValueEditor {
         editor.OnValueChanged((String?)e.NewValue);
     }
 
-    public String Value
-    {
+    public String Value {
         get => (String)GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
     }
 
-    protected override void OnBinaryValueChanged(Byte[]? oldValue, Byte[]? newValue) {
+    protected override void OnBinaryValueChanged(IList<Byte>? oldValue, IList<Byte>? newValue) {
         Value = newValue is null
             ? String.Empty
-            : AsnFormatter.BinaryToString(newValue, EncodingType.Hex);
+            : AsnFormatter.BinaryToString(newValue.ToArray(), EncodingType.Hex);
 
         SetValidationState(true);
     }
@@ -35,7 +36,7 @@ public class AsnHexValueEditor :AsnValueEditor {
         if (String.IsNullOrWhiteSpace(newValue)) {
             BinaryValue = [];
             SetValidationState(true);
-            
+
             return;
         }
 

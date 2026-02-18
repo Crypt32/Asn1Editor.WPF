@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -6,10 +7,11 @@ namespace SysadminsLV.Asn1Editor.Controls;
 
 public abstract class AsnValueEditor : Control {
     #region BinaryValue
-
+    // can't be Byte[]:
+    // https://stackoverflow.com/questions/926486/wpf-compilation-error-tags-of-type-propertyarraystart-are-not-supported-in
     public static readonly DependencyProperty BinaryValueProperty = DependencyProperty.Register(
         nameof(BinaryValue),
-        typeof(Byte[]),
+        typeof(IList<Byte>),
         typeof(AsnValueEditor),
         new FrameworkPropertyMetadata(null,
             FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
@@ -17,12 +19,12 @@ public abstract class AsnValueEditor : Control {
 
     static void onBinaryValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is AsnValueEditor editor) {
-            editor.OnBinaryValueChanged((Byte[])e.OldValue, (Byte[])e.NewValue);
+            editor.OnBinaryValueChanged((IList<Byte>)e.OldValue, (IList<Byte>)e.NewValue);
         }
     }
 
-    public Byte[] BinaryValue {
-        get => (Byte[])GetValue(BinaryValueProperty);
+    public IList<Byte> BinaryValue {
+        get => (IList<Byte>)GetValue(BinaryValueProperty);
         set => SetValue(BinaryValueProperty, value);
     }
 
@@ -69,5 +71,5 @@ public abstract class AsnValueEditor : Control {
             ? String.Empty
             : errorText ?? "The value is not correct.";
     }
-    protected abstract void OnBinaryValueChanged(Byte[] oldValue, Byte[] newValue);
+    protected abstract void OnBinaryValueChanged(IList<Byte> oldValue, IList<Byte> newValue);
 }
