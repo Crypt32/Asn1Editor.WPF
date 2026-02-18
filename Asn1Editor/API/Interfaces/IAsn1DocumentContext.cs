@@ -60,7 +60,7 @@ public interface IAsn1DocumentContext : INotifyCollectionChanged {
     /// <param name="nodeToRemove">Node to remove.</param>
     void RemoveNode(AsnTreeNode nodeToRemove);
 
-    void UpdateNodeBinaryCopy(IReadOnlyCollection<Byte> newBytes, AsnNodeValue nodeValue);
+    void UpdateNode(Byte[] newBytes, AsnTreeNode nodeValue);
     void UpdateNodeLength(AsnTreeNode node, IReadOnlyCollection<Byte> newLenBytes);
     void FinishBinaryUpdate();
     /// <summary>
