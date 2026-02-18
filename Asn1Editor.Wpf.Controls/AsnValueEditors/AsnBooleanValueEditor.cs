@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace SysadminsLV.Asn1Editor.Controls;
@@ -22,11 +23,11 @@ public class AsnBooleanValueEditor : AsnValueEditor {
         set => SetValue(ValueProperty, value);
     }
 
-    protected override void OnBinaryValueChanged(Byte[]? oldValue, Byte[]? newValue) {
-        if (newValue is not { Length: 1 }) {
+    protected override void OnBinaryValueChanged(IList<Byte>? oldValue, IList<Byte>? newValue) {
+        if (newValue is not { Count: 1 }) {
             SetValidationState(false, "BOOLEAN must be a single octet.");
             Value = null;
-            
+
             return;
         }
 
