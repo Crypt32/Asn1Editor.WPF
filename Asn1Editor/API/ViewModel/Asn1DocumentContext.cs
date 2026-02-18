@@ -34,8 +34,17 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
     /// Synchronizes the observable collection with coordinator's root node.
     /// </summary>
     void syncTreeCollection() {
-        _treeCollection.Clear();
-        if (_coordinator.Root is not null) {
+        // if we removed root node, clear collection.
+        if (_coordinator.Root is null) {
+            _treeCollection.Clear();
+
+            return;
+        }
+        // otherwise, check if we need to add root node to collection.
+        // we should not re-add root node if it already exists in collection, because it will
+        // cause WPF TreeView to lose expanded/collapsed state and complete tree will be re-rendered,
+        // which may hurt performance and cause UI flickering.
+        if (_treeCollection.Count == 0 && _coordinator.Root is not null) {
             _treeCollection.Add(_coordinator.Root);
         }
     }
