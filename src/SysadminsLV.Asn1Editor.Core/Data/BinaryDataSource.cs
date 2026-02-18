@@ -81,10 +81,28 @@ class BinaryDataSource : IBinarySource, IList<Byte> {
         notifyChanged();
     }
 
-    public void ReplaceRange(Int32 offset, Int32 count, IReadOnlyCollection<Byte> newData) {
-        validateRange(offset, count);
+    /// <summary>
+    /// Replaces a range of bytes in the binary source with the specified new data.
+    /// </summary>
+    /// <param name="offset">
+    /// The zero-based position in the binary source at which the replacement begins.
+    /// </param>
+    /// <param name="bytesToRemove">
+    /// The number of bytes to be replaced starting from the specified <paramref name="offset"/>.
+    /// </param>
+    /// <param name="newData">
+    /// A collection of bytes that will replace the specified range in the binary source.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if <paramref name="offset"/> or <paramref name="bytesToRemove"/> is out of the valid range.
+    /// </exception>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="newData"/> is <c>null</c>.
+    /// </exception>
+    public void ReplaceRange(Int32 offset, Int32 bytesToRemove, IReadOnlyCollection<Byte> newData) {
+        validateRange(offset, bytesToRemove);
 
-        _data.RemoveRange(offset, count);
+        _data.RemoveRange(offset, bytesToRemove);
         _data.InsertRange(offset, newData);
         notifyChanged();
     }
