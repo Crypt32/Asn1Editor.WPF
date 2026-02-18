@@ -46,26 +46,30 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
 
         var node = new AsnTreeNode(nodeValue, _binarySource, viewOptions);
         parent.AddChildNode(node, parent.Children.Count);
+        // this has to be done before propagating size change, because the propagation relies
+        // on the node's Path and MyIndex to update offsets of siblings
+        updatePathsFrom(parent, parent.Children.Count - 1);
 
         propagateSizeChange(parent, node, nodeRawData.Length);
-        updatePathsFrom(parent, parent.Children.Count - 1);
-        await node.UpdateNodeViewAsync();
+        await Root.UpdateNodeViewAsync();
 
         return node;
     }
 
-    public async Task InsertNode(Byte[] nodeRawData, AsnTreeNode targetNode, NodeAddOption option) {
+    public async Task InsertNode(AsnTreeNode targetNode, NodeAddOption option, Byte[] nodeRawData) {
         (AsnTreeNode parent, Int32 insertIndex, Int32 binaryOffset) = calculateInsertPosition(targetNode, option);
         AsnTreeNode childNode = await AsnTreeBuilder.BuildTreeAsync(nodeRawData, _binarySource, viewOptions);
-        await childNode.UpdateNodeViewAsync();
 
         childNode.Value.Offset = binaryOffset;
         _binarySource.InsertRange(binaryOffset, nodeRawData);
         parent.AddChildNode(childNode, insertIndex);
+        // this has to be done before propagating size change, because the propagation relies
+        // on the node's Path and MyIndex to update offsets of siblings
+        updatePathsFrom(parent, insertIndex);
 
         propagateSizeChange(parent, childNode, nodeRawData.Length);
-        updatePathsFrom(parent, insertIndex);
-        updateOffsetsFrom(parent, insertIndex + 1, nodeRawData.Length);
+        //updateOffsetsFrom(parent, insertIndex + 1, nodeRawData.Length);
+        await Root!.UpdateNodeViewAsync();
     }
 
     public void RemoveNode(AsnTreeNode nodeToRemove) {
@@ -81,9 +85,13 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
 
         _binarySource.RemoveRange(nodeToRemove.Value.Offset, nodeLength);
         parent.RemoveChildNode(nodeToRemove);
+        // this has to be done before propagating size change, because the propagation relies
+        // on the node's Path and MyIndex to update offsets of siblings
+        updatePathsFrom(parent, nodeIndex);
 
         propagateSizeChange(parent, nodeToRemove, -nodeLength);
-        updatePathsFrom(parent, nodeIndex);
+        // explicitly update offsets of siblings after the removed node, because the propagation relies
+        // on the node's Path and MyIndex to update offsets of siblings
         updateOffsetsFrom(parent, nodeIndex, -nodeLength);
     }
 
@@ -119,10 +127,8 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         // If the node size changed, propagate the change up the tree
         if (sizeDifference != 0 && node.Parent is not null) {
             propagateSizeChange(node.Parent, node, sizeDifference);
-
-            // Update siblings that come after this node
-            updateOffsetsFrom(node.Parent, node.MyIndex + 1, sizeDifference);
         }
+        Root!.UpdateNodeView();
     }
 
     public void Reset() {
