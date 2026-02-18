@@ -75,11 +75,11 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
         _coordinator.RemoveNode(nodeToRemove);
         syncTreeCollection();
     }
-    public void UpdateNodeBinaryCopy(IReadOnlyCollection<Byte> newBytes, AsnNodeValue nodeValue) {
-        _coordinator.RawData.ReplaceRange(nodeValue.Offset, nodeValue.TagLength, newBytes);
+    public void UpdateNode(Byte[] newBytes, AsnTreeNode nodeValue) {
+        _coordinator.UpdateNode(nodeValue, newBytes);
     }
     public void UpdateNodeLength(AsnTreeNode node, IReadOnlyCollection<Byte> newLenBytes) {
-        _coordinator.RawData.ReplaceRange(node.Value.Offset + 1, node.Value.HeaderLength - 1, newLenBytes);
+        _coordinator.ReplaceRange(node.Value.Offset + 1, node.Value.HeaderLength - 1, newLenBytes);
     }
     public void FinishBinaryUpdate() {
         //RequireTreeRefresh?.Invoke(this, EventArgs.Empty);
