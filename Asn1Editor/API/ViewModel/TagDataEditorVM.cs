@@ -118,7 +118,7 @@ class TagDataEditorVM : ViewModelBase, ITagDataEditorVM {
             return;
         }
 
-        _data.UpdateNode(binValue, _data.SelectedNode!);
+        _data.UpdateNode(_data.SelectedNode!, binValue);
         DialogResult = true;
     }
     Byte[]? validateValue() {

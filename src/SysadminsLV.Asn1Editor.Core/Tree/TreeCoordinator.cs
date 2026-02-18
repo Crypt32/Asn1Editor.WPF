@@ -124,9 +124,6 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
             updateOffsetsFrom(node.Parent, node.MyIndex + 1, sizeDifference);
         }
     }
-    public void ReplaceRange(Int32 offset, Int32 bytesToRemove, IReadOnlyCollection<Byte> newData) {
-        _binarySource.ReplaceRange(offset, bytesToRemove, newData);
-    }
 
     public void Reset() {
         Root = null;

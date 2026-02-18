@@ -146,15 +146,15 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     }
     Task pasteBefore(Object o, CancellationToken token) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
-        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.Before);
+        return data!.InsertNode(data.SelectedNode, NodeAddOption.Before, ClipboardManager.GetClipboardBytes().ToArray());
     }
     Task pasteAfter(Object o, CancellationToken token) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
-        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.After);
+        return data!.InsertNode(data.SelectedNode, NodeAddOption.After, ClipboardManager.GetClipboardBytes().ToArray());
     }
     Task pasteLast(Object o, CancellationToken token) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
-        return data!.InsertNode(ClipboardManager.GetClipboardBytes().ToArray(), data.SelectedNode, NodeAddOption.Last);
+        return data!.InsertNode(data.SelectedNode, NodeAddOption.Last, ClipboardManager.GetClipboardBytes().ToArray());
     }
 
     Boolean ensureNodeSelected(Object o) {

@@ -67,7 +67,7 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
 
         return result;
     }
-    public async Task InsertNode(Byte[] nodeRawData, AsnTreeNode node, NodeAddOption option) {
+    public async Task InsertNode(AsnTreeNode node, NodeAddOption option, Byte[] nodeRawData) {
         await _coordinator.InsertNode(nodeRawData, node, option);
         syncTreeCollection();
     }
@@ -75,14 +75,8 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
         _coordinator.RemoveNode(nodeToRemove);
         syncTreeCollection();
     }
-    public void UpdateNode(Byte[] newBytes, AsnTreeNode nodeValue) {
+    public void UpdateNode(AsnTreeNode nodeValue, Byte[] newBytes) {
         _coordinator.UpdateNode(nodeValue, newBytes);
-    }
-    public void UpdateNodeLength(AsnTreeNode node, IReadOnlyCollection<Byte> newLenBytes) {
-        _coordinator.ReplaceRange(node.Value.Offset + 1, node.Value.HeaderLength - 1, newLenBytes);
-    }
-    public void FinishBinaryUpdate() {
-        //RequireTreeRefresh?.Invoke(this, EventArgs.Empty);
     }
     public async Task InitializeFromRawData(IEnumerable<Byte> rawData) {
         await _coordinator.InitializeFromRawData(rawData);
