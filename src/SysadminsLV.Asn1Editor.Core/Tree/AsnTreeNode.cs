@@ -37,7 +37,7 @@ public class AsnTreeNode {
     /// This property is used to establish the hierarchical relationship between nodes in the ASN.1 tree structure.
     /// A value of <c>null</c> indicates that the current node is the root node.
     /// </remarks>
-    public AsnTreeNode? Parent { get; internal set; }
+    public AsnTreeNode? Parent { get; private set; }
     /// <summary>
     /// Gets a read-only collection of child nodes associated with the current ASN.1 tree node.
     /// </summary>
