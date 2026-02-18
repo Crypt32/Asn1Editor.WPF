@@ -59,17 +59,17 @@ public class AsnTreeNode {
     /// </remarks>
     public AsnNodeValue Value { get; }
     /// <summary>
-    /// Gets or sets the hierarchy path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.
+    /// Gets the hierarchy path to the node in form: /0/1/4/3/..., where values represent zero-based index of the node in subtree.
     /// </summary>
     public String Path => Value.Path;
     /// <summary>
-    /// Gets or sets the zero-based index of the current node within its parent's collection of child nodes.
+    /// Gets the zero-based index of the current node within its parent's collection of child nodes.
     /// </summary>
     /// <remarks>
     /// This property is used to determine the position of the current node relative to its siblings.
     /// It is updated automatically when the node is added to or removed from its parent's collection.
     /// </remarks>
-    public Int32 MyIndex { get; internal set; }
+    public Int32 MyIndex { get; private set; }
     /// <summary>
     /// Gets a value indicating whether this node is the root of the tree.
     /// </summary>
@@ -117,7 +117,7 @@ public class AsnTreeNode {
             }
 
             // this node is the last element in parent node. No next sibling.
-            return MyIndex + 1 > Parent!.Children.Count
+            return MyIndex + 1 >= Parent!.Children.Count
                 ? null
                 : Parent.Children[MyIndex + 1];
         }
