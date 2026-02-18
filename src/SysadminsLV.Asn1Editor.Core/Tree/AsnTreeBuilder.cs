@@ -18,6 +18,34 @@ namespace SysadminsLV.Asn1Editor.Core.Tree;
 /// visualization, or manipulation of the ASN.1 data.
 /// </remarks>
 public static class AsnTreeBuilder {
+    /// <summary>
+    /// Constructs an ASN.1 tree structure from the provided raw binary data.
+    /// </summary>
+    /// <param name="rawData">
+    /// A byte array containing the raw binary ASN.1 data to be parsed.
+    /// </param>
+    /// <param name="binaryOps">
+    /// An implementation of the <see cref="IBinarySource"/> interface, which provides
+    /// binary data operations required during tree construction.
+    /// </param>
+    /// <param name="viewOptions">
+    /// An implementation of the <see cref="INodeViewOptions"/> interface, which specifies
+    /// options for customizing the view or representation of the tree nodes.
+    /// </param>
+    /// <returns>
+    /// The root node of the constructed ASN.1 tree, represented as an <see cref="AsnTreeNode"/>.
+    /// </returns>
+    /// <remarks>
+    /// This method parses the binary ASN.1 data and builds a hierarchical tree structure
+    /// where each node corresponds to a specific ASN.1 element. The resulting tree can be
+    /// used for further processing, visualization, or manipulation of the ASN.1 data.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown if <paramref name="rawData"/>, <paramref name="binaryOps"/>, or <paramref name="viewOptions"/> is <c>null</c>.
+    /// </exception>
+    /// <exception cref="FormatException">
+    /// Thrown if the provided binary data is not in a valid ASN.1 format.
+    /// </exception>
     public static AsnTreeNode BuildTree(Byte[] rawData, IBinarySource binaryOps, INodeViewOptions viewOptions) {
         var asn = new Asn1Reader(rawData);
         asn.BuildOffsetMap();
