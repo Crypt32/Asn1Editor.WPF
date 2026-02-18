@@ -18,10 +18,7 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
                                      
                                      """;
 
-    Byte tag;
-    Boolean invalidData;
-    Int32 offset, offsetChange;
-    String path, header, toolTip;
+    Int32 offset;
 
     public AsnNodeValue(Asn1Reader asnReader) {
         Offset = asnReader.Offset;
@@ -51,49 +48,45 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
         }
     }
 
-    public String Header {
-        get => header;
-        private set {
-            header = value;
+    public String Header
+    {
+        get;
+        private set
+        {
+            field = value;
             OnPropertyChanged();
         }
     }
-    public String ToolTip {
-        get => toolTip;
-        private set {
-            toolTip = value;
+    public String ToolTip
+    {
+        get;
+        private set
+        {
+            field = value;
             OnPropertyChanged();
         }
     }
     public Byte Tag {
-        get => tag;
-        private set {
-            tag = value;
-            if ((tag & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
+        get;
+        private init {
+            field = value;
+            if ((field & (Byte)Asn1Class.CONTEXT_SPECIFIC) > 0) {
                 IsContextSpecific = true;
             }
-            if ((tag & (Byte)Asn1Class.CONSTRUCTED) > 0) {
+            if ((field & (Byte)Asn1Class.CONSTRUCTED) > 0) {
                 IsContainer = true;
             }
             OnPropertyChanged();
         }
     }
     public Byte UnusedBits { get; set; }
-    public String TagName { get; private set; }
+    public String TagName { get; }
     public Int32 Offset {
         get => offset;
         set {
             Int32 diff = value - offset;
             offset = value;
             PayloadStartOffset += diff;
-        }
-    }
-    public Int32 OffsetChange {
-        get => offsetChange;
-        set {
-            if (offsetChange == value) { return; }
-            offsetChange = value;
-            OnPropertyChanged();
         }
     }
 
@@ -112,19 +105,24 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     /// </remarks>
     public Boolean IsContainer { get; set; }
     public Boolean IsContextSpecific { get; private set; }
-    public Boolean InvalidData {
-        get => invalidData;
-        private set {
-            invalidData = value;
+    public Boolean InvalidData
+    {
+        get;
+        private set
+        {
+            field = value;
             OnPropertyChanged();
         }
     } //TODO
     public Int32 Depth { get; private set; }
-    public String Path {
-        get => path;
-        set {
-            path = value ?? String.Empty;
-            Depth = Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries).Length;
+    public String Path
+    {
+        get;
+        set
+        {
+            field = value ?? String.Empty;
+            Depth = Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries)
+                .Length;
         }
     }
     public String ExplicitValue { get; set; }
@@ -253,17 +251,17 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     }
 
     #region Equals
-    public override Boolean Equals(Object obj) {
+    public override Boolean Equals(Object? obj) {
         if (ReferenceEquals(null, obj)) { return false; }
         if (ReferenceEquals(this, obj)) { return true; }
         return obj.GetType() == typeof(AsnNodeValue) && Equals((AsnNodeValue)obj);
     }
     protected Boolean Equals(AsnNodeValue other) {
-        return offset == other.offset && tag == other.tag;
+        return offset == other.offset && Tag == other.Tag;
     }
     public override Int32 GetHashCode() {
         unchecked {
-            return (offset * 397) ^ tag.GetHashCode();
+            return (offset * 397) ^ Tag.GetHashCode();
         }
     }
     #endregion
