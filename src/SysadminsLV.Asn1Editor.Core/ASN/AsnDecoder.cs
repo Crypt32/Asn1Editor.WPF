@@ -14,6 +14,9 @@ public static class AsnDecoder {
         var retValue = new AsnViewValue {
             Options = AsnViewValueOptions.SupportsPrintableText
         };
+        if (asn.PayloadLength == 0) {
+            return retValue;
+        }
         switch ((Asn1Type)asn.Tag) {
             case Asn1Type.INTEGER:
                 retValue.TextValue = new Asn1Integer(asn.GetTagRawData()).Value.ToString();
