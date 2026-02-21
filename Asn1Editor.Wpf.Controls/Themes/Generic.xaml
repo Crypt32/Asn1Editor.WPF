@@ -2,6 +2,7 @@
     <ResourceDictionary.MergedDictionaries>
         <!-- ASN Value Editors -->
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnBooleanValueEditor.xaml"/>
+        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnBitStringEditor.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnHexValueEditor.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnVariantValueEditor.xaml"/>
 
