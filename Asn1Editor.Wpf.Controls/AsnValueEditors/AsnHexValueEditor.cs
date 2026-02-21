@@ -1,55 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using SysadminsLV.Asn1Parser;
 
 namespace SysadminsLV.Asn1Editor.Controls;
 
-public class AsnHexValueEditor : AsnValueEditor {
+public class AsnHexValueEditor : AsnVariantValueEditor {
+    AsnValueValidator? validator;
 
-    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-        nameof(Value),
-        typeof(String),
-        typeof(AsnHexValueEditor),
-        new FrameworkPropertyMetadata(String.Empty,
-            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-            onValueChanged));
-    static void onValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        var editor = (AsnHexValueEditor)d;
-        editor.OnValueChanged((String?)e.NewValue);
-    }
-
-    public String Value {
-        get => (String)GetValue(ValueProperty);
-        set => SetValue(ValueProperty, value);
-    }
-
-    protected override void OnBinaryValueChanged(IList<Byte>? oldValue, IList<Byte>? newValue) {
-        Value = newValue is null
-            ? String.Empty
-            : AsnFormatter.BinaryToString(newValue.ToArray(), EncodingType.Hex);
-
-        SetValidationState(true);
-    }
-    void OnValueChanged(String? newValue) {
-        if (String.IsNullOrWhiteSpace(newValue)) {
-            BinaryValue = [];
-            SetValidationState(true);
-
-            return;
-        }
-
-        Byte[] binary = null;
-
+    protected override AsnValueValidationResult PerformValidation() {
         try {
-            binary = AsnFormatter.StringToBinary(newValue, EncodingType.Hex);
+            Byte[] binary = Asn1Utils.Encode(AsnFormatter.StringToBinary(Value, EncodingType.Hex), validator!.Tag);
+            return validator.Validate(binary);
         } catch (Exception ex) {
-            SetValidationState(false, ex.Message);
+            return AsnValueValidationResult.Fail(ex.Message);
         }
+    }
+    protected override void OnInputValueChanged(Byte[]? oldValue, Byte[]? newValue) {
+        if (newValue is not null) {
+            validator = AsnValueValidator.Create(newValue[0]);
+            var reader = new Asn1Reader(newValue);
+            Value = AsnFormatter.BinaryToString(reader.GetPayload(), EncodingType.Hex);
 
-        // if we reached this far, binary is not null
-        BinaryValue = binary!;
-        SetValidationState(true);
+            SetOutOfBandValidationResult();
+        }
+    }
+
+    static AsnHexValueEditor() {
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(AsnHexValueEditor),
+            new FrameworkPropertyMetadata(typeof(AsnHexValueEditor)));
     }
 }
