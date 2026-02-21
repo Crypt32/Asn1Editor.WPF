@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="AsnValueEditorLargeTextBoxStyle" TargetType="TextBox" BasedOn="{x:Null}">
+        <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="MinLines" Value="10"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
+</ResourceDictionary>
