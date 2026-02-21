@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
+using SysadminsLV.Asn1Parser.Universal;
 
 namespace SysadminsLV.Asn1Editor.Controls;
 
@@ -12,10 +12,10 @@ public class AsnBooleanValueEditor : AsnValueEditor {
         new FrameworkPropertyMetadata(null,
             FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
             onValueChanged));
-
     static void onValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        var editor = (AsnBooleanValueEditor)d;
-        editor.OnValueChanged((Boolean?)e.NewValue);
+        if (d is AsnBooleanValueEditor editor) {
+            editor.SetOutOfBandValidationResult();
+        }
     }
 
     public Boolean? Value {
@@ -23,26 +23,26 @@ public class AsnBooleanValueEditor : AsnValueEditor {
         set => SetValue(ValueProperty, value);
     }
 
-    protected override void OnBinaryValueChanged(IList<Byte>? oldValue, IList<Byte>? newValue) {
-        if (newValue is not { Count: 1 }) {
-            SetValidationState(false, "BOOLEAN must be a single octet.");
-            Value = null;
+    protected override AsnValueValidationResult PerformValidation() {
+        if (Value is null) {
+            return AsnValueValidationResult.Fail("BOOLEAN value cannot be determined. It has to be either, True or False.");
+        }
+
+        return AsnValueValidationResult.Ok(new Asn1Boolean(Value ?? false).GetRawData());
+    }
+    protected override void OnInputValueChanged(Byte[]? oldValue, Byte[]? newValue) {
+        if (newValue is not { Length: 3 }) {
+            SetOutOfBandValidationResult();
 
             return;
         }
 
-        Value = newValue[0] != 0;
-        SetValidationState(true);
+        Value = new Asn1Boolean(newValue).Value;
     }
 
-    void OnValueChanged(Boolean? newValue) {
-        if (newValue == null) {
-            BinaryValue = [0x00];
-            SetValidationState(true);
-            return;
-        }
-
-        BinaryValue = [newValue.Value ? (Byte)0xFF : (Byte)0x00];
-        SetValidationState(true);
+    static AsnBooleanValueEditor() {
+        DefaultStyleKeyProperty.OverrideMetadata(
+            typeof(AsnBooleanValueEditor),
+            new FrameworkPropertyMetadata(typeof(AsnBooleanValueEditor)));
     }
 }
