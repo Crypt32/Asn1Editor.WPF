@@ -3,7 +3,7 @@
         <!-- ASN Value Editors -->
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnBooleanValueEditor.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnHexValueEditor.xaml"/>
-        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnNonEditableValueEditor.xaml"/>
+        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnVariantValueEditor.xaml"/>
 
         <!-- The rest -->
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnHexViewer.xaml"/>
