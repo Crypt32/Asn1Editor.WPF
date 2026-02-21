@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AsnValueEditorResources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="c:AsnBitStringValueEditor">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:AsnBitStringValueEditor">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Right"
+                                    Margin="5,0">
+                            <CheckBox x:Name="AutoCalcCheckBox"
+                                      Content="Auto-calculate unused bits"
+                                      VerticalContentAlignment="Center"
+                                      Margin="3"
+                                      IsChecked="{Binding AutoCalculateUnusedBits, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <TextBlock Text="Unused bits (0-7):"
+                                       Margin="20,0,0,0"/>
+                            <TextBox x:Name="PART_UnusedBitsTextBox"
+                                     Text="{Binding RelativeSource={RelativeSource TemplatedParent},
+                                         Path=UnusedBits,
+                                         Mode=TwoWay,
+                                         UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="20,3,0,0"
+                                     MaxLength="1"
+                                     Width="20"
+                                     HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <TextBox Style="{StaticResource AsnValueEditorLargeTextBoxStyle}"
+                                 Text="{Binding Value, RelativeSource={RelativeSource TemplatedParent}}"/>
+                    </DockPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="AutoCalcCheckBox" Property="IsChecked" Value="True">
+                            <Setter TargetName="PART_UnusedBitsTextBox" Property="IsEnabled" Value="False"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
