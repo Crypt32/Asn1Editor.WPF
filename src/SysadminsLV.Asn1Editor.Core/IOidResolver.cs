@@ -10,6 +10,7 @@ namespace SysadminsLV.Asn1Editor.Core;
 /// </summary>
 public interface IOidResolver {
     String? ResolveOid(String oidValue);
+    String? ResolveFriendlyName(String friendlyName);
 }
 
 /// <summary>
@@ -20,6 +21,9 @@ public interface IOidResolver {
 class OidResolverStub : IOidResolver {
     public String? ResolveOid(String oidValue) {
         return new Oid(oidValue).Value;
+    }
+    public String? ResolveFriendlyName(String friendlyName) {
+        return new Oid(friendlyName).FriendlyName;
     }
 }
 
@@ -32,11 +36,5 @@ class OidResolverStub : IOidResolver {
 /// be replaced with a custom resolver to support advanced OID resolution scenarios.
 /// </remarks>
 public static class OidServices {
-    static IOidResolver resolver = new OidResolverStub();
-    
-    public static IOidResolver Resolver
-    {
-        get => resolver;
-        set => resolver = value ?? new OidResolverStub();
-    }
+    public static IOidResolver Resolver { get; set; } = new OidResolverStub();
 }
