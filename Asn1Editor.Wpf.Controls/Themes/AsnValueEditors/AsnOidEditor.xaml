@@ -1,0 +1,66 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls"
+                    xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AsnValueEditorResources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="c:AsnOidEditor">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="c:AsnOidEditor">
+                    <DockPanel>
+                        <Grid DockPanel.Dock="Bottom"
+                              behaviors:MarginSetter.Margin="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="0"
+                                       Text="OID Value: "/>
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="0"
+                                     Style="{StaticResource TransparentTextBoxStyle}"
+                                     Text="{Binding Path=OidInfo.Value, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="1"
+                                       Text="Friendly Name: "/>
+                            <TextBox Grid.Column="1"
+                                     Grid.Row="1"
+                                     Style="{StaticResource TransparentTextBoxStyle}"
+                                     Text="{Binding Path=OidInfo.FriendlyName, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+
+                            <TextBlock Grid.Column="0"
+                                       Grid.Row="2"
+                                       Text="Online Info: "/>
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="2">
+                                <Hyperlink x:Name="PART_Hyperlink"
+                                           Foreground="Navy"
+                                           NavigateUri="{Binding Path=OidInfo.ExternalUri, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                                    <Run Text="{Binding Path=OidInfo.ExternalUri, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
+                                </Hyperlink>
+                            </TextBlock>
+                        </Grid>
+                        <TextBox FontFamily="Consolas"
+                                 TextWrapping="Wrap"
+                                 MinLines="4"
+                                 AcceptsReturn="False"
+                                 VerticalScrollBarVisibility="Auto"
+                                 BorderThickness="0,0,0,1"
+                                 Text="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
