@@ -70,6 +70,9 @@ public class OidResolverWrapper : IOidResolver {
     public String? ResolveOid(String oidValue) {
         return OidResolver.ResolveOid(oidValue);
     }
+    public String? ResolveFriendlyName(String friendlyName) {
+        return OidResolver.ResolveFriendlyName(friendlyName);
+    }
 }
 
 /// <summary>

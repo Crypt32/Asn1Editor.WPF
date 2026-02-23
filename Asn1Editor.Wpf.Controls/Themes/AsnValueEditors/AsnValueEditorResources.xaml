@@ -8,4 +8,12 @@
         <Setter Property="MinLines" Value="10"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     </Style>
+    <Style x:Key="TransparentTextBoxStyle" TargetType="TextBox" BasedOn="{x:Null}">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(TextElement.Foreground)}"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
 </ResourceDictionary>
