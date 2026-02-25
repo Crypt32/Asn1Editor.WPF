@@ -9,15 +9,14 @@ public class AsnHexValueEditor : AsnVariantValueEditor {
 
     protected override AsnValueValidationResult PerformValidation() {
         try {
-            Byte[] binary = Asn1Utils.Encode(AsnFormatter.StringToBinary(Value, EncodingType.Hex), validator!.Tag);
-            return validator.Validate(binary);
+            return validator!.Validate(Value);
         } catch (Exception ex) {
             return AsnValueValidationResult.Fail(ex.Message);
         }
     }
     protected override void OnInputValueChanged(Byte[]? oldValue, Byte[]? newValue) {
         if (newValue is not null) {
-            validator = AsnValueValidator.Create(newValue[0]);
+            validator = new AsnValueValidator(newValue[0]);
             var reader = new Asn1Reader(newValue);
             Value = AsnFormatter.BinaryToString(reader.GetPayload(), EncodingType.Hex);
 

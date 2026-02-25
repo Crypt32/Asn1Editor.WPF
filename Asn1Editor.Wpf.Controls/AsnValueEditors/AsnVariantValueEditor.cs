@@ -6,7 +6,7 @@ using SysadminsLV.Asn1Parser;
 namespace SysadminsLV.Asn1Editor.Controls;
 
 public class AsnVariantValueEditor : AsnValueEditor {
-    AsnValueValidator? validator;
+    Byte? tag;
 
     public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
@@ -20,11 +20,18 @@ public class AsnVariantValueEditor : AsnValueEditor {
     }
 
     protected override AsnValueValidationResult PerformValidation() {
-        return validator!.Validate(Value);
+        try
+        {
+            return AsnValueValidationResult.Ok(AsnDecoder.EncodeGeneric(tag!.Value, Value, 0));
+        }
+        catch (Exception ex)
+        {
+            return AsnValueValidationResult.Fail(ex.Message);
+        }
     }
     protected override void OnInputValueChanged(Byte[]? oldValue, Byte[]? newValue) {
         if (newValue is not null) {
-            validator = AsnValueValidator.Create(newValue[0]);
+            tag = newValue[0];
             var reader = new Asn1Reader(newValue);
             var editValue = AsnDecoder.GetEditValue(reader);
             Value = editValue.TextValue ?? String.Empty;
