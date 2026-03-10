@@ -14,14 +14,14 @@ using SysadminsLV.Asn1Parser.Universal;
 
 namespace SysadminsLV.Asn1Editor.Controls;
 
-public class AsnOidEditor : AsnValueEditor {
+public class AsnOidValueEditor : AsnValueEditor {
     static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
         typeof(String),
-        typeof(AsnOidEditor),
+        typeof(AsnOidValueEditor),
         new PropertyMetadata(null, onValueChanged));
     static void onValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-        if (d is AsnOidEditor editor) {
+        if (d is AsnOidValueEditor editor) {
             editor.OidInfo.Resolve(editor.Value);
         }
     }
@@ -34,7 +34,7 @@ public class AsnOidEditor : AsnValueEditor {
     static readonly DependencyProperty OidInfoProperty = DependencyProperty.Register(
         nameof(OidInfo),
         typeof(AsnOidInfo),
-        typeof(AsnOidEditor),
+        typeof(AsnOidValueEditor),
         new PropertyMetadata(new AsnOidInfo()));
 
     public AsnOidInfo OidInfo {
@@ -72,10 +72,10 @@ public class AsnOidEditor : AsnValueEditor {
         }
     }
 
-    static AsnOidEditor() {
+    static AsnOidValueEditor() {
         DefaultStyleKeyProperty.OverrideMetadata(
-            typeof(AsnOidEditor),
-            new FrameworkPropertyMetadata(typeof(AsnOidEditor)));
+            typeof(AsnOidValueEditor),
+            new FrameworkPropertyMetadata(typeof(AsnOidValueEditor)));
     }
 }
 
