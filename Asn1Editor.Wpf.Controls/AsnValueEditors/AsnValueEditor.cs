@@ -51,7 +51,7 @@ public abstract class AsnValueEditor : Control {
 
     // can't be Byte[]:
     // https://stackoverflow.com/questions/926486/wpf-compilation-error-tags-of-type-propertyarraystart-are-not-supported-in
-    public static readonly DependencyProperty InputValueProperty = DependencyProperty.Register(
+    static readonly DependencyProperty InputValueProperty = DependencyProperty.Register(
         nameof(InputValue),
         typeof(IList<Byte>),
         typeof(AsnValueEditor),
@@ -74,7 +74,7 @@ public abstract class AsnValueEditor : Control {
 
     #region Result
 
-    public static readonly DependencyProperty ResultProperty = DependencyProperty.Register(
+    static readonly DependencyProperty ResultProperty = DependencyProperty.Register(
         nameof(Result),
         typeof(AsnValueValidationResult),
         typeof(AsnValueEditor),
@@ -91,7 +91,7 @@ public abstract class AsnValueEditor : Control {
 
     // expose command to user code to trigger validation from ViewModel. Control itself will set this
     // command to execute PerformValidation and update Result property.
-    public static readonly DependencyProperty ValidateCommandProperty = DependencyProperty.Register(
+    static readonly DependencyProperty ValidateCommandProperty = DependencyProperty.Register(
         nameof(ValidateCommand),
         typeof(ICommand),
         typeof(AsnValueEditor),
