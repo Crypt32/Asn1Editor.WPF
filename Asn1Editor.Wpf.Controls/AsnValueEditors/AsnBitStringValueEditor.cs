@@ -71,7 +71,9 @@ public class AsnBitStringValueEditor : AsnValueEditor {
     }
 
     protected override AsnValueValidationResult PerformValidation() {
-        throw new NotImplementedException();
+        Byte[] value = AsnFormatter.StringToBinary(Value, EncodingType.Hex);
+        Byte.TryParse(UnusedBits, out Byte unusedBits);
+        return AsnValueValidationResult.Ok(new Asn1BitString(value, unusedBits).GetRawData());
     }
     protected override void OnInputValueChanged(Byte[]? oldValue, Byte[]? newValue) {
         if (newValue is not null) {
