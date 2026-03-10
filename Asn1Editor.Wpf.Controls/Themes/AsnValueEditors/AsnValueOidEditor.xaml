@@ -6,10 +6,10 @@
         <ResourceDictionary Source="AsnValueEditorResources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="c:AsnOidEditor">
+    <Style TargetType="c:AsnOidValueEditor">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="c:AsnOidEditor">
+                <ControlTemplate TargetType="c:AsnOidValueEditor">
                     <DockPanel>
                         <Grid DockPanel.Dock="Bottom"
                               behaviors:MarginSetter.Margin="3">
