@@ -18,7 +18,7 @@ class AsnValueValidator(Byte tag) {
     Byte[] encode(Byte[] inputValue) {
         switch ((Asn1Type)tag) {
             case Asn1Type.BOOLEAN:
-                if (inputValue.Length != 1) {
+                if (inputValue.Length != 3) {
                     throw new ArgumentException("BOOLEAN must be a single octet.");
                 }
                 return new Asn1Boolean(inputValue).GetRawData();
