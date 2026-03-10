@@ -223,7 +223,7 @@ public static class AsnDecoder {
     }
     static String DecodeObjectIdentifier(Asn1Reader asn) {
         Oid oid = new Asn1ObjectIdentifier(asn).Value;
-        String friendlyName = OidServices.Resolver.ResolveOid(oid.Value);
+        String friendlyName = OidServices.Resolver.ResolveFriendlyName(oid.Value);
         if (friendlyName is null) {
             return oid.Value;
         }
