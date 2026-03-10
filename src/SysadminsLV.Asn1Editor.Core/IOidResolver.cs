@@ -9,8 +9,29 @@ namespace SysadminsLV.Asn1Editor.Core;
 /// within the application.
 /// </summary>
 public interface IOidResolver {
-    String? ResolveOid(String oidValue);
-    String? ResolveFriendlyName(String friendlyName);
+    /// <summary>
+    /// Resolves the friendly name associated with a given object identifier (OID) value.
+    /// </summary>
+    /// <param name="oidValue">
+    /// The OID value to resolve. This should be a valid object identifier string.
+    /// </param>
+    /// <returns>
+    /// A string representing the friendly name associated with the specified OID value, 
+    /// or <see langword="null"/> if no friendly name is found.
+    /// </returns>
+    String? ResolveFriendlyName(String oidValue);
+    /// <summary>
+    /// Resolves the object identifier (OID) associated with a given friendly name.
+    /// </summary>
+    /// <param name="friendlyName">
+    /// The friendly name to resolve. This should be a valid and recognizable friendly name
+    /// corresponding to an OID.
+    /// </param>
+    /// <returns>
+    /// A string representing the OID associated with the specified friendly name, 
+    /// or <see langword="null"/> if no OID is found.
+    /// </returns>
+    String? ResolveOid(String friendlyName);
 }
 
 /// <summary>
@@ -19,10 +40,10 @@ public interface IOidResolver {
 /// <remarks>This class is intended for testing or placeholder scenarios where a minimal OID resolution is
 /// required. It does not perform validation or lookup beyond basic OID value extraction.</remarks>
 class OidResolverStub : IOidResolver {
-    public String? ResolveOid(String oidValue) {
+    public String? ResolveFriendlyName(String oidValue) {
         return new Oid(oidValue).Value;
     }
-    public String? ResolveFriendlyName(String friendlyName) {
+    public String? ResolveOid(String friendlyName) {
         return new Oid(friendlyName).FriendlyName;
     }
 }

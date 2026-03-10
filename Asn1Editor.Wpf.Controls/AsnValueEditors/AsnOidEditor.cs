@@ -97,16 +97,21 @@ public class AsnOidInfo : INotifyPropertyChanged {
 
     internal void Resolve(String oidString) {
         if (_oidRegex.IsMatch(oidString)) {
-            FriendlyName = OidServices.Resolver.ResolveOid(oidString);
+            FriendlyName = OidServices.Resolver.ResolveFriendlyName(oidString);
             Value = oidString;
             ExternalUri = "https://oidref.com/" + Value;
         } else {
             FriendlyName = oidString;
-            Value = OidServices.Resolver.ResolveFriendlyName(oidString) ?? String.Empty;
-            ExternalUri = null;
+            Value = OidServices.Resolver.ResolveOid(oidString) ?? String.Empty;
+            if (String.IsNullOrEmpty(Value)) {
+                FriendlyName = oidString;
+                ExternalUri = null;
+            } else {
+                FriendlyName = OidServices.Resolver.ResolveFriendlyName(oidString);
+                ExternalUri = "https://oidref.com/" + Value;
+            }
         }
     }
-
 
     #region INotifyPropertyChanged
 

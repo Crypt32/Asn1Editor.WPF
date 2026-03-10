@@ -67,10 +67,10 @@ class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
 /// Represents an OID resolver wrapper class used by Core project to provide an external OID resolution functionality.
 /// </summary>
 public class OidResolverWrapper : IOidResolver {
-    public String? ResolveOid(String oidValue) {
+    public String? ResolveFriendlyName(String oidValue) {
         return OidResolver.ResolveOid(oidValue);
     }
-    public String? ResolveFriendlyName(String friendlyName) {
+    public String? ResolveOid(String friendlyName) {
         return OidResolver.ResolveFriendlyName(friendlyName);
     }
 }
