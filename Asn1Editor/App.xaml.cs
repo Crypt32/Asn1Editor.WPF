@@ -101,19 +101,19 @@ public partial class App {
         Container.RegisterType<MainWindow>()
             .RegisterType<IWindowFactory, WindowFactory>()
             .RegisterType<IAppCommands, AppCommands>()
-            .RegisterType<ITagDataEditor, TagDataEditor>()
+            .RegisterType<IAsnValueEditorWindow, AsnValueEditorWindow>()
             .RegisterType<IUIMessenger, UIMessenger>()
             // view models
             .RegisterSingleton<MainWindowVM>()
             .RegisterType<IMainWindowVM, MainWindowVM>()
             .RegisterType<IHasAsnDocumentTabs, MainWindowVM>()
             .RegisterType<ITextViewerVM, TextViewerVM>()
-            .RegisterType<ITagDataEditorVM, TagDataEditorVM>()
+            .RegisterType<IAsnValueEditorVM, AsnValueEditorVM>()
             .RegisterType<IOidEditorVM, OidEditorVM>()
             .RegisterType<INewAsnNodeEditorVM, NewAsnNodeEditorVM>()
             .RegisterInstance(_options);
         var oidMgr = new OidDbManager(Container.Resolve<IUIMessenger>()) {
-            OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _appDataPath]
+            OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, _appDataPath]
         };
         Container.RegisterInstance<IOidDbManager>(oidMgr);
     }

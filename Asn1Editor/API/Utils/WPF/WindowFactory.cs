@@ -27,10 +27,10 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         ShowAsDialog();
     }
     public AsnNodeValue ShowNodeContentEditor(NodeEditMode editMode) {
-        hwnd = App.Container.Resolve<TagDataEditor>();
-        ((ITagDataEditorVM)hwnd.DataContext).SetBinding(editMode);
+        hwnd = App.Container.Resolve<AsnValueEditorWindow>();
+        ((IAsnValueEditorVM)hwnd.DataContext).SetBinding(editMode);
         ShowAsDialog();
-        return ((ITagDataEditorVM)hwnd.DataContext).Node;
+        return ((IAsnValueEditorVM)hwnd.DataContext).Node.Value;
     }
     public void ShowNodeTextViewer() {
         hwnd = App.Container.Resolve<TextViewer>();
