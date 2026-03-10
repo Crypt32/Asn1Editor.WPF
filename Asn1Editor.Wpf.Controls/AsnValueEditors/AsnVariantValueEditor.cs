@@ -8,7 +8,7 @@ namespace SysadminsLV.Asn1Editor.Controls;
 public class AsnVariantValueEditor : AsnValueEditor {
     Byte? tag;
 
-    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+    static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
         typeof(String),
         typeof(AsnVariantValueEditor),

@@ -5,7 +5,7 @@ using SysadminsLV.Asn1Parser.Universal;
 namespace SysadminsLV.Asn1Editor.Controls;
 
 public class AsnBooleanValueEditor : AsnValueEditor {
-    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+    static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
         typeof(Boolean?),
         typeof(AsnBooleanValueEditor),

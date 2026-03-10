@@ -7,7 +7,7 @@ using SysadminsLV.Asn1Parser.Universal;
 namespace SysadminsLV.Asn1Editor.Controls;
 
 public class AsnBitStringValueEditor : AsnValueEditor {
-    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+    static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
         nameof(Value),
         typeof(String),
         typeof(AsnBitStringValueEditor),
@@ -18,7 +18,7 @@ public class AsnBitStringValueEditor : AsnValueEditor {
         set => SetValue(ValueProperty, value);
     }
 
-    public static readonly DependencyProperty UnusedBitsProperty = DependencyProperty.Register(
+    static readonly DependencyProperty UnusedBitsProperty = DependencyProperty.Register(
         nameof(UnusedBits),
         typeof(String),
         typeof(AsnBitStringValueEditor),
@@ -42,7 +42,7 @@ public class AsnBitStringValueEditor : AsnValueEditor {
         return "0"; // default to "0" if the value is invalid
     }
 
-    public static readonly DependencyProperty AutoCalculateUnusedBitsProperty = DependencyProperty.Register(
+    static readonly DependencyProperty AutoCalculateUnusedBitsProperty = DependencyProperty.Register(
         nameof(AutoCalculateUnusedBits),
         typeof(Boolean),
         typeof(AsnBitStringValueEditor),
