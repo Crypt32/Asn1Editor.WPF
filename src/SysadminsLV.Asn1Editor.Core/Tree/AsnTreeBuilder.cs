@@ -24,9 +24,9 @@ public static class AsnTreeBuilder {
     /// <param name="rawData">
     /// A byte array containing the raw binary ASN.1 data to be parsed.
     /// </param>
-    /// <param name="binaryOps">
-    /// An implementation of the <see cref="IBinarySource"/> interface, which provides
-    /// binary data operations required during tree construction.
+    /// <param name="binarySource">
+    /// An implementation of <see cref="IBinarySource"/> that provides access to the binary 
+    /// data source.
     /// </param>
     /// <param name="viewOptions">
     /// An implementation of the <see cref="INodeViewOptions"/> interface, which specifies
@@ -41,22 +41,22 @@ public static class AsnTreeBuilder {
     /// used for further processing, visualization, or manipulation of the ASN.1 data.
     /// </remarks>
     /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="rawData"/>, <paramref name="binaryOps"/>, or <paramref name="viewOptions"/> is <c>null</c>.
+    /// Thrown if <paramref name="rawData"/>, <paramref name="binarySource"/>, or <paramref name="viewOptions"/> is <c>null</c>.
     /// </exception>
     /// <exception cref="FormatException">
     /// Thrown if the provided binary data is not in a valid ASN.1 format.
     /// </exception>
-    public static AsnTreeNode BuildTree(Byte[] rawData, IBinarySource binaryOps, INodeViewOptions viewOptions) {
+    public static AsnTreeNode BuildTree(Byte[] rawData, IBinarySource binarySource, INodeViewOptions viewOptions) {
         var asn = new Asn1Reader(rawData);
         asn.BuildOffsetMap();
         var rootValue = new AsnNodeValue(asn);
-        var rootNode = new AsnTreeNode(rootValue, binaryOps, viewOptions);
+        var rootNode = new AsnTreeNode(rootValue, binarySource, viewOptions);
 
         if (asn.NextOffset == 0) {
             return rootNode;
         }
 
-        buildTree(asn, rootNode, binaryOps, viewOptions);
+        buildTree(asn, rootNode, binarySource, viewOptions);
         return rootNode;
     }
 
@@ -67,9 +67,9 @@ public static class AsnTreeBuilder {
     /// <param name="rawData">
     /// The raw binary data to be parsed into an ASN.1 tree structure.
     /// </param>
-    /// <param name="binaryOps">
-    /// An implementation of <see cref="IBinarySource"/> that provides methods for 
-    /// manipulating the binary data.
+    /// <param name="binarySource">
+    /// An implementation of <see cref="IBinarySource"/> that provides access to the binary 
+    /// data source.
     /// </param>
     /// <param name="viewOptions">
     /// An implementation of <see cref="INodeViewOptions"/> that specifies options for 
@@ -85,16 +85,16 @@ public static class AsnTreeBuilder {
     /// the calling thread. The resulting tree represents the hierarchical structure of 
     /// the provided ASN.1 data.
     /// </remarks>
-    public static Task<AsnTreeNode> BuildTreeAsync(Byte[] rawData, IBinarySource binaryOps, INodeViewOptions viewOptions) {
-        return Task.Run(() => BuildTree(rawData, binaryOps, viewOptions));
+    public static Task<AsnTreeNode> BuildTreeAsync(Byte[] rawData, IBinarySource binarySource, INodeViewOptions viewOptions) {
+        return Task.Run(() => BuildTree(rawData, binarySource, viewOptions));
     }
 
-    static void buildTree(Asn1Reader root, AsnTreeNode tree, IBinarySource binaryOps, INodeViewOptions viewOptions) {
+    static void buildTree(Asn1Reader root, AsnTreeNode tree, IBinarySource binarySource, INodeViewOptions viewOptions) {
         root.MoveNext();
         Int32 index = 0;
         do {
             var childValue = new AsnNodeValue(root, tree.Value.Depth, tree.Value.Path, index);
-            var childNode = new AsnTreeNode(childValue, binaryOps, viewOptions);
+            var childNode = new AsnTreeNode(childValue, binarySource, viewOptions);
             tree.AddChildNode(childNode, index);
             index++;
         } while (root.MoveNextSibling());
@@ -102,7 +102,7 @@ public static class AsnTreeBuilder {
         root.Reset();
         foreach (AsnTreeNode node in tree.Children.Where(node => node.Value is { IsContainer: true, PayloadLength: > 0 })) {
             root.Seek(node.Value.Offset);
-            buildTree(root, node, binaryOps, viewOptions);
+            buildTree(root, node, binarySource, viewOptions);
         }
     }
 }
