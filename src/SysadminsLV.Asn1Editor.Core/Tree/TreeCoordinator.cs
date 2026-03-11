@@ -222,6 +222,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         // explicitly update offsets of siblings after the removed node, because the propagation relies
         // on the node's Path and MyIndex to update offsets of siblings
         updateOffsetsFrom(parent, nodeIndex, -nodeLength);
+        Root!.UpdateNodeHeader();
     }
     /// <summary>
     /// Updates the specified ASN.1 tree node with new data and recalculates its metadata.
