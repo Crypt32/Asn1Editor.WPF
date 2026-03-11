@@ -11,8 +11,8 @@ using SysadminsLV.Asn1Editor.Core.Tree;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
-    String path, fileName, pbHeaderText;
-    Boolean isModified, suppressModified, isEnabled = true;
+    String fileName;
+    Boolean suppressModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         AsnDocContext = new Asn1DocumentContext(nodeViewOptions);
@@ -57,39 +57,40 @@ public class Asn1DocumentVM : AsyncViewModel {
         }
     }
     public String Path {
-        get => path;
+        get;
         set {
-            path = value;
-            if (!String.IsNullOrWhiteSpace(path)) {
-                fileName = new FileInfo(path).Name;
+            field = value;
+            if (!String.IsNullOrWhiteSpace(field)) {
+                fileName = new FileInfo(field).Name;
             }
+
             OnPropertyChanged();
             OnPropertyChanged(nameof(Header));
             OnPropertyChanged(nameof(ToolTipText));
         }
     }
     public Boolean IsModified {
-        get => isModified;
+        get;
         set {
-            isModified = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(Header));
         }
     }
     public String ProgressText {
-        get => pbHeaderText;
+        get;
         set {
-            pbHeaderText = value;
+            field = value;
             OnPropertyChanged();
         }
     }
     public Boolean IsEnabled {
-        get => isEnabled;
+        get;
         set {
-            isEnabled = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = true;
 
     public Task RefreshTreeView(Func<AsnTreeNode, Boolean>? filter = null) {
         if (Tree.Count == 0) {
@@ -130,7 +131,6 @@ public class Asn1DocumentVM : AsyncViewModel {
     }
     public void Reset() {
         AsnDocContext.Reset();
-        Path = String.Empty;
         IsModified = false;
     }
 }
