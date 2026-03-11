@@ -27,6 +27,9 @@ public class AsnTreeNode {
         _binarySource = binarySource;
         Children = new ReadOnlyObservableCollection<AsnTreeNode>(_children);
         Value = value;
+        MyIndex = value.Path.Split('/').LastOrDefault() is { } lastIndexStr && Int32.TryParse(lastIndexStr, out Int32 lastIndex)
+            ? lastIndex
+            : 0;
         _viewOptions = viewOptions;
     }
 
