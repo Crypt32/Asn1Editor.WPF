@@ -20,7 +20,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
-    AsnDocumentHostVM? selectedTab;
 
     public MainWindowVM(
         IWindowFactory windowFactory,
@@ -39,6 +38,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
         OpenCommand = new AsyncCommand(openFileAsync);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
+        ReloadDocumentCommand = new AsyncCommand(reloadDocumentAsync);
         DropFileCommand = new AsyncCommand(dropFileAsync);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
         addTabToList(new AsnDocumentHostVM(NodeViewOptions, TreeCommands));
@@ -54,6 +54,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     public ICommand CloseAllButThisTabCommand { get; }
     public IAsyncCommand OpenCommand { get; }
     public ICommand SaveCommand { get; }
+    public IAsyncCommand ReloadDocumentCommand { get; }
     public ICommand PrintCommand { get; }
     public ICommand SettingsCommand { get; }
     public IAsyncCommand DropFileCommand { get; }
@@ -65,9 +66,9 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     public NodeViewOptions NodeViewOptions { get; }
     public ObservableCollection<AsnDocumentHostVM> Tabs { get; } = [];
     public AsnDocumentHostVM? SelectedTab {
-        get => selectedTab;
+        get;
         set {
-            selectedTab = value;
+            field = value;
             OnPropertyChanged();
         }
     }
@@ -139,6 +140,31 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
 
+    async Task reloadDocumentAsync(Object o, CancellationToken ct) {
+        if (SelectedTab is null) {
+            return;
+        }
+        var doc = SelectedTab.GetPrimaryDocument();
+        if (String.IsNullOrEmpty(doc.Path)) {
+            return;
+        }
+        // if document is modified, ask user for confirmation to reload and lose unsaved changes.
+        if (doc.IsModified) {
+            Boolean confirmResult = _uiMessenger.YesNo("Reloading will discard all unsaved changes. Do you want to continue?", "Confirm Reload");
+            if (!confirmResult) {
+                return;
+            }
+        }
+
+        try {
+            doc.Reset();
+            IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(doc.Path);
+            await doc.Decode(bytes, true);
+        } catch (Exception ex) {
+            _uiMessenger.ShowError(ex.Message, "Reload Error");
+        }
+    }
+
     #region Read content to tab
     Task openFileAsync(Object obj, CancellationToken token = default) {
         _uiMessenger.TryGetOpenFileName(out String filePath);
@@ -155,18 +181,18 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     // null - use current tab with default name
     // 1    - use current tab with custom name
     // 2    - save all tabs with default name.
-    void saveFile(Object obj) {
+    void saveFile(Object? obj) {
         if (obj is null) {
             writeFile(SelectedTab);
         } else {
             switch (obj.ToString()) {
                 case "1": {
-                    if (getSaveFilePath(out String filePath)) {
-                        writeFile(SelectedTab, filePath);
-                    }
+                        if (getSaveFilePath(out String filePath)) {
+                            writeFile(SelectedTab, filePath);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case "2":
                     // do something with save all tabs
                     break;
@@ -178,7 +204,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     }
 
     // general method to write arbitrary tab to a file.
-    Boolean writeFile(AsnDocumentHostVM tab, String filePath = null) {
+    Boolean writeFile(AsnDocumentHostVM tab, String? filePath = null) {
         Asn1DocumentVM doc = tab.GetPrimaryDocument();
         // use default path if no custom file path specified
         filePath ??= doc.Path;
@@ -206,14 +232,14 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         Boolean? result = _uiMessenger.YesNoCancel("Current file was modified. Save changes?", "Unsaved Data");
         return result switch {
             false => true,
-            true  => writeFile(tab),
-            _     => false
+            true => writeFile(tab),
+            _ => false
         };
     }
     #endregion
 
     #region Close Tab(s)
-    
+
     void removeTab(AsnDocumentHostVM tab) {
         // unlock Right ASN.1 document if in compare mode
         tab.Right?.IsEnabled = true;
@@ -310,16 +336,13 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     }
     Task openRawAsync(Byte[] rawBytes) {
         var asn = new Asn1Reader(rawBytes);
-        try
-        {
+        try {
             asn.BuildOffsetMap();
             // at this point, raw data is granted to be valid DER encoding and should not fail.
             var tab = getAvailableTab(out _);
 
             return tab.GetPrimaryDocument().Decode(rawBytes, false);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
 
             return Task.CompletedTask;
