@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using SysadminsLV.Asn1Editor.Core.ASN;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.Asn1Parser.Universal;
 
 namespace SysadminsLV.Asn1Editor.Core.Tree;
 
@@ -30,8 +32,7 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
         if (!asnReader.IsConstructed) {
             try {
                 ExplicitValue = AsnDecoder.GetViewValue(asnReader);
-            }
-            catch {
+            } catch {
                 InvalidData = true;
             }
         }
@@ -48,20 +49,16 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
         }
     }
 
-    public String Header
-    {
+    public String Header {
         get;
-        private set
-        {
+        private set {
             field = value;
             OnPropertyChanged();
         }
     }
-    public String ToolTip
-    {
+    public String ToolTip {
         get;
-        private set
-        {
+        private set {
             field = value;
             OnPropertyChanged();
         }
@@ -105,21 +102,17 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     /// </remarks>
     public Boolean IsContainer { get; set; }
     public Boolean IsContextSpecific { get; private set; }
-    public Boolean InvalidData
-    {
+    public Boolean InvalidData {
         get;
-        private set
-        {
+        private set {
             field = value;
             OnPropertyChanged();
         }
     } //TODO
     public Int32 Depth { get; private set; }
-    public String Path
-    {
+    public String Path {
         get;
-        set
-        {
+        set {
             field = value ?? String.Empty;
             Depth = Path.Split(['/'], StringSplitOptions.RemoveEmptyEntries)
                 .Length;
@@ -167,10 +160,13 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     }
     String getNodeHeader(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
         if (Tag == (Byte)Asn1Type.INTEGER) {
-            updateIntValue(rawData, options.IntegerAsInteger);
+            updateIntValue(rawData, options.GetIntegerViewOptions().IntegerAsInteger);
         }
         if (Tag == (Byte)Asn1Type.OBJECT_IDENTIFIER) {
             updateOidValue(rawData);
+        }
+        if (Tag is (Byte)Asn1Type.UTCTime or (Byte)Asn1Type.GeneralizedTime) {
+            updateDateTimeValue(rawData, options.GetDateTimeViewOptions().UseISO8601Format);
         }
 
         // contains only node location information, such as offset, length, path. Everything what is displayed in parentheses.
@@ -215,6 +211,13 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
                 EncodingFormat.NOCRLF
             );
         }
+    }
+    void updateDateTimeValue(IEnumerable<Byte> rawData, Boolean useIsoFormat) {
+        Byte[] raw = rawData.Skip(offset).Take(TagLength).ToArray();
+        Asn1DateTime dateTime = Asn1DateTime.DecodeAnyDateTime(new Asn1Reader(raw));
+        ExplicitValue = useIsoFormat
+            ? dateTime.Value.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)
+            : AsnDecoder.GetViewValue(new Asn1Reader(raw));
     }
     void updateOidValue(IEnumerable<Byte> rawData) {
         Byte[] raw = rawData.Skip(Offset).Take(TagLength).ToArray();
