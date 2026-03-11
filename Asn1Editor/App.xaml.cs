@@ -28,6 +28,7 @@ namespace SysadminsLV.Asn1Editor;
 public partial class App {
     static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new(_appDataPath);
+    static readonly XmlSerializer _settingsSerializer = new(typeof(NodeViewOptions));
 
     readonly NodeViewOptions _options;
 
@@ -120,13 +121,13 @@ public partial class App {
     static void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
         using var sw = new StreamWriter(Path.Combine(_appDataPath, "user.config"), false);
         using var xw = XmlWriter.Create(sw);
-        new XmlSerializer(typeof(NodeViewOptions)).Serialize(xw, s);
+        _settingsSerializer.Serialize(xw, s);
     }
     static NodeViewOptions readSettings() {
         if (File.Exists(Path.Combine(_appDataPath, "user.config"))) {
             try {
                 using var sr = new StreamReader(Path.Combine(_appDataPath, "user.config"));
-                return (NodeViewOptions)new XmlSerializer(typeof(NodeViewOptions)).Deserialize(sr);
+                return (NodeViewOptions)_settingsSerializer.Deserialize(sr);
             } catch {
                 return new NodeViewOptions();
             }
