@@ -80,23 +80,23 @@
                             <ColumnDefinition Style="{StaticResource DynamicColumnDefinitionStyle}"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Grid.Column="0">
-                            <DockPanel Visibility="{Binding NodeViewOptions.ShowHexViewer, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <DockPanel Visibility="{Binding NodeViewOptions.HexViewer.ShowHexViewer, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
                                     <ToolBar>
                                         <ToggleButton x:Name="HexAddressToggle"
-                                                      IsChecked="{Binding NodeViewOptions.ShowHexAddrPanel}"
+                                                      IsChecked="{Binding NodeViewOptions.HexViewer.ShowAddrPanel}"
                                                       ToolTip="Show or hide address panel">
                                             <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
                                         </ToggleButton>
                                         <Separator/>
                                         <ToggleButton x:Name="AsciiToggle"
-                                                      IsChecked="{Binding NodeViewOptions.ShowHexAsciiPanel}"
+                                                      IsChecked="{Binding NodeViewOptions.HexViewer.ShowAsciiPanel}"
                                                       ToolTip="Show or hide ASCII panel">
                                             <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
                                         </ToggleButton>
                                         <Separator/>
                                         <ToggleButton x:Name="HexColorToggle"
-                                                      IsChecked="{Binding NodeViewOptions.HexViewerColoringEnabled}"
+                                                      IsChecked="{Binding NodeViewOptions.HexViewer.ColoringEnabled}"
                                                       ToolTip="Enable or disable hex coloring">
                                             <Image Source="/Views/Images/Menu/textcolor_32x32.png"/>
                                         </ToggleButton>
