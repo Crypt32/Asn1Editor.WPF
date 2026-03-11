@@ -61,7 +61,7 @@
                 <RibbonGroup Header="Dialogs">
                     <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
                                         Label="Show hex"
-                                        IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
+                                        IsChecked="{Binding NodeViewOptions.HexViewer.ShowHexViewer}"
                                         ToolTip="Show or hide hex viewer"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/converter_32x32.png"
                                   Label="Binary Converter"
@@ -147,7 +147,9 @@
                     <CheckBox Content="Show in hex"
                               IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
                     <CheckBox Content="Decode Integer as integer"
-                              IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
+                              IsChecked="{Binding NodeViewOptions.TagView.Integer.IntegerAsInteger}"/>
+                    <CheckBox Content="Use ISO 8601 DateTime format"
+                              IsChecked="{Binding NodeViewOptions.TagView.DateTime.UseISO8601Format}"/>
                     <CheckBox Content="Show node content"
                               IsChecked="{Binding NodeViewOptions.ShowContent}"/>
                 </RibbonGroup>

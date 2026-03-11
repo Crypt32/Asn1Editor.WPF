@@ -57,12 +57,15 @@
                           IsCheckable="True"
                           IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
                 <Separator/>
-                <MenuItem Header="Decode Integer as integer"
-                          IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.IntegerAsInteger}"/>
                 <MenuItem Header="Show content"
                           IsCheckable="True"
                           IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+                <MenuItem Header="Decode Integer as integer"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.TagView.Integer.IntegerAsInteger}"/>
+                <MenuItem Header="Use ISO 8601 DateTime format"
+                          IsCheckable="True"
+                          IsChecked="{Binding NodeViewOptions.TagView.DateTime.UseISO8601Format}"/>
                 <Separator/>
                 <MenuItem Header="Use Ribbon menu"
                           Command="{Binding NodeViewOptions.ToggleToolbar}"/>
@@ -179,7 +182,7 @@
         </Menu>
         <ToolBarTray IsLocked="True">
             <ToolBar>
-                <ToggleButton IsChecked="{Binding NodeViewOptions.ShowHexViewer}"
+                <ToggleButton IsChecked="{Binding NodeViewOptions.HexViewer.ShowHexViewer}"
                               ToolTip="Show or hide hex viewer">
                     <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>
                 </ToggleButton>
