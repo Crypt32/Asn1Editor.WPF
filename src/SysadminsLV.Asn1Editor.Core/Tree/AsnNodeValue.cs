@@ -22,7 +22,7 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
 
     Int32 offset;
 
-    public AsnNodeValue(Asn1Reader asnReader) {
+    internal AsnNodeValue(Asn1Reader asnReader) {
         Offset = asnReader.Offset;
         Tag = asnReader.Tag;
         TagName = asnReader.TagName;
@@ -39,7 +39,7 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
         Depth = 0;
         Path = String.Empty;
     }
-    public AsnNodeValue(Asn1Reader asnReader, Int32 parentDepth, String parentPath, Int32 index) : this(asnReader) {
+    internal AsnNodeValue(Asn1Reader asnReader, Int32 parentDepth, String parentPath, Int32 index) : this(asnReader) {
         Depth = parentDepth + 1;
         Path = $"{parentPath}/{index}";
         if (Tag == (Byte)Asn1Type.BIT_STRING) {
