@@ -5,9 +5,11 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.Asn1Parser.Universal;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
+
 public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     Boolean shouldGenerateNode;
     Boolean formTagChecked, decimalTagChecked, hexTagChecked,
@@ -199,10 +201,12 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
             return null;
         }
         Byte tag = getResultingTag();
-        // for BIT_STRING need to include unused bit count
-        if (tag == (Int32)Asn1Type.BIT_STRING) {
-            return [tag, 1, 0];
-        }
-        return [getResultingTag(), 0];
+        return tag switch {
+            // for BIT_STRING need to include unused bit count
+            (Int32)Asn1Type.BIT_STRING      => [tag, 1, 0],
+            (Int32)Asn1Type.UTCTime         => new Asn1UtcTime(DateTime.Now).GetRawData(),
+            (Int32)Asn1Type.GeneralizedTime => new Asn1GeneralizedTime(DateTime.Now).GetRawData(),
+            _                               => [tag, 0]
+        };
     }
 }
