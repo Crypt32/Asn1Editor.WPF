@@ -9,7 +9,7 @@
     <Title>Asn1Editor.Wpf.Controls</Title>
     <Version>25.12.02</Version>
     <Authors>Vadims Podāns</Authors>
-    <Copyright>Copyright © Sysadmins LV  2019 - 2025</Copyright>
+    <Copyright>Copyright © Sysadmins LV  2019 - 2026</Copyright>
     <Company>Sysadmins LV</Company>
     <Product>ASN.1 Editor</Product>
     <Description>Contains reusable ASN.1 editor WPF controls</Description>
@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
+    <ProjectReference Include="..\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

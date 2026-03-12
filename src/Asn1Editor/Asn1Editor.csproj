@@ -13,7 +13,7 @@
     <Company>Sysadmins LV</Company>
     <Title>ASN.1 Editor</Title>
     <Description>ASN.1 Editor</Description>
-    <Copyright>Copyright © Sysadmins LV  2019 - 2025</Copyright>
+    <Copyright>Copyright © Sysadmins LV  2019 - 2026</Copyright>
     <LangVersion>latest</LangVersion>
     <Platforms>AnyCPU;x64;x86</Platforms>
   </PropertyGroup>
@@ -89,7 +89,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Asn1Editor.Wpf.Controls\Asn1Editor.Wpf.Controls.csproj" />
-    <ProjectReference Include="..\src\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
+    <ProjectReference Include="..\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
