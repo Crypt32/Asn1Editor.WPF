@@ -1,0 +1,99 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:linq="clr-namespace:System.Linq;assembly=System.Core"
+                    xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AsnValueEditorResources.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <ObjectDataProvider x:Key="TimeZoneList"
+                        ObjectType="{x:Type sys:TimeZoneInfo}"
+                        MethodName="GetSystemTimeZones"/>
+    <ObjectDataProvider x:Key="HoursList"
+                        ObjectType="linq:Enumerable"
+                        MethodName="Range">
+        <ObjectDataProvider.MethodParameters>
+            <sys:Int32>0</sys:Int32>
+            <sys:Int32>24</sys:Int32>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="MinutesSecondsList"
+                        ObjectType="linq:Enumerable"
+                        MethodName="Range">
+        <ObjectDataProvider.MethodParameters>
+            <sys:Int32>0</sys:Int32>
+            <sys:Int32>60</sys:Int32>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+    <Style TargetType="controls:AsnDateTimeValueEditor">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:AsnDateTimeValueEditor">
+                    <ControlTemplate.Resources>
+                        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                            <Setter Property="IsEditable" Value="True"/>
+                            <Setter Property="MinWidth" Value="45"/>
+                        </Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                        </Style>
+                    </ControlTemplate.Resources>
+                    <StackPanel behaviors:MarginSetter.Margin="3">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <DatePicker x:Name="PART_DatePicker"
+                                        SelectedDate="{Binding Path=Date, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource HoursList}}"
+                                      SelectedItem="{Binding Path=Hour, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Margin="5,0,0,0"/>
+                            <TextBlock Text=" : "/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource MinutesSecondsList}}"
+                                      SelectedItem="{Binding Path=Minute, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <TextBlock Text=" : "/>
+                            <ComboBox ItemsSource="{Binding Source={StaticResource MinutesSecondsList}}"
+                                      SelectedItem="{Binding Path=Second, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </StackPanel>
+                        <TextBlock Text="Time Zone:"
+                                   Margin="0, 10, 0, 0"/>
+                        <ComboBox ItemsSource="{Binding Source={StaticResource TimeZoneList}}"
+                                  DisplayMemberPath="DisplayName"
+                                  SelectedItem="{Binding Path=TimeZone, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <GroupBox Header="Result">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Text="Local Time:" />
+                                <TextBox Grid.Row="0"
+                                         Grid.Column="1"
+                                         Text="{Binding Path=Value, StringFormat={}{0:yyyy-MM-dd HH:mm:ssK}, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                         Style="{StaticResource TransparentTextBoxStyle}"/>
+
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Text="UTC Time:" />
+                                <TextBox Grid.Row="1"
+                                         Grid.Column="1"
+                                         Text="{Binding Path=UtcValue, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                         Style="{StaticResource TransparentTextBoxStyle}"/>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="controls:AsnUtcTimeValueEditor" BasedOn="{StaticResource {x:Type controls:AsnDateTimeValueEditor}}"></Style>
+    <Style TargetType="controls:AsnGeneralizedTimeValueEditor" BasedOn="{StaticResource {x:Type controls:AsnDateTimeValueEditor}}"></Style>
+</ResourceDictionary>

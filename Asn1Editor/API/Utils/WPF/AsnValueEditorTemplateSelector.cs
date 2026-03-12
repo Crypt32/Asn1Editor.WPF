@@ -16,6 +16,8 @@ public class AsnValueEditorTemplateSelector : DataTemplateSelector {
     public DataTemplate HexTemplate { get; set; }
     public DataTemplate BooleanTemplate { get; set; }
     public DataTemplate OidTemplate { get; set; }
+    public DataTemplate UtcTimeTemplate { get; set; }
+    public DataTemplate GeneralizedTimeTemplate { get; set; }
     public DataTemplate StringTemplate { get; set; }
     public DataTemplate BitStringTemplate { get; set; }
 
@@ -67,6 +69,9 @@ public class AsnValueEditorTemplateSelector : DataTemplateSelector {
             Asn1Type.OBJECT_IDENTIFIER or
             Asn1Type.RELATIVE_OID => OidTemplate,
 
+            Asn1Type.UTCTime => UtcTimeTemplate,
+            Asn1Type.GeneralizedTime => GeneralizedTimeTemplate,
+
             Asn1Type.BOOLEAN => BooleanTemplate,
             Asn1Type.INTEGER or
             Asn1Type.UTF8String or
@@ -78,9 +83,7 @@ public class AsnValueEditorTemplateSelector : DataTemplateSelector {
             Asn1Type.VisibleString or
             Asn1Type.GeneralString or
             Asn1Type.UniversalString or
-            Asn1Type.BMPString or 
-            Asn1Type.UTCTime or
-            Asn1Type.GeneralizedTime => StringTemplate,
+            Asn1Type.BMPString => StringTemplate,
 
             Asn1Type.OCTET_STRING => HexTemplate,
 

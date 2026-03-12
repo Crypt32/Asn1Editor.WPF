@@ -59,6 +59,20 @@
                             ValidateCommand="{Binding ValidateCommand, Mode=OneWayToSource}"/>
         </DataTemplate>
 
+        <DataTemplate x:Key="UtcTimeTemplate">
+            <c:AsnUtcTimeValueEditor d:DataContext="{d:DesignInstance vm:AsnValueEditorContext}"
+                                     InputValue="{Binding OriginalEncodedValue, Mode=OneTime}"
+                                     Result="{Binding Result, Mode=OneWayToSource}"
+                                     ValidateCommand="{Binding ValidateCommand, Mode=OneWayToSource}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="GeneralizedTimeTemplate">
+            <c:AsnGeneralizedTimeValueEditor d:DataContext="{d:DesignInstance vm:AsnValueEditorContext}"
+                                            InputValue="{Binding OriginalEncodedValue, Mode=OneTime}"
+                                            Result="{Binding Result, Mode=OneWayToSource}"
+                                            ValidateCommand="{Binding ValidateCommand, Mode=OneWayToSource}"/>
+        </DataTemplate>
+
         <DataTemplate x:Key="StringEditorTemplate">
             <c:AsnVariantValueEditor d:DataContext="{d:DesignInstance vm:AsnValueEditorContext}"
                                      InputValue="{Binding OriginalEncodedValue, Mode=OneTime}"
@@ -79,6 +93,8 @@
                                             HexTemplate="{StaticResource HexEditorTemplate}"
                                             BooleanTemplate="{StaticResource BooleanEditorTemplate}"
                                             OidTemplate="{StaticResource OidEditorTemplate}"
+                                            UtcTimeTemplate="{StaticResource UtcTimeTemplate}"
+                                            GeneralizedTimeTemplate="{StaticResource GeneralizedTimeTemplate}"
                                             StringTemplate="{StaticResource StringEditorTemplate}"
                                             BitStringTemplate="{StaticResource BitStringTemplate}"/>
     </Window.Resources>
