@@ -50,20 +50,16 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
             OnPropertyChanged();
         }
     }
-    public Asn1DocumentVM? Right
-    {
+    public Asn1DocumentVM? Right {
         get;
-        set
-        {
+        set {
             field = value;
             OnPropertyChanged();
         }
     }
-    public Boolean IsCompareMode
-    {
+    public Boolean IsCompareMode {
         get;
-        set
-        {
+        set {
             field = value;
             OnPropertyChanged();
         }
@@ -73,7 +69,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
         OnPropertyChanged(nameof(Header));
     }
     void start(Object? o) {
-        if (o is not TabCompareParam param || param.Left is null || ReferenceEquals(param.Left, param.Right)) {
+        if (o is not TabCompareParam param || param.Left is null) {
             return;
         }
 

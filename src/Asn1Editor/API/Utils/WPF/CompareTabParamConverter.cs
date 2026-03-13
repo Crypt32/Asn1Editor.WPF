@@ -32,25 +32,3 @@ public class CompareTabParamConverter : IMultiValueConverter {
         throw new NotSupportedException();
     }
 }
-
-/// <summary>
-/// Provides a mechanism for determining whether two tab objects are not the same.
-/// This converter is specifically designed for use in WPF bindings where such comparisons
-/// are required, for example, to enable or disable UI elements based on tab equality.
-/// </summary>
-/// <remarks>
-/// This class implements the <see cref="IMultiValueConverter"/> interface to handle the comparison
-/// of two input values, typically representing tabs, and returns a boolean indicating whether
-/// they are not the same. The conversion back operation is not supported and will throw a
-/// <see cref="NotSupportedException"/>.
-/// </remarks>
-public class NotSameTabConverter : IMultiValueConverter {
-    /// <inheritdoc />
-    public Object Convert(Object?[] values, Type targetTypet, Object parameter, CultureInfo culture) {
-        return !ReferenceEquals(values[0], values[1]);
-    }
-    /// <inheritdoc />
-    public Object[] ConvertBack(Object value, Type[] targetType, Object parameter, CultureInfo culture) {
-        throw new NotSupportedException();
-    }
-}
