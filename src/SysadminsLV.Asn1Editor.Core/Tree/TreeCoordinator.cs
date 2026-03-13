@@ -131,7 +131,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
 
             return Root;
         }
-        
+
         if (parent is null) {
             throw new ArgumentNullException(nameof(parent), "Parent node cannot be null for non-root node.");
         }
@@ -176,7 +176,12 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         (AsnTreeNode parent, Int32 insertIndex, Int32 binaryOffset) = calculateInsertPosition(targetNode, option);
         AsnTreeNode childNode = await AsnTreeBuilder.BuildTreeAsync(nodeRawData, _binarySource, viewOptions);
 
-        childNode.Value.Offset = binaryOffset;
+        if (option == NodeAddOption.Last) {
+            childNode.Value.Offset = binaryOffset;
+        } else {
+            childNode.UpdateOffset(binaryOffset);
+        }
+
         _binarySource.InsertRange(binaryOffset, nodeRawData);
         parent.AddChildNode(childNode, insertIndex);
         // this has to be done before propagating size change, because the propagation relies
@@ -184,7 +189,6 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         updatePathsFrom(parent, insertIndex);
 
         propagateSizeChange(parent, childNode, nodeRawData.Length);
-        //updateOffsetsFrom(parent, insertIndex + 1, nodeRawData.Length);
         await Root!.UpdateNodeViewAsync();
     }
     /// <summary>
