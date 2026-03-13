@@ -12,6 +12,8 @@ public static class ScrollSyncBehavior {
     // one group per tab
     static readonly ScrollGroupRegistry _registry = new();
 
+    #region Group
+
     public static readonly DependencyProperty GroupProperty =
         DependencyProperty.RegisterAttached(
             "Group",
@@ -26,6 +28,25 @@ public static class ScrollSyncBehavior {
     public static String GetGroup(DependencyObject element) {
         return (String)element.GetValue(GroupProperty);
     }
+
+    #endregion
+
+    #region IsScrollSyncEnabled
+
+    public static readonly DependencyProperty IsScrollSyncEnabledProperty =
+        DependencyProperty.RegisterAttached(
+            "IsScrollSyncEnabled",
+            typeof(Boolean),
+            typeof(ScrollSyncBehavior),
+            new PropertyMetadata(true, OnIsEnabledChanged));
+    public static Boolean GetIsScrollSyncEnabled(DependencyObject element) {
+        return (Boolean)element.GetValue(IsScrollSyncEnabledProperty);
+    }
+    public static void SetIsScrollSyncEnabled(DependencyObject element, Boolean value) {
+        element.SetValue(IsScrollSyncEnabledProperty, value);
+    }
+
+    #endregion
 
     static void OnGroupChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is not FrameworkElement fe) {
@@ -56,6 +77,30 @@ public static class ScrollSyncBehavior {
         }
     }
 
+    static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is not FrameworkElement fe) {
+            return;
+        }
+
+        Boolean oldValue = (Boolean)e.OldValue;
+        Boolean newValue = (Boolean)e.NewValue;
+
+        String groupName = GetGroup(fe);
+        if (String.IsNullOrEmpty(groupName)) {
+            return;
+        }
+
+        // update the group's enabled state
+        if (_registry.TryGetGroupByName(groupName, out ScrollGroup? group)) {
+            group.IsScrollSyncEnabled = newValue;
+
+            // when re-enabling, synchronize the scroll positions
+            if (!oldValue && newValue) {
+                SynchronizeScrollPositions(groupName);
+            }
+        }
+    }
+
     static void OnElementLoaded(Object sender, RoutedEventArgs e) {
         FrameworkElement fe = (FrameworkElement)sender;
         fe.Loaded -= OnElementLoaded;
@@ -79,7 +124,9 @@ public static class ScrollSyncBehavior {
         // if it is visible, try to find and register ScrollViewer with a group
         ScrollViewer? sv = FindScrollViewer(fe);
         if (sv == null) {
-            // Подстрахуемся: ещё один заход после layout
+            // attempt to find it later, when visual tree is fully loaded.
+            // This is needed for cases when ScrollViewer is not in the same DataTemplate
+            // as the element with Group property, so it can't be found at this point
             fe.Dispatcher.BeginInvoke(new Action(() => {
                 String currentGroup = GetGroup(fe);
                 if (String.IsNullOrEmpty(currentGroup)) {
@@ -162,6 +209,29 @@ public static class ScrollSyncBehavior {
             return;
         }
 
+        // check if synchronization is enabled
+        if (!group.IsScrollSyncEnabled) {
+            return;
+        }
+
+        SyncViewersToSource(source, group);
+    }
+
+    static void SynchronizeScrollPositions(String groupName) {
+        if (!_registry.TryGetGroupByName(groupName, out ScrollGroup? group)) {
+            return;
+        }
+
+        if (group.Viewers.Count < 2) {
+            return;
+        }
+
+        // use the first viewer (typically the Left panel) as the source
+        ScrollViewer source = group.Viewers[0];
+        SyncViewersToSource(source, group);
+    }
+
+    static void SyncViewersToSource(ScrollViewer source, ScrollGroup group) {
         // calculate fractions for vertical and horizontal offsets
         Double vDenom = source.ExtentHeight - source.ViewportHeight;
         Double hDenom = source.ExtentWidth - source.ViewportWidth;
@@ -238,6 +308,7 @@ public static class ScrollSyncBehavior {
     sealed class ScrollGroup {
         public List<ScrollViewer> Viewers { get; } = [];
         public Boolean IsUpdating { get; set; }
+        public Boolean IsScrollSyncEnabled { get; set; } = true;
     }
     // scroll group registry, manages all groups and their viewers
     // maintains both, forward and reverse mappings for faster lookups

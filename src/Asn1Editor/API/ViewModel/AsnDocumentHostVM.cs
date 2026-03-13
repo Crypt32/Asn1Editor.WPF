@@ -11,9 +11,6 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     Asn1DocumentVM left;
-    Asn1DocumentVM? right;
-    Boolean isCompareMode;
-    String header;
 
     public AsnDocumentHostVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         NodeViewOptions = nodeViewOptions;
@@ -31,10 +28,18 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     // Unique identifier for scroll synchronization between compare tabs
     public String ScrollGroupId { get; } = Guid.NewGuid().ToString("N");
 
+    public Boolean IsScrollbarSynchronized {
+        get;
+        set {
+            field = value;
+            OnPropertyChanged();
+        }
+    } = true;
+
 
     public String Header =>
-        isCompareMode
-            ? "Comparing: " + (left.Header ?? "") + " <> " + (right?.Header ?? "")
+        IsCompareMode
+            ? "Comparing: " + Left.Header + " <> " + (Right?.Header ?? "")
             : Left.Header;
     public Asn1DocumentVM Left {
         get => left;
@@ -45,21 +50,25 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
             OnPropertyChanged();
         }
     }
-    public Asn1DocumentVM? Right {
-        get => right;
-        set {
-            right = value;
+    public Asn1DocumentVM? Right
+    {
+        get;
+        set
+        {
+            field = value;
             OnPropertyChanged();
         }
     }
-    public Boolean IsCompareMode {
-        get => isCompareMode;
-        set {
-            isCompareMode = value;
+    public Boolean IsCompareMode
+    {
+        get;
+        set
+        {
+            field = value;
             OnPropertyChanged();
         }
     }
-    
+
     void refreshHeader() {
         OnPropertyChanged(nameof(Header));
     }
