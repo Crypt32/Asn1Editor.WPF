@@ -60,9 +60,9 @@
                                             IsDismissable="False"
                                             Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock FontSize="{Binding NodeViewOptions.FontSize}">
-                                <Run Text="You are in a side-by-side view mode. Click"/>
+                                <Run Text="You are in a compare mode. Click"/>
                                 <Hyperlink Command="{Binding ExitCompareModeCommand}">Close</Hyperlink>
-                                <Run Text="or press Esc button to exit from this view."/>
+                                <Run Text="or press Esc button to exit from compare mode."/>
                             </TextBlock>
                         </c:NotificationItem>
                         <c:NotificationItem Kind="Warning"
@@ -70,7 +70,7 @@
                                             IsDismissable="False"
                                             Visibility="{Binding Left.IsEnabled, Converter={StaticResource BooleanToVisibilityReversedConverter}}">
                             <TextBlock TextWrapping="Wrap"
-                                       Text="This document is opened in another side-by-side view. Editing functionality is disabled. Exit from side-by-side mode first."/>
+                                       Text="This document is opened in another compare mode. Editing functionality is disabled. Exit from compare mode first."/>
                         </c:NotificationItem>
                     </c:NotificationPanel>
                     <Grid>
