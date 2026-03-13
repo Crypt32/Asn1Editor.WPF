@@ -124,7 +124,8 @@
                                                ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                                ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
                                                ContextMenu="{StaticResource AsnTreeViewContextMenu}"
-                                               behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}">
+                                               behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}"
+                                               behaviors:ScrollSyncBehavior.IsScrollSyncEnabled="{Binding IsScrollbarSynchronized}">
                                     <c:AsnTreeView.InputBindings>
                                         <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
                                         <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
@@ -152,7 +153,8 @@
                                        ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                        ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
                                        Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                       behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}"/>
+                                       behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}"
+                                       behaviors:ScrollSyncBehavior.IsScrollSyncEnabled="{Binding IsScrollbarSynchronized}"/>
                     </Grid>
                 </DockPanel>
             </DataTemplate>
