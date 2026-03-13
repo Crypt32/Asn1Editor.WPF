@@ -51,9 +51,13 @@
             </MenuItem.Icon>
         </MenuItem>
         <Separator/>
-        <MenuItem Header="View side-by-side..."
+        <MenuItem Header="Compare with..."
                   ItemsSource="{Binding Tabs}"
                   ItemContainerStyle="{StaticResource CompareMenuItemStyle}">
+        </MenuItem>
+        <MenuItem Header="Synchronize Scrollbars"
+                  IsCheckable="True"
+                  IsChecked="{Binding SelectedTab.IsScrollbarSynchronized}">
         </MenuItem>
         <Separator/>
         <MenuItem Header="_Close"
