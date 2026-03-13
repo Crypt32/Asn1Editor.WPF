@@ -176,18 +176,15 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         (AsnTreeNode parent, Int32 insertIndex, Int32 binaryOffset) = calculateInsertPosition(targetNode, option);
         AsnTreeNode childNode = await AsnTreeBuilder.BuildTreeAsync(nodeRawData, _binarySource, viewOptions);
 
-        if (option == NodeAddOption.Last) {
-            childNode.Value.Offset = binaryOffset;
-        } else {
-            childNode.UpdateOffset(binaryOffset);
-        }
-
         _binarySource.InsertRange(binaryOffset, nodeRawData);
         parent.AddChildNode(childNode, insertIndex);
         // this has to be done before propagating size change, because the propagation relies
         // on the node's Path and MyIndex to update offsets of siblings
         updatePathsFrom(parent, insertIndex);
 
+        // shift the inserted node and its subtree to the correct offset in the binary structure
+        // it will not be updated by the propagation of size change
+        childNode.UpdateOffset(binaryOffset);
         propagateSizeChange(parent, childNode, nodeRawData.Length);
         await Root!.UpdateNodeViewAsync();
     }
