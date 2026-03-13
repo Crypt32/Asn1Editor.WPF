@@ -219,9 +219,12 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         updatePathsFrom(parent, nodeIndex);
 
         propagateSizeChange(parent, nodeToRemove, -nodeLength);
-        // explicitly update offsets of siblings after the removed node, because the propagation relies
-        // on the node's Path and MyIndex to update offsets of siblings
-        updateOffsetsFrom(parent, nodeIndex, -nodeLength);
+        // explicitly update offsets of next sibling after the removed node only. Other sibling
+        // offsets will be updated during propagation of size change, which also updates offsets
+        // in the subtree of the removed node.
+        if (parent.Children.Count >= nodeIndex + 1) {
+            parent.Children[nodeIndex].UpdateOffset(-nodeLength);
+        }
         Root!.UpdateNodeHeader();
     }
     /// <summary>
