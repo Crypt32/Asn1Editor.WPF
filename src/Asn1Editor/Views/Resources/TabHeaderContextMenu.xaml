@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:wpf="clr-namespace:SysadminsLV.Asn1Editor.API.Utils.WPF">
     <wpf:CompareTabParamConverter x:Key="CompareTabParamConverter"/>
-    <wpf:NotSameTabConverter x:Key="NotSameTabConverter"/>
 
     <Style x:Key="CompareMenuItemStyle" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
         <Setter Property="Header" Value="{Binding Header}"/>
@@ -26,17 +25,6 @@
                              Path="PlacementTarget.DataContext"/>
                     <!-- Right -->
                     <Binding/>
-                </MultiBinding>
-            </Setter.Value>
-        </Setter>
-
-        <!-- Do not compare with self -->
-        <Setter Property="IsEnabled">
-            <Setter.Value>
-                <MultiBinding Converter="{StaticResource NotSameTabConverter}">
-                    <Binding/>
-                    <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
-                             Path="PlacementTarget.DataContext"/>
                 </MultiBinding>
             </Setter.Value>
         </Setter>
