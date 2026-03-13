@@ -74,7 +74,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
         }
 
         Right = param.Right!.GetPrimaryDocument();
-        Right.IsEnabled = false;
+        Right.IsEnabled = ReferenceEquals(Left, Right);
 
         IsCompareMode = true;
         refreshHeader();
