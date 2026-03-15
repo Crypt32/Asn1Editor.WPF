@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -127,7 +127,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
             var rootValue = new AsnNodeValue(asn);
             Root = new AsnTreeNode(rootValue, _binarySource, viewOptions);
             _binarySource.InsertRange(0, nodeRawData);
-            await Root.UpdateNodeViewAsync();
+            await Root.UpdateNodeHeaderAsync();
 
             return Root;
         }
@@ -136,19 +136,21 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
             throw new ArgumentNullException(nameof(parent), "Parent node cannot be null for non-root node.");
         }
 
-        var nodeValue = new AsnNodeValue(new Asn1Reader(nodeRawData)) {
-            Offset = parent.Value.Offset + parent.Value.TagLength
-        };
-        _binarySource.InsertRange(nodeValue.Offset, nodeRawData);
-
+        // create new node value from raw data
+        var nodeValue = new AsnNodeValue(new Asn1Reader(nodeRawData));
+        // create new node with the value and insert it into the binary source at the correct offset
         var node = new AsnTreeNode(nodeValue, _binarySource, viewOptions);
+        // shift the inserted node and its subtree to the end of the parent in the binary structure
+        // it will not be updated by the propagation of size change
+        node.UpdateOffset(parent.Value.Offset + parent.Value.TagLength);
+        _binarySource.InsertRange(nodeValue.Offset, nodeRawData);
         parent.AddChildNode(node, parent.Children.Count);
         // this has to be done before propagating size change, because the propagation relies
         // on the node's Path and MyIndex to update offsets of siblings
         updatePathsFrom(parent, parent.Children.Count - 1);
-
+        
         propagateSizeChange(parent, node, nodeRawData.Length);
-        await Root.UpdateNodeViewAsync();
+        await Root.UpdateNodeHeaderAsync();
 
         return node;
     }
@@ -219,13 +221,12 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         // on the node's Path and MyIndex to update offsets of siblings
         updatePathsFrom(parent, nodeIndex);
 
-        propagateSizeChange(parent, nodeToRemove, -nodeLength);
-        // explicitly update offsets of next sibling after the removed node only. Other sibling
-        // offsets will be updated during propagation of size change, which also updates offsets
-        // in the subtree of the removed node.
-        if (parent.Children.Count >= nodeIndex + 1) {
-            parent.Children[nodeIndex].UpdateOffset(-nodeLength);
-        }
+        propagateSizeChange(parent, nodeToRemove, -nodeLength, updateSiblings: false);
+        // explicitly update offsets of all siblings after the removed node. They already received
+        // offset adjustments from header length changes in propagateSizeChange, but still need
+        // the adjustment for the removed node's length.
+        updateOffsetsFrom(parent, nodeIndex, -nodeLength);
+
         Root!.UpdateNodeHeader();
     }
     /// <summary>
@@ -302,13 +303,13 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
     ///     produced at lower levels.</item>
     /// <item>The encoded length field of each ancestor is recalculated.</item>
     /// <item>
-    ///     If the ASN.1 length encoding crosses a boundary (e.g. 127 → 128, 255 → 256),
+    ///     If the ASN.1 length encoding crosses a boundary (e.g. 127 -> 128, 255 -> 256),
     ///     the number of bytes used to encode the length may change.
     /// </item>
     /// <item>
     ///     Any increase in the length field size shifts the binary layout of:
     ///     <list type="bullet">
-    ///         <item>the node’s payload start offset,</item>
+    ///         <item>the node�s payload start offset,</item>
     ///         <item>all nodes in its subtree,</item>
     ///         <item>and all following siblings in the parent node.</item>
     ///     </list>
@@ -333,7 +334,7 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
     ///     This algorithm is sensitive to ASN.1 length encoding rules and must be modified with extreme care.
     /// </para>
     /// </remarks>
-    void propagateSizeChange(AsnTreeNode parent, AsnTreeNode source, Int32 difference) {
+    void propagateSizeChange(AsnTreeNode parent, AsnTreeNode source, Int32 difference, Boolean updateSiblings = true) {
         _binarySource.BeginUpdate();
         try {
             AsnTreeNode? current = parent;
@@ -353,7 +354,21 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
                     cumulativeDiff += lenDiff;
                 }
 
-                updateOffsetsFromSibling(source, cumulativeDiff);
+                if (updateSiblings) {
+                    // If source is a direct child of current, its siblings were already shifted by lenDiff
+                    // via updateOffsetsInSubtree, so only apply the original size difference.
+                    // Otherwise, use cumulativeDiff to include all accumulated header growth.
+                    Int32 siblingShift = ReferenceEquals(source.Parent, current) && lenDiff != 0
+                        ? difference
+                        : cumulativeDiff;
+                    updateOffsetsFromSibling(source, siblingShift);
+                } else if (current.Parent is not null) {
+                    // When updateSiblings is false (RemoveNode case), we need to update
+                    // siblings of current at each level using cumulativeDiff since they
+                    // weren't included in updateOffsetsInSubtree at this level.
+                    updateOffsetsFromSibling(current, cumulativeDiff);
+                }
+
                 source = current;
                 current = current.Parent;
             }
