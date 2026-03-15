@@ -144,8 +144,9 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     /// <param name="rawData">Node raw data.</param>
     /// <param name="options">Node view options.</param>
     /// <remarks></remarks>
-    public void UpdateNodeHeader(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
+    internal void UpdateNodeHeader(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
         Header = getNodeHeader(rawData, options);
+        ToolTip = getToolTip(rawData);
     }
     /// <summary>
     /// Performs node value update, which includes update for <see cref="Header"/>, <see cref="ToolTip"/>
@@ -153,9 +154,8 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
     /// </summary>
     /// <param name="rawData">Node raw data.</param>
     /// <param name="options">Node view options.</param>
-    public void UpdateNode(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
-        Header = getNodeHeader(rawData, options);
-        ToolTip = getToolTip(rawData);
+    internal void UpdateNode(IReadOnlyList<Byte> rawData, INodeViewOptions options) {
+        UpdateNodeHeader(rawData, options);
         DataChanged?.Invoke(this, EventArgs.Empty);
     }
     String getNodeHeader(IReadOnlyList<Byte> rawData, INodeViewOptions options) {

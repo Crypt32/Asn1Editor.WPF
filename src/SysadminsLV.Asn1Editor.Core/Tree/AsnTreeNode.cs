@@ -156,14 +156,14 @@ public class AsnTreeNode {
     }
 
     // ITreeOperations implementation
-    public void UpdateOffset(Int32 difference) {
+    internal void UpdateOffset(Int32 difference) {
         Value.Offset += difference;
         foreach (AsnTreeNode child in Children) {
             child.UpdateOffset(difference);
         }
     }
 
-    public void UpdatePath(String parentPath, Int32 index) {
+    internal void UpdatePath(String parentPath, Int32 index) {
         Value.Path = parentPath + "/" + index;
         MyIndex = index;
         for (Int32 i = 0; i < Children.Count; i++) {
@@ -172,10 +172,10 @@ public class AsnTreeNode {
     }
 
     // View updates
-    public void UpdateNodeView(Func<AsnTreeNode, Boolean>? filter = null) {
+    internal void UpdateNodeView(Func<AsnTreeNode, Boolean>? filter = null) {
         updateNodeView(this, filter);
     }
-    public Task UpdateNodeViewAsync(Func<AsnTreeNode, Boolean>? filter = null) {
+    internal Task UpdateNodeViewAsync(Func<AsnTreeNode, Boolean>? filter = null) {
         return Task.Run(() => UpdateNodeView(filter));
     }
 
@@ -199,7 +199,7 @@ public class AsnTreeNode {
             node.Value.UpdateNodeHeader(_binarySource, _viewOptions);
         }
         foreach (AsnTreeNode child in node.Children) {
-            updateNodeView(child, filter);
+            updateNodeHeader(child, filter);
         }
     }
 

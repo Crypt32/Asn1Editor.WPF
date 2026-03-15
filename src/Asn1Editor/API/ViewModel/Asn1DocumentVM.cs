@@ -96,12 +96,6 @@ public class Asn1DocumentVM : AsyncViewModel {
         if (Tree.Count == 0) {
             return Task.CompletedTask;
         }
-        return refreshTree(Tree[0].UpdateNodeViewAsync, filter);
-    }
-    public Task RefreshTreeHeaders(Func<AsnTreeNode, Boolean>? filter = null) {
-        if (Tree.Count == 0) {
-            return Task.CompletedTask;
-        }
         return refreshTree(Tree[0].UpdateNodeHeaderAsync, filter);
     }
 
