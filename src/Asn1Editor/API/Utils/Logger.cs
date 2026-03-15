@@ -20,7 +20,11 @@ class Logger : IDisposable {
     void flushOldLogs() {
         var directory = new DirectoryInfo(_logDirectory);
         foreach (FileInfo? fileInfo in directory.EnumerateFiles().OrderByDescending(x => x.LastWriteTime).Skip(10)) {
-            fileInfo.Delete();
+            try {
+                // this can legitimately fail if there is running editor instance that is still writing to the log file,
+                // so we just ignore any exceptions here
+                fileInfo.Delete();
+            } catch { }
         }
     }
     
