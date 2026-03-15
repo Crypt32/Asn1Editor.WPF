@@ -12,7 +12,7 @@ class Logger : IDisposable {
 
     public Logger(String appDataDirectory) {
         _logDirectory = Directory.CreateDirectory(Path.Combine(appDataDirectory, "Logs")).FullName;
-        String dt = "Log-" + DateTime.Now.ToString("ddMMyyyyHHmmss");
+        String dt = "Log-" + DateTime.Now.ToString("yyyy-MM-dd-HHmmss");
         sessionStream = new StreamWriter(Path.Combine(_logDirectory, $"{dt}-{Process.GetCurrentProcess().Id}.log")) { AutoFlush = true };
         Task.Run(flushOldLogs);
     }
@@ -32,7 +32,7 @@ class Logger : IDisposable {
         sessionStream.WriteLine(s);
     }
     public void Write(Exception e) {
-        String dt = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+        String dt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         sessionStream.WriteLine($"[{dt}]" + " An exception has been thrown:");
         Exception? ex = e;
         do {
