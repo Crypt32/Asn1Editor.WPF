@@ -157,7 +157,7 @@ public static class AsnDecoder {
             case Asn1Type.BIT_STRING:
                 return new Asn1BitString(HexUtility.HexToBinary(value), unusedBits).GetRawData();
             case Asn1Type.OCTET_STRING:
-                return new Asn1OctetString(HexUtility.HexToBinary(value), false).GetRawData();
+                return new Asn1OctetString(HexUtility.HexToBinary(value), true).GetRawData();
             case Asn1Type.NULL:
                 return new Asn1Null().GetRawData();
             case Asn1Type.OBJECT_IDENTIFIER:
