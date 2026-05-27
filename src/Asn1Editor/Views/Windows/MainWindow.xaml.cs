@@ -16,6 +16,10 @@ public partial class MainWindow {
         Closing += onClosing;
     }
     void onClosing(Object sender, CancelEventArgs e) {
-        e.Cancel = !_vm.CloseAllTabs();
+        Boolean result = _vm.CloseAllTabs();
+        if (result) {
+            _vm.Shutdown();
+        }
+        e.Cancel = !result;
     }
 }
