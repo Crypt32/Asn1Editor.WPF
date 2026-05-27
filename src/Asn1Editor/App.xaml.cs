@@ -38,11 +38,13 @@ public partial class App {
         _options.PropertyChanged += onOptionsChanged;
     }
 
+    public static String AppDataPath => _appDataPath;
     public static IUnityContainer Container { get; private set; }
 
     static void onDispatcherUnhandledException(Object s, DispatcherUnhandledExceptionEventArgs e) {
         _logger.Write(e.Exception);
     }
+
     public static void Write(Exception e) {
         _logger.Write(e);
     }
