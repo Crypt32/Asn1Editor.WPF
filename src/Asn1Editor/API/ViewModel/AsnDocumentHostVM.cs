@@ -15,7 +15,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     public AsnDocumentHostVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
         NodeViewOptions = nodeViewOptions;
         TreeCommands = treeCommands;
-        StartCompareModeCommand = new RelayCommand(start);
+        StartCompareModeCommand = new RelayCommand(startCompare);
         ExitCompareModeCommand = new RelayCommand(exit, _ => IsCompareMode);
         left = new Asn1DocumentVM(nodeViewOptions, treeCommands);
         left.PropertyChanged += onMainContentPropertyChanged;
@@ -68,7 +68,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     void refreshHeader() {
         OnPropertyChanged(nameof(Header));
     }
-    void start(Object? o) {
+    void startCompare(Object? o) {
         if (o is not TabCompareParam param || param.Left is null) {
             return;
         }
