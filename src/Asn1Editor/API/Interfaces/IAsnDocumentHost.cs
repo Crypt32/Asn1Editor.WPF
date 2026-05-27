@@ -14,4 +14,12 @@ public interface IAsnDocumentHost {
     /// An instance of <see cref="Asn1DocumentVM"/> representing the main ASN.1 document.
     /// </returns>
     Asn1DocumentVM GetPrimaryDocument();
+    /// <summary>
+    /// Retrieves the secondary ASN.1 document associated with the current tab, if available.
+    /// </summary>
+    /// <returns>
+    /// An instance of <see cref="Asn1DocumentVM"/> representing the secondary ASN.1 document,
+    /// or <c>null</c> if no secondary document is associated.
+    /// </returns>
+    Asn1DocumentVM? GetSecondaryDocument();
 }
