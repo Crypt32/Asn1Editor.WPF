@@ -74,9 +74,11 @@ public class Asn1DocumentVM : AsyncViewModel {
     public Boolean IsModified {
         get;
         set {
-            field = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(Header));
+            if (field != value) {
+                field = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Header));
+            }
         }
     }
     public String ProgressText {
