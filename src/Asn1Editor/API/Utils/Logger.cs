@@ -9,6 +9,7 @@ namespace SysadminsLV.Asn1Editor.API.Utils;
 class Logger : IDisposable {
     readonly String _logDirectory;
     readonly StreamWriter sessionStream;
+    readonly Object _lock = new();
 
     public Logger(String appDataDirectory) {
         _logDirectory = Directory.CreateDirectory(Path.Combine(appDataDirectory, "Logs")).FullName;
@@ -29,16 +30,20 @@ class Logger : IDisposable {
     }
     
     public void Write(String s) {
-        sessionStream.WriteLine(s);
+        lock (_lock) {
+            sessionStream.WriteLine(s);
+        }
     }
     public void Write(Exception e) {
-        String dt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        sessionStream.WriteLine($"[{dt}]" + " An exception has been thrown:");
-        Exception? ex = e;
-        do {
-            sessionStream.WriteLine($"\tError message: {ex.Message}\r\n\tStack trace:\r\n{ex.StackTrace.Replace("   ", "\t\t")}");
-            ex = ex.InnerException;
-        } while (ex is not null);
+        lock (_lock) {
+            String dt = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            sessionStream.WriteLine($"[{dt}]" + " An exception has been thrown:");
+            Exception? ex = e;
+            do {
+                sessionStream.WriteLine($"\tError message: {ex.Message}\r\n\tStack trace:\r\n{ex.StackTrace.Replace("   ", "\t\t")}");
+                ex = ex.InnerException;
+            } while (ex is not null);
+        }
     }
     public void Dispose() {
         sessionStream?.Dispose();
