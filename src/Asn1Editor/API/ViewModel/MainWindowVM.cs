@@ -9,6 +9,7 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
@@ -17,9 +18,10 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
+class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISessionTabHost {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
+    readonly ObservableCollection<AsnDocumentHostVM> _tabs = [];
 
     public MainWindowVM(
         IWindowFactory windowFactory,
@@ -27,6 +29,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         NodeViewOptions nodeViewOptions) {
         _windowFactory = windowFactory;
         _uiMessenger = windowFactory.GetUIMessenger();
+        Tabs = new ReadOnlyObservableCollection<AsnDocumentHostVM>(_tabs);
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         TreeCommands = new TreeViewCommands(windowFactory, this);
@@ -64,7 +67,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
 
     public GlobalData GlobalData { get; }
     public NodeViewOptions NodeViewOptions { get; }
-    public ObservableCollection<AsnDocumentHostVM> Tabs { get; } = [];
+    public ReadOnlyObservableCollection<AsnDocumentHostVM> Tabs { get; }
     public AsnDocumentHostVM? SelectedTab {
         get;
         set {
@@ -94,7 +97,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     /// </summary>
     /// <param name="tab">Tab document to add.</param>
     void addTabToList(AsnDocumentHostVM tab) {
-        Tabs.Add(tab);
+        _tabs.Add(tab);
         SelectedTab = tab;
     }
     /// <summary>
@@ -243,7 +246,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     void removeTab(AsnDocumentHostVM tab) {
         // unlock Right ASN.1 document if in compare mode
         tab.Right?.IsEnabled = true;
-        Tabs.Remove(tab);
+        _tabs.Remove(tab);
     }
 
     void closeTab(Object? o) {
