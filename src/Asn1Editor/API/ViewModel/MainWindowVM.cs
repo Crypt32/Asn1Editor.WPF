@@ -21,6 +21,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISessionTabHost {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
+    readonly SessionBackupManager _sessionManager = SessionBackupManager.Instance;
     readonly ObservableCollection<AsnDocumentHostVM> _tabs = [];
 
     public MainWindowVM(
@@ -316,6 +317,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
     }
     public Boolean CloseAllTabs() {
         return closeTabsWithPreservation();
+    }
+
+    /// <inheritdoc />
+    public void Shutdown() {
+        _sessionManager.Shutdown();
     }
 
     #endregion

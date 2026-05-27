@@ -36,7 +36,7 @@ class SessionDocumentSource : IDisposable {
     async Task saveSessionAsync() {
         _timer.Stop();
         try {
-            await SessionManager.Instance.SaveSessionAsync(_sessionTabHost);
+            await SessionBackupManager.Instance.SaveSessionAsync(_sessionTabHost);
         } catch (Exception ex) {
             App.Write(ex);
         } finally {
@@ -52,6 +52,10 @@ class SessionDocumentSource : IDisposable {
     }
     async void SessionTabHost_OnPropertyChanged(Object sender, PropertyChangedEventArgs args) {
         await saveSessionAsync();
+    }
+
+    public void Shutdown() {
+        SessionBackupManager.Instance.Shutdown();
     }
 
     /// <inheritdoc />

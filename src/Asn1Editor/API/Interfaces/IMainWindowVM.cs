@@ -27,4 +27,9 @@ public interface IMainWindowVM {
     Boolean CloseAllTabs();
     Task OpenExistingAsync(String filePath);
     Task OpenRawAsync(String base64String);
+    /// <summary>
+    /// Instructs main window view model to perform necessary actions to prepare for application shutdown,
+    /// such as prompting user to save unsaved data and releasing resources.
+    /// </summary>
+    void Shutdown();
 }
