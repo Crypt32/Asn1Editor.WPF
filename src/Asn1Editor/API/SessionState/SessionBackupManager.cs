@@ -12,30 +12,29 @@ namespace SysadminsLV.Asn1Editor.API.SessionState;
 /// This class provides functionality to save, restore, and manage session-related data,
 /// ensuring the persistence of session state across application runs.
 /// </summary>
-class SessionManager {
+class SessionBackupManager {
     static readonly Object _lock = new();
-    static readonly SessionManagerStorageHandler _storageHandler = new();
+    static readonly SessionManagerStorage _sessionStorage = new();
     static volatile Boolean isRunning;
 
     readonly SessionDto _currentSession;
 
-    SessionManager() {
+    SessionBackupManager() {
         _currentSession = new SessionDto {
             Version = 1,
-            State = "running",
             SessionID = Guid.NewGuid().ToString("N"),
             ProcessID = Process.GetCurrentProcess().Id,
-            CreatedUtc = DateTime.UtcNow,
+            CreatedUtc = Process.GetCurrentProcess().StartTime.ToUniversalTime(),
             UpdatedUtc = DateTime.UtcNow
         };
     }
 
     /// <summary>
-    /// Gets the singleton instance of the <see cref="SessionManager"/> class.
-    /// This property ensures that only one instance of the <see cref="SessionManager"/> exists
+    /// Gets the singleton instance of the <see cref="SessionBackupManager"/> class.
+    /// This property ensures that only one instance of the <see cref="SessionBackupManager"/> exists
     /// throughout the application's lifecycle, providing a centralized point for managing session state.
     /// </summary>
-    public static SessionManager Instance { get; } = new();
+    public static SessionBackupManager Instance { get; } = new();
 
     /// <summary>
     /// Asynchronously saves the current session state, including the state of all open tabs and their metadata.
@@ -68,6 +67,13 @@ class SessionManager {
             isRunning = false;
         }
     }
+    
+    public void Shutdown() {
+        foreach (SessionTabDto tab in _currentSession.OpenTabs) {
+            _sessionStorage.DeleteRecoveryFileAsync(tab.ID).GetAwaiter().GetResult();
+        }
+        _sessionStorage.DeleteRecoverySession(_currentSession.SessionID);
+    }
 
     async Task saveSessionAsync(ISessionTabHost documentHosts) {
         // Create a backup of the current tabs to avoid issues with collection modification during enumeration
@@ -87,7 +93,7 @@ class SessionManager {
                 Order = i,
                 Title = tabBackup[i].Header.TrimEnd('*'),
                 SourcePath = tabBackup[i].GetPrimaryDocument().Path,
-                RecoveryFile = String.Empty // This should be set if the document has unsaved changes
+                CompareID = tabBackup[i].GetSecondaryDocument()?.ID
             };
             activeTabs[dto.ID] = new TabSource(tabBackup[i].GetPrimaryDocument(), dto);
         }
@@ -99,11 +105,11 @@ class SessionManager {
         foreach (TabChangeState tabChangeState in compareState) {
             switch (tabChangeState.State) {
                 case SessionTabState.Dirty:
-                    tabChangeState.Tab.RecoveryFile = await _storageHandler.WriteRecoveryFileAsync(activeTabs[tabChangeState.Tab.ID].Document);
+                    tabChangeState.Tab.RecoveryFile = await _sessionStorage.WriteRecoveryFileAsync(activeTabs[tabChangeState.Tab.ID].Document);
                     break;
                 case SessionTabState.Clean:
                 case SessionTabState.Removed:
-                    await _storageHandler.DeleteRecoveryFileAsync(tabChangeState.Tab.ID);
+                    await _sessionStorage.DeleteRecoveryFileAsync(tabChangeState.Tab.ID);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -115,7 +121,7 @@ class SessionManager {
             _currentSession.OpenTabs.Add(tab.Dto);
         }
 
-        await _storageHandler.WriteSessionAsync(_currentSession);
+        await _sessionStorage.WriteSessionAsync(_currentSession);
     }
 
     static List<TabChangeState> compareStateChange(IDictionary<String, TabSource> activeTabs, IDictionary<String, SessionTabDto> lastKnownState) {
