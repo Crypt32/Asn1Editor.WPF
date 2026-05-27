@@ -95,4 +95,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     public Asn1DocumentVM GetPrimaryDocument() {
         return Left;
     }
+    public Asn1DocumentVM? GetSecondaryDocument() {
+        return Right;
+    }
 }
