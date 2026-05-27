@@ -20,13 +20,6 @@ public sealed class SessionDto {
     [XmlAttribute("version")]
     public Int32 Version { get; set; }
     /// <summary>
-    /// Gets or sets the current state of the session.
-    /// This property represents the status of the session, such as "running",
-    /// "paused", or "completed", and is used to track the session's lifecycle.
-    /// </summary>
-    [XmlAttribute("state")]
-    public String State { get; set; } = String.Empty;
-    /// <summary>
     /// Gets or sets the unique identifier for the session.
     /// This property is used to distinguish between different sessions
     /// and is typically represented as a globally unique identifier (GUID).
@@ -126,3 +119,6 @@ public sealed class SessionTabDto {
     [XmlIgnore]
     public Boolean IsDirty => !String.IsNullOrWhiteSpace(RecoveryFile);
 }
+
+public sealed record SessionRecoveryDto(String? SelectedTabID, List<SessionTabRecoveryDto> Tabs);
+public sealed record SessionTabRecoveryDto(String ID, String Name, String? SourcePath, String? CompareID, Byte[]? RecoveryData);
