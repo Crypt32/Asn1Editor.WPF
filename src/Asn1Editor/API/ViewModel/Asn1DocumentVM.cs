@@ -11,7 +11,7 @@ using SysadminsLV.Asn1Editor.Core.Tree;
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public class Asn1DocumentVM : AsyncViewModel {
-    String fileName;
+    String? fileName;
     Boolean suppressModified;
 
     public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
@@ -58,12 +58,12 @@ public class Asn1DocumentVM : AsyncViewModel {
             return "untitled";
         }
     }
-    public String Path {
+    public String? Path {
         get;
         set {
             field = value;
             if (!String.IsNullOrWhiteSpace(field)) {
-                fileName = new FileInfo(field).Name;
+                fileName = new FileInfo(field!).Name;
             }
 
             OnPropertyChanged();
@@ -87,7 +87,7 @@ public class Asn1DocumentVM : AsyncViewModel {
             field = value;
             OnPropertyChanged();
         }
-    }
+    } = String.Empty;
     public Boolean IsEnabled {
         get;
         set {
