@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
@@ -12,6 +13,7 @@ using SysadminsLV.Asn1Editor.API;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
+using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.API.ViewModel;
@@ -51,7 +53,8 @@ public partial class App {
     public static void Write(String s) {
         _logger.Write(s);
     }
-    protected override void OnStartup(StartupEventArgs e) {
+    async protected override void OnStartup(StartupEventArgs e) {
+        base.OnStartup(e);
         _logger.Write("******************************** Started ********************************");
         _logger.Write($"Process: {Process.GetCurrentProcess().ProcessName}");
         _logger.Write($"PID    : {Process.GetCurrentProcess().Id}");
@@ -62,8 +65,25 @@ public partial class App {
         oidMgr.ReloadLookup();
         OidServices.Resolver = new OidResolverWrapper();
         parseArguments(e.Args);
-        base.OnStartup(e);
-        Container.Resolve<MainWindow>().Show();
+        var mainWindow = Container.Resolve<MainWindow>();
+        var recoveryManager = new SessionRecoveryManager();
+        SessionRecoveryDto recoveryData = await recoveryManager.GetSessionRecoveryAsync();
+        if (recoveryData.Tabs.Count > 0) {
+            var sb = new StringBuilder();
+            sb.AppendLine("The application was not closed correctly last time.");
+            sb.AppendLine("The following documents can be restored:");
+            sb.AppendLine();
+            foreach (var tab in recoveryData.Tabs) {
+                sb.AppendLine($"- {tab.Name}");
+            }
+            sb.AppendLine();
+            sb.AppendLine("Do you want to restore these documents?");
+            var uiMessenger = Container.Resolve<IUIMessenger>();
+            if (uiMessenger.YesNo(sb.ToString(), "Restore session")) {
+                await ((IMainWindowVM)mainWindow.DataContext).RestoreSessionAsync(recoveryData);
+            }
+        }
+        mainWindow.Show();
     }
     protected override void OnExit(ExitEventArgs e) {
         _logger.Dispose();
@@ -108,7 +128,7 @@ public partial class App {
             .RegisterType<IUIMessenger, UIMessenger>()
             // view models
             .RegisterSingleton<MainWindowVM>()
-            .RegisterType<IMainWindowVM, MainWindowVM>()
+            .RegisterSingleton<IMainWindowVM, MainWindowVM>()
             .RegisterType<IHasAsnDocumentTabs, MainWindowVM>()
             .RegisterType<ITextViewerVM, TextViewerVM>()
             .RegisterType<IAsnValueEditorVM, AsnValueEditorVM>()
