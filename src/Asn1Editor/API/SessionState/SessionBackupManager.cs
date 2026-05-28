@@ -70,7 +70,7 @@ class SessionBackupManager {
     
     public void Shutdown() {
         foreach (SessionTabDto tab in _currentSession.OpenTabs) {
-            _sessionStorage.DeleteRecoveryFileAsync(tab.ID).GetAwaiter().GetResult();
+            _sessionStorage.DeleteRecoveryFile(tab.ID);
         }
         _sessionStorage.DeleteRecoverySession(_currentSession.SessionID);
     }
