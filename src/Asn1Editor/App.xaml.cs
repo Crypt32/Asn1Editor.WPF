@@ -1,12 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using System.Xml;
-using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API;
 using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.AppStartup;
@@ -27,14 +23,14 @@ namespace SysadminsLV.Asn1Editor;
 public partial class App {
     static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new(_appDataPath);
-    static readonly XmlSerializer _settingsSerializer = new(typeof(NodeViewOptions));
-
+    
     readonly NodeViewOptions _options;
 
     public App() {
         Dispatcher.UnhandledException += onDispatcherUnhandledException;
-        _options = readSettings();
-        _options.PropertyChanged += onOptionsChanged;
+        var optionsStorage = new NodeViewOptionsStorage(_appDataPath);
+        _options = optionsStorage.Load();
+        _options.PropertyChanged += (s, _) => optionsStorage.Save((NodeViewOptions)s);
     }
 
     public static String AppDataPath => _appDataPath;
@@ -94,22 +90,5 @@ public partial class App {
             OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, _appDataPath]
         };
         Container.RegisterInstance<IOidDbManager>(oidMgr);
-    }
-    static void onOptionsChanged(Object s, PropertyChangedEventArgs e) {
-        using var sw = new StreamWriter(Path.Combine(_appDataPath, "user.config"), false);
-        using var xw = XmlWriter.Create(sw);
-        _settingsSerializer.Serialize(xw, s);
-    }
-    static NodeViewOptions readSettings() {
-        if (File.Exists(Path.Combine(_appDataPath, "user.config"))) {
-            try {
-                using var sr = new StreamReader(Path.Combine(_appDataPath, "user.config"));
-                return (NodeViewOptions)_settingsSerializer.Deserialize(sr);
-            } catch {
-                return new NodeViewOptions();
-            }
-        }
-
-        return new NodeViewOptions();
     }
 }
