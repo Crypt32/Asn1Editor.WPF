@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using SysadminsLV.Asn1Editor.API;
-using SysadminsLV.Asn1Editor.API.Abstractions;
 using SysadminsLV.Asn1Editor.API.AppStartup;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;

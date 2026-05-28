@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Microsoft.Win32;
-using SysadminsLV.Asn1Editor.API.Abstractions;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 
 namespace SysadminsLV.Asn1Editor.API.Utils;
 

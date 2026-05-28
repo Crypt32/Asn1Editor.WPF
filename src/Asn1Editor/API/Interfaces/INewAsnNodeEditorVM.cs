@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SysadminsLV.Asn1Editor.API.Abstractions;
+namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface INewAsnNodeEditorVM {
     /// <summary>
