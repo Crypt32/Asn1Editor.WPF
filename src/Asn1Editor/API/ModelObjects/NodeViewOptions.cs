@@ -180,6 +180,24 @@ public class NodeViewOptions : ViewModelBase, INodeViewOptions {
         }
     } = new();
 
+    [XmlElement("sessionRecovery")]
+    public SessionRecoveryOptions SessionRecovery {
+        get;
+        set {
+            if (field is not null) {
+                field.PropertyChanged -= OnSessionRecoveryPropertyChanged;
+            }
+            field = value;
+            if (field is not null) {
+                field.PropertyChanged += OnSessionRecoveryPropertyChanged;
+            }
+            OnPropertyChanged();
+        }
+    } = new();
+    void OnSessionRecoveryPropertyChanged(Object sender, PropertyChangedEventArgs e) {
+        OnPropertyChanged(nameof(SessionRecovery));
+    }
+
     void OnTagViewPropertyChanged(Object sender, PropertyChangedEventArgs args) {
         OnPropertyChanged(nameof(TagView));
         switch (args.PropertyName) {
@@ -405,6 +423,29 @@ public class AsnIntegerViewOptions : ViewModelBase, IAsnIntegerViewOptions {
             OnPropertyChanged();
         }
     }
+}
+
+public class SessionRecoveryOptions : ViewModelBase {
+    [XmlElement("enableAutomaticRecovery")]
+    public Boolean EnableAutomaticRecovery {
+        get;
+        set {
+            if (value != field) {
+                field = value;
+                OnPropertyChanged();
+            }
+        }
+    } = true;
+    [XmlElement("backupIntervalInSeconds")]
+    public Int32 BackupIntervalInSeconds {
+        get;
+        set {
+            if (value != field) {
+                field = value;
+                OnPropertyChanged();
+            }
+        }
+    } = 60;
 }
 
 /// <summary>
