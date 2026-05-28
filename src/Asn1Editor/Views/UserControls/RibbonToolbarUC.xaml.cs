@@ -17,7 +17,7 @@ public partial class RibbonToolbarUC {
     }
     void onRibbonExpandCollapseClick(Object sender, RoutedEventArgs args) {
         if (DataContext is MainWindowVM vm) {
-            vm.NodeViewOptions.RibbonMinimized = !vm.NodeViewOptions.RibbonMinimized;
+            vm.UserSettings.RibbonMinimized = !vm.UserSettings.RibbonMinimized;
         }
         Keyboard.ClearFocus();
     }

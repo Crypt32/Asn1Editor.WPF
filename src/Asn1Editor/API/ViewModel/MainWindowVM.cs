@@ -28,15 +28,15 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
     public MainWindowVM(
         IWindowFactory windowFactory,
         IAppCommands appCommands,
-        NodeViewOptions nodeViewOptions) {
+        UserSettings userSettings) {
         _windowFactory = windowFactory;
         _uiMessenger = windowFactory.GetUIMessenger();
         Tabs = new ReadOnlyObservableCollection<AsnDocumentHostVM>(_tabs);
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         TreeCommands = new TreeViewCommands(windowFactory, this);
-        NodeViewOptions = nodeViewOptions;
-        NodeViewOptions.RequireTreeRefresh += onNodeViewOptionsChanged;
+        UserSettings = userSettings;
+        UserSettings.RequireTreeRefresh += OnUserSettingsChanged;
         NewCommand = new RelayCommand(newTab);
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
         CloseAllTabsCommand = new RelayCommand(closeAllTabs);
@@ -46,11 +46,11 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
         ReloadDocumentCommand = new AsyncCommand(reloadDocumentAsync);
         DropFileCommand = new AsyncCommand(dropFileAsync);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
-        _sessionDocumentSource = new SessionDocumentSource(this, NodeViewOptions);
-        addTabToList(new AsnDocumentHostVM(NodeViewOptions, TreeCommands));
+        _sessionDocumentSource = new SessionDocumentSource(this, UserSettings);
+        addTabToList(new AsnDocumentHostVM(UserSettings, TreeCommands));
     }
 
-    async void onNodeViewOptionsChanged(Object sender, RequireTreeRefreshEventArgs args) {
+    async void OnUserSettingsChanged(Object sender, RequireTreeRefreshEventArgs args) {
         await RefreshTabs(args.Filter);
     }
 
@@ -69,7 +69,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
     public ITreeCommands TreeCommands { get; }
 
     public GlobalData GlobalData { get; }
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
     public ReadOnlyObservableCollection<AsnDocumentHostVM> Tabs { get; }
     public AsnDocumentHostVM? SelectedTab {
         get;
@@ -91,7 +91,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
         }
     }
     void newTab(Object o) {
-        var tab = new AsnDocumentHostVM(NodeViewOptions, TreeCommands);
+        var tab = new AsnDocumentHostVM(UserSettings, TreeCommands);
         addTabToList(tab);
     }
     /// <summary>
@@ -120,7 +120,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
         }
 
         isNew = true;
-        var tab = new AsnDocumentHostVM(NodeViewOptions, TreeCommands);
+        var tab = new AsnDocumentHostVM(UserSettings, TreeCommands);
         addTabToList(tab);
 
         return tab;
@@ -369,7 +369,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
         }
         var compareDictionary = new Dictionary<String, AsnDocumentHostVM>();
         foreach (SessionTabRecoveryDto recoveryTab in recoveryData.Tabs) {
-            var tab = new AsnDocumentHostVM(NodeViewOptions, TreeCommands);
+            var tab = new AsnDocumentHostVM(UserSettings, TreeCommands);
             Asn1DocumentVM doc = tab.GetPrimaryDocument();
             if (recoveryTab.RecoveryData is not null) {
                 try {

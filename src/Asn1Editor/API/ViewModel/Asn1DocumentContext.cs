@@ -17,8 +17,8 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
     readonly TreeCoordinator _coordinator;
     readonly ObservableCollection<AsnTreeNode> _treeCollection = [];
 
-    public Asn1DocumentContext(NodeViewOptions viewOptions) {
-        NodeViewOptions = viewOptions;
+    public Asn1DocumentContext(UserSettings viewOptions) {
+        UserSettings = viewOptions;
         Tree = new ReadOnlyObservableCollection<AsnTreeNode>(_treeCollection);
         // TreeCoordinator creates and owns BinaryDataSource internally
         _coordinator = new TreeCoordinator(viewOptions);
@@ -60,7 +60,7 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
         }
     }
 
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
     /// <summary>
     /// Gets the tree collection for WPF TreeView binding.
     /// This is a single-item collection containing the root node.

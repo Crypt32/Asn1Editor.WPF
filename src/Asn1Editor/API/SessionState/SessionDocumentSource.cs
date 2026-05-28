@@ -23,10 +23,10 @@ class SessionDocumentSource : IDisposable {
     readonly SessionRecoveryOptions _recoveryOptions;
     readonly DispatcherTimer _timer = new();
 
-    public SessionDocumentSource(ISessionTabHost sessionTabHost, NodeViewOptions nodeViewOptions) {
+    public SessionDocumentSource(ISessionTabHost sessionTabHost, UserSettings userSettings) {
         _sessionTabHost = sessionTabHost;
         _tabsChangeSource = sessionTabHost.Tabs;
-        _recoveryOptions = nodeViewOptions.SessionRecovery;
+        _recoveryOptions = userSettings.SessionRecovery;
         _recoveryOptions.PropertyChanged += RecoveryOptions_OnPropertyChanged;
         if (_recoveryOptions.EnableAutomaticRecovery) {
             enableRecovery();

@@ -11,7 +11,7 @@
         d:DataContext="{d:DesignInstance vm:NewAsnNodeEditorVM}"
         Background="{StaticResource PanelBackgroundBrush}"
         Foreground="{StaticResource Panel.FgBrush}"
-        FontSize="{Binding NodeViewOptions.FontSize, Mode=OneTime}"
+        FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         Title="New ASN.1 Node"
         SizeToContent="Height"
         ResizeMode="NoResize"

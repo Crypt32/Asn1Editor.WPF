@@ -17,8 +17,8 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     String? decimalTagText, hexTagText, resultTagDecimal, resultTagHex, resultTagName;
     Asn1Type selectedType;
 
-    public NewAsnNodeEditorVM(NodeViewOptions options) {
-        NodeViewOptions = options;
+    public NewAsnNodeEditorVM(UserSettings options) {
+        UserSettings = options;
         formTagChecked = true;
         OkCommand = new RelayCommand(save, canSave);
         SelectedType = Asn1Type.SEQUENCE;
@@ -26,7 +26,7 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
 
     public ICommand OkCommand { get; }
 
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
 
     public Boolean FormTagChecked {
         get => formTagChecked;

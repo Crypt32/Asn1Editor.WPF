@@ -14,7 +14,7 @@
         Height="420"
         Width="600"
         Icon="/Views/Images/Menu/edit_16x16.png"
-        FontSize="{Binding NodeViewOptions.FontSize, Mode=OneTime}"
+        FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False">
     <Window.InputBindings>
@@ -114,7 +114,7 @@
 
         <!-- Status Bar -->
         <StatusBar DockPanel.Dock="Bottom"
-                   FontSize="{Binding NodeViewOptions.FontSize}">
+                   FontSize="{Binding UserSettings.FontSize}">
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Ok"

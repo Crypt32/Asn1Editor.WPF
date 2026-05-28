@@ -24,13 +24,13 @@ public partial class App {
     static readonly String _appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"Sysadmins LV\Asn1Editor");
     static readonly Logger _logger = new(_appDataPath);
     
-    readonly NodeViewOptions _options;
+    readonly UserSettings _options;
 
     public App() {
         Dispatcher.UnhandledException += onDispatcherUnhandledException;
-        var optionsStorage = new NodeViewOptionsStorage(_appDataPath);
+        var optionsStorage = new UserSettingsStorage(_appDataPath);
         _options = optionsStorage.Load();
-        _options.PropertyChanged += (s, _) => optionsStorage.Save((NodeViewOptions)s);
+        _options.PropertyChanged += (s, _) => optionsStorage.Save((UserSettings)s);
     }
 
     public static String AppDataPath => _appDataPath;

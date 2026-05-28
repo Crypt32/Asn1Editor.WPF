@@ -12,7 +12,7 @@
     <Grid>
         <Ribbon ShowQuickAccessToolBarOnTop="False"
                 Margin="0,-23,0,0"
-                IsMinimized="{Binding NodeViewOptions.RibbonMinimized}">
+                IsMinimized="{Binding UserSettings.RibbonMinimized}">
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu Label="File">
                     <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/info_32x32.png"
@@ -61,7 +61,7 @@
                 <RibbonGroup Header="Dialogs">
                     <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
                                         Label="Show hex"
-                                        IsChecked="{Binding NodeViewOptions.HexViewer.ShowHexViewer}"
+                                        IsChecked="{Binding UserSettings.HexViewer.ShowHexViewer}"
                                         ToolTip="Show or hide hex viewer"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/converter_32x32.png"
                                   Label="Binary Converter"
@@ -137,28 +137,28 @@
             <RibbonTab Header="View">
                 <RibbonGroup Header="View options">
                     <CheckBox Content="Show node offset"
-                              IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
+                              IsChecked="{Binding UserSettings.ShowNodeOffset}"/>
                     <CheckBox Content="Show node length"
-                              IsChecked="{Binding NodeViewOptions.ShowNodeLength}"/>
+                              IsChecked="{Binding UserSettings.ShowNodeLength}"/>
                     <CheckBox Content="Show tag number"
-                              IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
+                              IsChecked="{Binding UserSettings.ShowTagNumber}"/>
                     <CheckBox Content="Show node path"
-                              IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
+                              IsChecked="{Binding UserSettings.ShowNodePath}"/>
                     <CheckBox Content="Show in hex"
-                              IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
+                              IsChecked="{Binding UserSettings.ShowInHex}"/>
                     <CheckBox Content="Decode Integer as integer"
-                              IsChecked="{Binding NodeViewOptions.TagView.Integer.IntegerAsInteger}"/>
+                              IsChecked="{Binding UserSettings.TagView.Integer.IntegerAsInteger}"/>
                     <CheckBox Content="Use ISO 8601 DateTime format"
-                              IsChecked="{Binding NodeViewOptions.TagView.DateTime.UseISO8601Format}"/>
+                              IsChecked="{Binding UserSettings.TagView.DateTime.UseISO8601Format}"/>
                     <CheckBox Content="Show node content"
-                              IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+                              IsChecked="{Binding UserSettings.ShowContent}"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Session Recovery">
                     <CheckBox Content="Use session recovery"
-                              IsChecked="{Binding NodeViewOptions.SessionRecovery.EnableAutomaticRecovery}"/>
-                    <StackPanel Orientation="Horizontal" IsEnabled="{Binding NodeViewOptions.SessionRecovery.EnableAutomaticRecovery}">
+                              IsChecked="{Binding UserSettings.SessionRecovery.EnableAutomaticRecovery}"/>
+                    <StackPanel Orientation="Horizontal" IsEnabled="{Binding UserSettings.SessionRecovery.EnableAutomaticRecovery}">
                         <TextBlock Text="Timer interval (sec): " VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding NodeViewOptions.SessionRecovery.BackupIntervalInSeconds, UpdateSourceTrigger=LostFocus}"
+                        <TextBox Text="{Binding UserSettings.SessionRecovery.BackupIntervalInSeconds, UpdateSourceTrigger=LostFocus}"
                                  Width="50"
                                  MaxLength="4"
                                  VerticalAlignment="Center"
@@ -168,11 +168,11 @@
                 <RibbonGroup Header="Miscellaneous">
                     <RibbonButton LargeImageSource="/Views/Images/Menu/classicmenu_32x32.png"
                                   Label="Classic Menu"
-                                  Command="{Binding NodeViewOptions.ToggleToolbar}"
+                                  Command="{Binding UserSettings.ToggleToolbar}"
                                   ToolTip="Switch to classic menu and toolbar"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Font Size: " VerticalAlignment="Center"/>
-                        <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}"
+                        <ComboBox SelectedValue="{Binding UserSettings.FontSize}"
                                   MinWidth="50">
                             <system:Int32>10</system:Int32>
                             <system:Int32>11</system:Int32>
@@ -197,7 +197,7 @@
                     <Style TargetType="Path">
                         <Setter Property="Data" Value="M0,4 L8,4 L4,0 Z"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding NodeViewOptions.RibbonMinimized}" Value="True">
+                            <DataTrigger Binding="{Binding UserSettings.RibbonMinimized}" Value="True">
                                 <Setter Property="Data" Value="M0,0 L8,0 L4,4 Z"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -208,7 +208,7 @@
                 <Style TargetType="Button" BasedOn="{StaticResource ToolBarButtonStyle}">
                     <Setter Property="ToolTip" Value="Minimize the Ribbon"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding NodeViewOptions.RibbonMinimized}" Value="True">
+                        <DataTrigger Binding="{Binding UserSettings.RibbonMinimized}" Value="True">
                             <Setter Property="ToolTip" Value="Expand the Ribbon"/>
                         </DataTrigger>
                     </Style.Triggers>

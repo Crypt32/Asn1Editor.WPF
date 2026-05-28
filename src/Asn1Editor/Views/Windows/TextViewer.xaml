@@ -9,7 +9,7 @@
         d:DataContext="{d:DesignInstance vm:TextViewerVM}"
         WindowStartupLocation="CenterOwner"
         Title="ASN.1 Text Dump Viewer"
-        FontSize="{Binding NodeViewOptions.FontSize, Mode=OneTime}"
+        FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         Height="600"
         Width="800">
     <Window.InputBindings>
@@ -54,7 +54,7 @@
                              Style="{StaticResource {x:Type RadioButton}}"/>
             </ToolBar>
         </ToolBarTray>
-        <StatusBar DockPanel.Dock="Bottom" FontSize="{Binding NodeViewOptions.FontSize, Mode=OneTime}">
+        <StatusBar DockPanel.Dock="Bottom" FontSize="{Binding UserSettings.FontSize, Mode=OneTime}">
             <StatusBarItem>
                 <TextBlock Text="Line width (characters): "/>
             </StatusBarItem>

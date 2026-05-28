@@ -24,7 +24,7 @@ public interface IAsn1DocumentContext : INotifyCollectionChanged {
     /// <summary>
     /// Gets tree node view options.
     /// </summary>
-    NodeViewOptions NodeViewOptions { get; }
+    UserSettings UserSettings { get; }
     /// <summary>
     /// Gets current ASN.1 node tree.
     /// </summary>
