@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SysadminsLV.Asn1Editor.API.Abstractions;
+namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 /// <summary>
 /// Represents an abstraction for UI message boxes. For UI-less applications, this interface can be
