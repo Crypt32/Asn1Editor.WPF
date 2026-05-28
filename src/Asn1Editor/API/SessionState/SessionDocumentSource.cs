@@ -61,9 +61,8 @@ class SessionDocumentSource : IDisposable {
         SessionBackupManager.Instance.Shutdown();
     }
     TimeSpan getBackupInterval() {
-        return TimeSpan.FromSeconds(_recoveryOptions.BackupIntervalInSeconds < 0
-            ? 60
-            : _recoveryOptions.BackupIntervalInSeconds);
+        Int32 interval = Math.Max(20, _recoveryOptions.BackupIntervalInSeconds);    
+        return TimeSpan.FromSeconds(interval);
     }
 
     void RecoveryOptions_OnPropertyChanged(Object sender, PropertyChangedEventArgs e) {
