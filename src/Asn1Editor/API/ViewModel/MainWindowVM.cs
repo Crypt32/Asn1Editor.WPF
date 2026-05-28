@@ -361,4 +361,52 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
     public Task RefreshTabs(Func<AsnTreeNode, Boolean>? filter = null) {
         return Task.WhenAll(Tabs.Select(x => x.GetPrimaryDocument().RefreshTreeView(filter)));
     }
+    public async Task RestoreSessionAsync(SessionRecoveryDto recoveryData) {
+        if (recoveryData.Tabs.Count > 0) {
+            _tabs.Clear();
+        }
+        var compareDictionary = new Dictionary<String, AsnDocumentHostVM>();
+        foreach (SessionTabRecoveryDto recoveryTab in recoveryData.Tabs) {
+            var tab = new AsnDocumentHostVM(NodeViewOptions, TreeCommands);
+            Asn1DocumentVM doc = tab.GetPrimaryDocument();
+            if (recoveryTab.RecoveryData is not null) {
+                try {
+                    await doc.Decode(recoveryTab.RecoveryData, false);
+                } catch (Exception ex) {
+                    App.Write(ex);
+                    _uiMessenger.ShowError($"Failed to restore session tab with source path '{recoveryTab.SourcePath}'. Error: {ex.Message}", "Session Restore Warning");
+                    continue;
+                }
+            } else if (!String.IsNullOrEmpty(recoveryTab.SourcePath) && File.Exists(recoveryTab.SourcePath)) {
+                try {
+                    IEnumerable<Byte> bytes = await FileUtility.FileToBinaryAsync(recoveryTab.SourcePath!);
+                    await doc.Decode(bytes, true);
+                } catch (Exception ex) {
+                    App.Write(ex);
+                    _uiMessenger.ShowError($"Failed to restore session tab with source path '{recoveryTab.SourcePath}'. Error: {ex.Message}", "Session Restore Warning");
+                    continue;
+                }
+            } else {
+                // if there is no recovery data and source path is invalid, skip restoring this tab.
+                // normally, you don't hit this branch it may happen if the recovery data is corrupted, edited manually.
+                continue;
+            }
+
+            doc.ID = recoveryTab.ID;
+            doc.Path = recoveryTab.SourcePath;
+            addTabToList(tab);
+            compareDictionary[recoveryTab.ID] = tab;
+        }
+
+        foreach (SessionTabRecoveryDto recoveryTab in recoveryData.Tabs.Where(x => x.CompareID is not null)) {
+            if (compareDictionary.TryGetValue(recoveryTab.CompareID!, out AsnDocumentHostVM compareTab)) {
+                AsnDocumentHostVM left = compareDictionary[recoveryTab.ID];
+                var tabParam = new TabCompareParam(left, compareTab);
+                left.StartCompareModeCommand.Execute(tabParam);
+            }
+        }
+        if (recoveryData.SelectedTabID is not null) {
+            SelectedTab = Tabs.FirstOrDefault(x => x.GetPrimaryDocument().ID == recoveryData.SelectedTabID);
+        }
+    }
 }
