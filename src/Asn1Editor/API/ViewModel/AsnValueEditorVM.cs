@@ -20,7 +20,7 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
     public AsnValueEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
         _data = appTabs.SelectedTab!.GetPrimaryDocument().AsnDocContext;
         _uiMessenger = uiMessenger;
-        NodeViewOptions = appTabs.NodeViewOptions;
+        UserSettings = appTabs.UserSettings;
         OkCommand = new RelayCommand(submitValues, canSubmit);
         CloseCommand = new RelayCommand(close);
         TagDetails = String.Empty;
@@ -28,7 +28,7 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
 
     public ICommand OkCommand { get; }
     public ICommand CloseCommand { get; }
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
     public AsnTreeNode Node => _data.SelectedNode!;
 
     /// <summary>

@@ -27,7 +27,7 @@ class NodeHashVM : ClosableWindowVM {
             Hashes.Add(String.Empty);
         }
         _asnDocContext = asnDocContext;
-        NodeViewOptions = asnDocContext.NodeViewOptions;
+        UserSettings = asnDocContext.UserSettings;
         CopyValueCommand = new RelayCommand(copyValue);
         IsHexChecked = true;
         calculateAllHashes();
@@ -36,7 +36,7 @@ class NodeHashVM : ClosableWindowVM {
     public ICommand CopyValueCommand { get; }
 
     public ObservableCollection<String> Hashes { get; } = [];
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
 
     public Boolean IsHexChecked {
         get => isHexChecked;

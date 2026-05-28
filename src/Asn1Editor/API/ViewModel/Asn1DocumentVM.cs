@@ -14,9 +14,9 @@ public class Asn1DocumentVM : AsyncViewModel {
     String? fileName;
     Boolean suppressModified;
 
-    public Asn1DocumentVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
+    public Asn1DocumentVM(UserSettings userSettings, ITreeCommands treeCommands) {
         ID = Guid.NewGuid().ToString("N");
-        AsnDocContext = new Asn1DocumentContext(nodeViewOptions);
+        AsnDocContext = new Asn1DocumentContext(userSettings);
         AsnDocContext.CollectionChanged += onAsnDocContextCollectionChanged;
         TreeCommands = treeCommands;
     }
@@ -30,7 +30,7 @@ public class Asn1DocumentVM : AsyncViewModel {
     public String ID { get; set; }
     public IAsn1DocumentContext AsnDocContext { get; }
     public ITreeCommands TreeCommands { get; }
-    public NodeViewOptions NodeViewOptions => AsnDocContext.NodeViewOptions;
+    public UserSettings UserSettings => AsnDocContext.UserSettings;
     public ReadOnlyObservableCollection<AsnTreeNode> Tree => AsnDocContext.Tree;
 
     /// <summary>

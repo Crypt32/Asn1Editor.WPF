@@ -10,9 +10,9 @@ using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 
 [XmlRoot("appSettings")]
-public class NodeViewOptions : ViewModelBase, INodeViewOptions {
+public class UserSettings : ViewModelBase, INodeViewOptions {
 
-    public NodeViewOptions() {
+    public UserSettings() {
         TagView.PropertyChanged += OnTagViewPropertyChanged;
         HexViewer.PropertyChanged += OnHexViewerPropertyChanged;
     }
@@ -449,7 +449,7 @@ public class SessionRecoveryOptions : ViewModelBase {
 }
 
 /// <summary>
-/// Provides data for the <see cref="NodeViewOptions.RequireTreeRefresh"/> event, which is triggered
+/// Provides data for the <see cref="UserSettings.RequireTreeRefresh"/> event, which is triggered
 /// when a tree refresh is required. This class encapsulates a filter function that determines
 /// which nodes in the tree should be affected by the refresh operation.
 /// </summary>

@@ -12,18 +12,18 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     Asn1DocumentVM left;
 
-    public AsnDocumentHostVM(NodeViewOptions nodeViewOptions, ITreeCommands treeCommands) {
-        NodeViewOptions = nodeViewOptions;
+    public AsnDocumentHostVM(UserSettings userSettings, ITreeCommands treeCommands) {
+        UserSettings = userSettings;
         TreeCommands = treeCommands;
         StartCompareModeCommand = new RelayCommand(startCompare);
         ExitCompareModeCommand = new RelayCommand(exit, _ => IsCompareMode);
-        left = new Asn1DocumentVM(nodeViewOptions, treeCommands);
+        left = new Asn1DocumentVM(userSettings, treeCommands);
         left.PropertyChanged += onMainContentPropertyChanged;
     }
 
     public ICommand StartCompareModeCommand { get; }
     public ICommand ExitCompareModeCommand { get; }
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
     public ITreeCommands TreeCommands { get; }
     // Unique identifier for scroll synchronization between compare tabs
     public String ScrollGroupId { get; } = Guid.NewGuid().ToString("N");
@@ -45,7 +45,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
         get => left;
         set {
             left.PropertyChanged -= onMainContentPropertyChanged;
-            left = value ?? new Asn1DocumentVM(NodeViewOptions, TreeCommands);
+            left = value ?? new Asn1DocumentVM(UserSettings, TreeCommands);
             left.PropertyChanged += onMainContentPropertyChanged;
             OnPropertyChanged();
         }

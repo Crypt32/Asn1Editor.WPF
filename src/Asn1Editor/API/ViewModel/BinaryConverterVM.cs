@@ -27,9 +27,9 @@ class BinaryConverterVM : AsyncViewModel {
     EncodingTypeEntry? selectedEncoding;
     Boolean canCheck;
 
-    public BinaryConverterVM(IUIMessenger uiMessenger, NodeViewOptions options, Func<Byte[], Task>? action) {
+    public BinaryConverterVM(IUIMessenger uiMessenger, UserSettings options, Func<Byte[], Task>? action) {
         _uiMessenger = uiMessenger;
-        NodeViewOptions = options;
+        UserSettings = options;
         _action = action;
         OpenCommand = new AsyncCommand(openFile);
         SaveCommand = new RelayCommand(saveFile, canPrintSave);
@@ -47,7 +47,7 @@ class BinaryConverterVM : AsyncViewModel {
     public IAsyncCommand ValidateCommand { get; }
     public ICommand PrintCommand { get; }
 
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
 
     public String? Text {
         get => text;
@@ -201,7 +201,7 @@ class BinaryConverterVM : AsyncViewModel {
         Path = null;
     }
     void print(Object obj) {
-        StaticCommands.Print(Text, NodeViewOptions.FontSize);
+        StaticCommands.Print(Text, UserSettings.FontSize);
     }
     Boolean canPrintSave(Object obj) {
         return CanCheck = RawData.Count > 0;

@@ -37,7 +37,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         OidView.Filter = filterOidList;
 
         SearchScope = OidSearchScope.UserDefined;
-        NodeViewOptions = tabs.NodeViewOptions;
+        UserSettings = tabs.UserSettings;
     }
     Boolean filterOidList(Object obj) {
         if (obj is not OidDto entry) {
@@ -68,7 +68,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     public IAsyncCommand RemoveOidCommand { get; }
     public ICommand ResetCommand { get; }
     public ICommand CloseCommand { get; }
-    public NodeViewOptions NodeViewOptions { get; }
+    public UserSettings UserSettings { get; }
 
     public ICollectionView OidView { get; }
 

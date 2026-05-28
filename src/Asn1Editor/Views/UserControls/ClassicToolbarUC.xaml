@@ -43,32 +43,32 @@
             <MenuItem Header="_View">
                 <MenuItem Header="Show node offset"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.ShowNodeOffset}"/>
+                          IsChecked="{Binding UserSettings.ShowNodeOffset}"/>
                 <MenuItem Header="Show node length"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.ShowNodeLength}"/>
+                          IsChecked="{Binding UserSettings.ShowNodeLength}"/>
                 <MenuItem Header="Show tag number"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.ShowTagNumber}"/>
+                          IsChecked="{Binding UserSettings.ShowTagNumber}"/>
                 <MenuItem Header="Show node path"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.ShowNodePath}"/>
+                          IsChecked="{Binding UserSettings.ShowNodePath}"/>
                 <MenuItem Header="Show in hex"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.ShowInHex}"/>
+                          IsChecked="{Binding UserSettings.ShowInHex}"/>
                 <Separator/>
                 <MenuItem Header="Show content"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.ShowContent}"/>
+                          IsChecked="{Binding UserSettings.ShowContent}"/>
                 <MenuItem Header="Decode Integer as integer"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.TagView.Integer.IntegerAsInteger}"/>
+                          IsChecked="{Binding UserSettings.TagView.Integer.IntegerAsInteger}"/>
                 <MenuItem Header="Use ISO 8601 DateTime format"
                           IsCheckable="True"
-                          IsChecked="{Binding NodeViewOptions.TagView.DateTime.UseISO8601Format}"/>
+                          IsChecked="{Binding UserSettings.TagView.DateTime.UseISO8601Format}"/>
                 <Separator/>
                 <MenuItem Header="Use Ribbon menu"
-                          Command="{Binding NodeViewOptions.ToggleToolbar}"/>
+                          Command="{Binding UserSettings.ToggleToolbar}"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="Edit node..."
@@ -182,7 +182,7 @@
         </Menu>
         <ToolBarTray IsLocked="True">
             <ToolBar>
-                <ToggleButton IsChecked="{Binding NodeViewOptions.HexViewer.ShowHexViewer}"
+                <ToggleButton IsChecked="{Binding UserSettings.HexViewer.ShowHexViewer}"
                               ToolTip="Show or hide hex viewer">
                     <Image Source="/Views/Images/Menu/hexview_16x16.png" Width="16"/>
                 </ToggleButton>
@@ -254,7 +254,7 @@
                            Foreground="{StaticResource TabItem.FgBrush}"
                            Margin="2,0"
                            VerticalAlignment="Center"/>
-                <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}">
+                <ComboBox SelectedValue="{Binding UserSettings.FontSize}">
                     <system:Int32>10</system:Int32>
                     <system:Int32>11</system:Int32>
                     <system:Int32>12</system:Int32>

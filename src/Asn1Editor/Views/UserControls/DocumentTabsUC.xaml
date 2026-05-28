@@ -41,7 +41,7 @@
             <DataTemplate>
                 <TextBlock Text="{Binding Header}"
                            ToolTip="{Binding Path=Left.ToolTipText}"
-                           FontSize="{Binding NodeViewOptions.FontSize}"
+                           FontSize="{Binding UserSettings.FontSize}"
                            Tag="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType=wpf:ClosableTabControl}}"
                            ContextMenuOpening="onTabHeaderContextMenuOpening"
                            ContextMenu="{StaticResource TabHeaderContextMenu}">
@@ -59,7 +59,7 @@
                                             Icon="/Views/Images/Menu/info_16x16.png"
                                             IsDismissable="False"
                                             Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock FontSize="{Binding NodeViewOptions.FontSize}">
+                            <TextBlock FontSize="{Binding UserSettings.FontSize}">
                                 <Run Text="You are in a compare mode. Click"/>
                                 <Hyperlink Command="{Binding ExitCompareModeCommand}">Close</Hyperlink>
                                 <Run Text="or press Esc button to exit from compare mode."/>
@@ -80,23 +80,23 @@
                             <ColumnDefinition Style="{StaticResource DynamicColumnDefinitionStyle}"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel Grid.Column="0">
-                            <DockPanel Visibility="{Binding NodeViewOptions.HexViewer.ShowHexViewer, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <DockPanel Visibility="{Binding UserSettings.HexViewer.ShowHexViewer, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
                                     <ToolBar>
                                         <ToggleButton x:Name="HexAddressToggle"
-                                                      IsChecked="{Binding NodeViewOptions.HexViewer.ShowAddrPanel}"
+                                                      IsChecked="{Binding UserSettings.HexViewer.ShowAddrPanel}"
                                                       ToolTip="Show or hide address panel">
                                             <Image Source="/Views/Images/Menu/AddressEnabled_32x32.png"/>
                                         </ToggleButton>
                                         <Separator/>
                                         <ToggleButton x:Name="AsciiToggle"
-                                                      IsChecked="{Binding NodeViewOptions.HexViewer.ShowAsciiPanel}"
+                                                      IsChecked="{Binding UserSettings.HexViewer.ShowAsciiPanel}"
                                                       ToolTip="Show or hide ASCII panel">
                                             <Image Source="/Views/Images/Menu/AsciiEnabled_32x32.png"/>
                                         </ToggleButton>
                                         <Separator/>
                                         <ToggleButton x:Name="HexColorToggle"
-                                                      IsChecked="{Binding NodeViewOptions.HexViewer.ColoringEnabled}"
+                                                      IsChecked="{Binding UserSettings.HexViewer.ColoringEnabled}"
                                                       ToolTip="Enable or disable hex coloring">
                                             <Image Source="/Views/Images/Menu/textcolor_32x32.png"/>
                                         </ToggleButton>
@@ -105,7 +105,7 @@
                                 <c:AsnHexViewer DataSource="{Binding Left.AsnDocContext.RawData, Mode=OneWay}"
                                                 SelectedNode="{Binding Left.AsnDocContext.SelectedNode.Value, Mode=OneWay}"
                                                 FontFamily="Consolas"
-                                                FontSize="{Binding NodeViewOptions.FontSize}"
+                                                FontSize="{Binding UserSettings.FontSize}"
                                                 Background="#D5E7FE"
                                                 IsColoringEnabled="{Binding ElementName=HexColorToggle, Path=IsChecked}"
                                                 ShowAddressPane="{Binding ElementName=HexAddressToggle, Path=IsChecked}"
@@ -116,8 +116,8 @@
                                 <c:AsnTreeView ItemsSource="{Binding Left.Tree}"
                                                SelectedItem="{Binding Left.AsnDocContext.SelectedNode, Mode=TwoWay}"
                                                AllowDrop="True"
-                                               FontSize="{Binding NodeViewOptions.FontSize}"
-                                               MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
+                                               FontSize="{Binding UserSettings.FontSize}"
+                                               MaxTextLength="{Binding UserSettings.MaxTreeTextLength}"
                                                DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
                                                DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
                                                FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -148,8 +148,8 @@
                         <c:AsnTreeView Grid.Column="2"
                                        ItemsSource="{Binding Right.Tree, FallbackValue=[]}"
                                        SelectedItem="{Binding Right.AsnDocContext.SelectedNode}"
-                                       FontSize="{Binding NodeViewOptions.FontSize}"
-                                       MaxTextLength="{Binding NodeViewOptions.MaxTreeTextLength}"
+                                       FontSize="{Binding UserSettings.FontSize}"
+                                       MaxTextLength="{Binding UserSettings.MaxTreeTextLength}"
                                        ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                        ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
                                        Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}"

@@ -12,7 +12,7 @@
         Icon="/Views/Images/oid.ico"
         Background="{StaticResource PanelBackgroundBrush}"
         Foreground="{StaticResource Panel.FgBrush}"
-        FontSize="{Binding NodeViewOptions.FontSize, Mode=OneTime}"
+        FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         Title="Oid Lookup Editor"
         WindowStartupLocation="CenterOwner"
         Height="480"
