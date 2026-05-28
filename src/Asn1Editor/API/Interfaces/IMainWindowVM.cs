@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 
 namespace SysadminsLV.Asn1Editor.API.Interfaces;
@@ -32,4 +33,5 @@ public interface IMainWindowVM {
     /// such as prompting user to save unsaved data and releasing resources.
     /// </summary>
     void Shutdown();
+    Task RestoreSessionAsync(SessionRecoveryDto recoveryData);
 }
