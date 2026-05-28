@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API;
 using SysadminsLV.Asn1Editor.API.Abstractions;
+using SysadminsLV.Asn1Editor.API.AppStartup;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
-using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.API.ViewModel;
-using SysadminsLV.Asn1Editor.Core;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 using Path = System.IO.Path;
@@ -55,69 +52,27 @@ public partial class App {
     }
     async protected override void OnStartup(StartupEventArgs e) {
         base.OnStartup(e);
+        logStartupHeader();
+        configureUnity();
+        var mainWindow = Container.Resolve<MainWindow>();
+        await new StartupPipeline()
+            .Add(new InfrastructureStartupTask(Container.Resolve<IOidDbManager>()))
+            .Add(new SessionRecoveryStartupTask(Container.Resolve<IUIMessenger>(), Container.Resolve<IMainWindowVM>()))
+            .Add(new CliArgumentsStartupTask(Container.Resolve<IMainWindowVM>(), e.Args))
+            .RunAsync();
+        mainWindow.Show();
+    }
+    static void logStartupHeader() {
         _logger.Write("******************************** Started ********************************");
         _logger.Write($"Process: {Process.GetCurrentProcess().ProcessName}");
         _logger.Write($"PID    : {Process.GetCurrentProcess().Id}");
         _logger.Write($"Version: {Assembly.GetExecutingAssembly().GetName().Version}");
         _logger.Write("*************************************************************************");
-        configureUnity();
-        IOidDbManager oidMgr = Container.Resolve<IOidDbManager>();
-        oidMgr.ReloadLookup();
-        OidServices.Resolver = new OidResolverWrapper();
-        parseArguments(e.Args);
-        var mainWindow = Container.Resolve<MainWindow>();
-        var recoveryManager = new SessionRecoveryManager();
-        SessionRecoveryDto recoveryData = await recoveryManager.GetSessionRecoveryAsync();
-        if (recoveryData.Tabs.Count > 0) {
-            var sb = new StringBuilder();
-            sb.AppendLine("The application was not closed correctly last time.");
-            sb.AppendLine("The following documents can be restored:");
-            sb.AppendLine();
-            foreach (var tab in recoveryData.Tabs) {
-                sb.AppendLine($"- {tab.Name}");
-            }
-            sb.AppendLine();
-            sb.AppendLine("Do you want to restore these documents?");
-            var uiMessenger = Container.Resolve<IUIMessenger>();
-            if (uiMessenger.YesNo(sb.ToString(), "Restore session")) {
-                await ((IMainWindowVM)mainWindow.DataContext).RestoreSessionAsync(recoveryData);
-            }
-        }
-        mainWindow.Show();
     }
+
     protected override void OnExit(ExitEventArgs e) {
         _logger.Dispose();
         base.OnExit(e);
-    }
-    async void parseArguments(IReadOnlyList<String> args) {
-        for (Int32 i = 0; i < args.Count;) {
-            switch (args[i].ToLower()) {
-                case "-path":  // open from a file
-                    i++;
-                    if (args.Count <= i) {
-                        throw new ArgumentException(args[i]);
-                    }
-                    await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
-                    return;
-                case "-raw":  // base64 raw string
-                    i++;
-                    if (args.Count <= i) {
-                        throw new ArgumentException(args[i]);
-                    }
-                    await Container.Resolve<IMainWindowVM>().OpenRawAsync(args[i]);
-                    return;
-                default:
-                    await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
-                    // use the code below when CLI interface is implemented
-                    /*if (File.Exists(args[i])) {
-                        await Container.Resolve<IMainWindowVM>().OpenExistingAsync(args[i]);
-                    } else {
-                        Trace.WriteLine($"Unknown parameter '{args[i]}'");
-                        Shutdown(2);
-                    }*/
-                    return;
-            }
-        }
     }
     void configureUnity() {
         Container = new UnityContainer();
