@@ -11,6 +11,7 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
 using SysadminsLV.WPF.OfficeTheme.Controls;
@@ -21,7 +22,7 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISessionTabHost {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
-    readonly SessionBackupManager _sessionManager = SessionBackupManager.Instance;
+    readonly SessionDocumentSource _sessionDocumentSource;
     readonly ObservableCollection<AsnDocumentHostVM> _tabs = [];
 
     public MainWindowVM(
@@ -45,6 +46,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
         ReloadDocumentCommand = new AsyncCommand(reloadDocumentAsync);
         DropFileCommand = new AsyncCommand(dropFileAsync);
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
+        _sessionDocumentSource = new SessionDocumentSource(this, NodeViewOptions);
         addTabToList(new AsnDocumentHostVM(NodeViewOptions, TreeCommands));
     }
 
@@ -62,7 +64,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
     public ICommand PrintCommand { get; }
     public ICommand SettingsCommand { get; }
     public IAsyncCommand DropFileCommand { get; }
-
+    
     public IAppCommands AppCommands { get; }
     public ITreeCommands TreeCommands { get; }
 
@@ -321,7 +323,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
 
     /// <inheritdoc />
     public void Shutdown() {
-        _sessionManager.Shutdown();
+        _sessionDocumentSource.Shutdown();
     }
 
     #endregion
