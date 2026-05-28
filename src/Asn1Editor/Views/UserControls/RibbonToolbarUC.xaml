@@ -153,6 +153,18 @@
                     <CheckBox Content="Show node content"
                               IsChecked="{Binding NodeViewOptions.ShowContent}"/>
                 </RibbonGroup>
+                <RibbonGroup Header="Session Recovery">
+                    <CheckBox Content="Use session recovery"
+                              IsChecked="{Binding NodeViewOptions.SessionRecovery.EnableAutomaticRecovery}"/>
+                    <StackPanel Orientation="Horizontal" IsEnabled="{Binding NodeViewOptions.SessionRecovery.EnableAutomaticRecovery}">
+                        <TextBlock Text="Timer interval (sec): " VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding NodeViewOptions.SessionRecovery.BackupIntervalInSeconds, UpdateSourceTrigger=LostFocus}"
+                                 Width="50"
+                                 MaxLength="4"
+                                 VerticalAlignment="Center"
+                                 ToolTip="Minimum interval is 30 seconds."/>
+                    </StackPanel>
+                </RibbonGroup>
                 <RibbonGroup Header="Miscellaneous">
                     <RibbonButton LargeImageSource="/Views/Images/Menu/classicmenu_32x32.png"
                                   Label="Classic Menu"
@@ -161,7 +173,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Font Size: " VerticalAlignment="Center"/>
                         <ComboBox SelectedValue="{Binding NodeViewOptions.FontSize}"
-                              MinWidth="50">
+                                  MinWidth="50">
                             <system:Int32>10</system:Int32>
                             <system:Int32>11</system:Int32>
                             <system:Int32>12</system:Int32>
