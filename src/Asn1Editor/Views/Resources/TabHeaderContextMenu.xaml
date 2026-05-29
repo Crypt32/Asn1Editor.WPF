@@ -50,6 +50,7 @@
         <Separator/>
         <MenuItem Header="_Close"
                   Command="{Binding Path=CloseTabCommand}"
+                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext}"
                   InputGestureText="Ctrl + F4">
             <MenuItem.Icon>
                 <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
@@ -62,7 +63,8 @@
             </MenuItem.Icon>
         </MenuItem>
         <MenuItem Header="Close All _But This"
-                  Command="{Binding Path=CloseAllButThisTabCommand}">
+                  Command="{Binding Path=CloseAllButThisTabCommand}"
+                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext}">
             <MenuItem.Icon>
                 <Image Source="/Views/Images/Menu/cancel_16x16.png"/>
             </MenuItem.Icon>
