@@ -13,7 +13,6 @@ using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Controls;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -252,26 +251,23 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs, ISession
     }
 
     void closeTab(Object? o) {
-        if (o is null) {
-            closeTab(SelectedTab);
-        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (AsnDocumentHostVM)tabItem.Content;
+        if (o is AsnDocumentHostVM vm) {
             closeTab(vm);
+        } else {
+            closeTab(SelectedTab);
         }
     }
     Boolean canCloseTab(Object? o) {
-        // TODO: need to eliminate explicit reference to UI elements
-        return o is null or ClosableTabItem;
+        return o is AsnDocumentHostVM or null;
     }
     void closeAllTabs(Object? o) {
         CloseAllTabs();
     }
     void closeAllButThisTab(Object? o) {
-        if (o is null) {
-            closeTabsWithPreservation(SelectedTab);
-        } else if (o is ClosableTabItem tabItem) { // TODO: need to eliminate explicit reference to UI elements
-            var vm = (AsnDocumentHostVM)tabItem.Content;
+        if (o is AsnDocumentHostVM vm) {
             closeTabsWithPreservation(vm);
+        } else {
+            closeTabsWithPreservation(SelectedTab);
         }
     }
     Boolean canCloseAllButThisTab(Object? o) {
