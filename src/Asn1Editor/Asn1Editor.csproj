@@ -19,14 +19,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Views\Images\Menu\classicmenu_32x32.png" />
-    <None Remove="Views\Images\Menu\exit_16x16.png" />
-    <None Remove="Views\Images\Menu\exit_32x32.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Views\Images\asnlogo.ico" />
+    <Resource Include="Views\Images\asnlogo.png" />
     <Resource Include="Views\Images\oid.ico" />
+    <Resource Include="Views\Images\splash.png" />
     <Resource Include="Views\Images\Menu\AddressEnabled_32x32.png" />
     <Resource Include="Views\Images\Menu\ascii_16x16.png" />
     <Resource Include="Views\Images\Menu\AsciiEnabled_32x32.png" />

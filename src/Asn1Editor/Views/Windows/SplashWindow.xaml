@@ -1,0 +1,56 @@
+﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.SplashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:SplashScreenVM}"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="ASN.1 Editor"
+        Icon="/Views/Images/asnlogo.ico"
+        Height="480"
+        Width="600">
+    <Window.Resources>
+        <SolidColorBrush x:Key="ForeColor" Color="#1346A3"></SolidColorBrush>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Foreground" Value="{StaticResource ForeColor}"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Image Source="/Views/Images/splash.png"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"/>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Bottom"
+                        HorizontalAlignment="Right"
+                        Margin="3">
+                <TextBlock Text="© Sysadmins LV"
+                           FontWeight="SemiBold"/>
+                <TextBlock FontWeight="SemiBold">
+                    <Run Text="Version: "/>
+                    <Run Text="{Binding Version, Mode=OneTime}"/>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Image Source="/Views/Images/asnlogo.png"
+                       Opacity="0.7"
+                       Width="64"/>
+                <TextBlock Text="ASN.1 Editor"
+                           FontWeight="Bold"
+                           FontSize="40"
+                           Opacity=".7"/>
+                <TextBlock Text="{Binding CurrentAction}"
+                           Margin="0 20 0 0"/>
+                <ProgressBar Style="{x:Null}" Height="10"
+                             Value="{Binding Progress}"
+                             Foreground="{StaticResource ForeColor}"
+                             Opacity=".7"
+                             Margin="0 5 0 0"/>
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

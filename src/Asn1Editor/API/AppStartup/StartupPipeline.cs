@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SysadminsLV.Asn1Editor.API.Interfaces;
 
 namespace SysadminsLV.Asn1Editor.API.AppStartup;
 
@@ -29,19 +30,36 @@ class StartupPipeline {
 
         return this;
     }
+    
     /// <summary>
-    /// Executes all registered startup tasks asynchronously.
+    /// Executes all registered startup tasks asynchronously, optionally updating the splash screen
+    /// with the current progress and action being performed.
     /// </summary>
-    /// <param name="onProgress">
-    /// An optional callback that is invoked with the display name of each task as it starts execution.
+    /// <param name="splashVM">
+    /// An optional instance of <see cref="ISplashScreenVM"/> used to display the current action
+    /// and progress of the startup tasks. If <c>null</c>, no updates will be displayed.
     /// </param>
     /// <returns>
-    /// A <see cref="Task"/> representing the asynchronous operation.
+    /// A <see cref="Task"/> that represents the asynchronous operation of executing the startup tasks.
     /// </returns>
-    public async Task RunAsync(Action<String>? onProgress = null) {
-        foreach (IStartupTask task in _tasks) {
-            onProgress?.Invoke(task.DisplayName);
+    /// <remarks>
+    /// This method iterates through all tasks added to the pipeline, executing them sequentially.
+    /// If a splash screen ViewModel is provided, it updates the current action and progress
+    /// during the execution of each task.
+    /// </remarks>
+    public async Task RunAsync(ISplashScreenVM? splashVM = null) {
+        Int32 total = _tasks.Count;
+        for (Int32 i = 0; i < total; i++) {
+            IStartupTask task = _tasks[i];
+            if (splashVM is not null) {
+                splashVM.CurrentAction = task.DisplayName;
+                splashVM.Progress = (Double)i / total * 100;
+            }
             await task.ExecuteAsync();
+        }
+        if (splashVM is not null) {
+            splashVM.CurrentAction = null;
+            splashVM.Progress = 100;
         }
     }
 }
