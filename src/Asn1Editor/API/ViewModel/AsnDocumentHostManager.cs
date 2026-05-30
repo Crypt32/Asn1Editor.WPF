@@ -68,6 +68,7 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
             }
         }
     }
+    /// <inheritdoc />
     public Task RefreshTabs(Func<AsnTreeNode, Boolean>? filter = null) {
         return Task.WhenAll(Tabs.Select(x => x.GetPrimaryDocument().RefreshTreeView(filter)));
     }
