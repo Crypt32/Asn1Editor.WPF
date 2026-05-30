@@ -193,7 +193,7 @@ class AsnDocumentFileService {
     /// If a new tab was created but decoding fails the temporary tab is closed.
     /// </summary>
     public async Task CreateTabFromFileAsync(String file) {
-        AsnDocumentHostVM tab = _tabManager.GetAvailableTab(out Boolean isNew);
+        AsnDocumentHostVM tab = _tabManager.GetAvailableTab(_treeCommands, out Boolean isNew);
         Asn1DocumentVM doc = tab.GetPrimaryDocument();
         doc.Path = file;
         try {
