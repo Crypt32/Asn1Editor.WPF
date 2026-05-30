@@ -16,10 +16,10 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
     readonly IUIMessenger _uiMessenger;
     readonly IAsn1DocumentContext _data;
 
-    public AsnValueEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
+    public AsnValueEditorVM(IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger, UserSettings userSettings) {
         _data = appTabs.SelectedTab!.GetPrimaryDocument().AsnDocContext;
         _uiMessenger = uiMessenger;
-        UserSettings = appTabs.UserSettings;
+        UserSettings = userSettings;
         OkCommand = new RelayCommand(submitValues, canSubmit);
         CloseCommand = new RelayCommand(close);
         TagDetails = String.Empty;

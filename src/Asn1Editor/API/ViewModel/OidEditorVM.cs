@@ -23,7 +23,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
     OidDto? selectedItem;
     OidSearchScope searchScope;
 
-    public OidEditorVM(IHasAsnDocumentTabs tabs, IOidDbManager oidMgr) {
+    public OidEditorVM(IHasAsnDocumentTabs tabs, IOidDbManager oidMgr, UserSettings userSettings) {
         _tabs = tabs;
         _oidMgr = oidMgr;
         ReloadCommand = new RelayCommand(reload);
@@ -37,7 +37,7 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
         OidView.Filter = filterOidList;
 
         SearchScope = OidSearchScope.UserDefined;
-        UserSettings = tabs.UserSettings;
+        UserSettings = userSettings;
     }
     Boolean filterOidList(Object obj) {
         if (obj is not OidDto entry) {
