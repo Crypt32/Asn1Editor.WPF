@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.SessionState;
@@ -114,7 +113,7 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost {
     public AsnDocumentHostVM GetAvailableTab(out Boolean isNew) {
         isNew = false;
         Boolean useExistingTab = SelectedTab is not null && SelectedTab.GetPrimaryDocument().CanReuse;
-        if (useExistingTab && Tabs.Any()) {
+        if (useExistingTab && Tabs.Count > 0) {
             return SelectedTab!;
         }
 
