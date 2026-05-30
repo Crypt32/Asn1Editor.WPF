@@ -10,6 +10,7 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
 using SysadminsLV.Asn1Editor.API.ViewModel;
+using SysadminsLV.Asn1Editor.Views;
 using SysadminsLV.Asn1Editor.Views.Windows;
 using Unity;
 using Path = System.IO.Path;
@@ -37,6 +38,7 @@ public partial class App {
 
     static void onDispatcherUnhandledException(Object s, DispatcherUnhandledExceptionEventArgs e) {
         _logger.Write(e.Exception);
+        Splasher.CloseSplashScreen();
     }
 
     public static void Write(Exception e) {
@@ -49,13 +51,17 @@ public partial class App {
         base.OnStartup(e);
         logStartupHeader();
         configureUnity();
-        var mainWindow = Container.Resolve<MainWindow>();
+        
+        Splasher.SplashScreen = Container.Resolve<SplashWindow>();
+        Splasher.MainWindow = Container.Resolve<MainWindow>();
+        Splasher.ShowSplashScreen();
+
         await new StartupPipeline()
             .Add(new InfrastructureStartupTask(Container.Resolve<IOidDbManager>()))
             .Add(new SessionRecoveryStartupTask(Container.Resolve<IUIMessenger>(), Container.Resolve<IMainWindowVM>()))
             .Add(new CliArgumentsStartupTask(Container.Resolve<IMainWindowVM>(), e.Args))
-            .RunAsync();
-        mainWindow.Show();
+            .RunAsync(Container.Resolve<ISplashScreenVM>());
+        Splasher.ShowMainWindow();
     }
     static void logStartupHeader() {
         _logger.Write("******************************** Started ********************************");
@@ -77,19 +83,16 @@ public partial class App {
             .RegisterType<IAsnValueEditorWindow, AsnValueEditorWindow>()
             .RegisterType<IUIMessenger, UIMessenger>()
             // view models
-            .RegisterSingleton<MainWindowVM>()
+            .RegisterSingleton<ISplashScreenVM, SplashScreenVM>()
             .RegisterSingleton<IMainWindowVM, MainWindowVM>()
             .RegisterSingleton<AsnDocumentHostManager>()
             .RegisterType<IHasAsnDocumentTabs, AsnDocumentHostManager>()
+            .RegisterSingleton<IOidDbManager, OidDbManager>()
             .RegisterType<ITextViewerVM, TextViewerVM>()
             .RegisterType<IAsnValueEditorVM, AsnValueEditorVM>()
             .RegisterType<IOidEditorVM, OidEditorVM>()
             .RegisterType<INewAsnNodeEditorVM, NewAsnNodeEditorVM>()
             .RegisterType<ITreeCommands, TreeViewCommands>()
             .RegisterInstance(_options);
-        var oidMgr = new OidDbManager(Container.Resolve<IUIMessenger>()) {
-            OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, _appDataPath]
-        };
-        Container.RegisterInstance<IOidDbManager>(oidMgr);
     }
 }

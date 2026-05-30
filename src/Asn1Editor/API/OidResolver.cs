@@ -13,11 +13,12 @@ namespace SysadminsLV.Asn1Editor.API;
 interface IOidDbManager {
     void ReloadLookup();
     Task<Boolean> SaveUserLookup();
+    String[] OidLookupLocations { set; }
 }
 class OidDbManager(IUIMessenger uiMessenger) : IOidDbManager {
 
     const String oidFileName = "OID.txt";
-    public String[] OidLookupLocations { get; init; } = [];
+    public String[] OidLookupLocations { get; set; } = [];
 
     public void ReloadLookup() {
         OidResolver.Reset();

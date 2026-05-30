@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.Core;
 
@@ -16,6 +18,7 @@ class InfrastructureStartupTask(IOidDbManager oidDbManager) : IStartupTask {
     public String DisplayName => "Loading OID database...";
 
     void execute() {
+        oidDbManager.OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, App.AppDataPath];
         oidDbManager.ReloadLookup();
     }
 
