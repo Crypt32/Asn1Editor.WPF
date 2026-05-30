@@ -40,7 +40,7 @@
         </MenuItem>
         <Separator/>
         <MenuItem Header="Compare with..."
-                  ItemsSource="{Binding Tabs}"
+                  ItemsSource="{Binding DocumentHostManager.Tabs}"
                   ItemContainerStyle="{StaticResource CompareMenuItemStyle}">
         </MenuItem>
         <MenuItem Header="Synchronize Scrollbars"

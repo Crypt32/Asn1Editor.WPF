@@ -30,8 +30,8 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <wpf:ClosableTabControl ItemsSource="{Binding Tabs}"
-                            SelectedItem="{Binding SelectedTab}"
+    <wpf:ClosableTabControl ItemsSource="{Binding DocumentHostManager.Tabs}"
+                            SelectedItem="{Binding DocumentHostManager.SelectedTab}"
                             AddTabCommand="{Binding NewCommand}"
                             CloseTabCommand="{Binding CloseTabCommand}"
                             ShowNewTabButton="False"
