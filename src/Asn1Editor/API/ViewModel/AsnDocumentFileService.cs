@@ -15,14 +15,17 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class AsnDocumentFileService {
     readonly IUIMessenger _uiMessenger;
     readonly AsnDocumentHostManager _tabManager;
+    readonly ITreeCommands _treeCommands;
     readonly Func<AsnDocumentHostVM, Boolean> _requestFileSave;
 
     public AsnDocumentFileService(
         IUIMessenger uiMessenger,
         AsnDocumentHostManager tabManager,
+        ITreeCommands treeCommands,
         Func<AsnDocumentHostVM, Boolean> requestFileSave) {
         _uiMessenger = uiMessenger;
         _tabManager = tabManager;
+        _treeCommands = treeCommands;
         _requestFileSave = requestFileSave;
     }
 
@@ -66,7 +69,7 @@ class AsnDocumentFileService {
         var asn = new Asn1Reader(rawBytes);
         try {
             asn.BuildOffsetMap();
-            var tab = _tabManager.GetAvailableTab(out _);
+            AsnDocumentHostVM tab = _tabManager.GetAvailableTab(_treeCommands, out _);
             return tab.GetPrimaryDocument().Decode(rawBytes, false);
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");

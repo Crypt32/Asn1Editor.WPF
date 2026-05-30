@@ -29,12 +29,12 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         UserSettings = userSettings;
         UserSettings.RequireTreeRefresh += OnUserSettingsChanged;
         TreeCommands = new TreeViewCommands(windowFactory, this);
-        DocumentHostManager = new AsnDocumentHostManager(userSettings, TreeCommands);
+        DocumentHostManager = new AsnDocumentHostManager(userSettings);
         _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, requestFileSave);
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         
-        NewCommand = new RelayCommand(_ => DocumentHostManager.AddNewTab());
+        NewCommand = new RelayCommand(_ => DocumentHostManager.AddNewTab(TreeCommands));
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
         CloseAllTabsCommand = new RelayCommand(closeAllTabs);
         CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
