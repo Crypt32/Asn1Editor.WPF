@@ -30,7 +30,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         UserSettings.RequireTreeRefresh += OnUserSettingsChanged;
         TreeCommands = new TreeViewCommands(windowFactory, this);
         DocumentHostManager = new AsnDocumentHostManager(userSettings);
-        _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, requestFileSave);
+        _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, TreeCommands, requestFileSave);
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         
