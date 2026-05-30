@@ -152,6 +152,68 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
     }
 
     /// <summary>
+    /// Closes the specified tab and optionally prompts the user to save changes if the tab contains unsaved modifications.
+    /// </summary>
+    /// <param name="tab">The tab to be closed.</param>
+    /// <param name="requestFileSave">
+    /// A function that prompts the user to save changes for the specified tab. 
+    /// Returns <see langword="true"/> if the user chooses to save or discard changes, allowing the tab to be closed; 
+    /// otherwise, <see langword="false"/> to cancel the close operation.
+    /// </param>
+    /// <remarks>
+    /// If the tab's primary document is not modified, it is closed immediately without invoking the <paramref name="requestFileSave"/> function.
+    /// If the document is modified, the <paramref name="requestFileSave"/> function is invoked to determine whether to proceed with closing the tab.
+    /// </remarks>
+    public void CloseTab(AsnDocumentHostVM? tab, Func<AsnDocumentHostVM, Boolean> requestFileSave) {
+        tab ??= SelectedTab;
+        if (tab is null) {
+            return;
+        }
+
+        Asn1DocumentVM doc = tab.GetPrimaryDocument();
+        if (!doc.IsModified) {
+            RemoveTab(tab);
+            return;
+        }
+        if (requestFileSave(tab)) {
+            RemoveTab(tab);
+        }
+    }
+    /// <summary>
+    /// Closes all tabs except for the optionally specified preserved tab, ensuring that any unsaved changes
+    /// are handled based on the provided save request function.
+    /// </summary>
+    /// <param name="requestFileSave">
+    /// A delegate that is invoked for each modified tab to determine whether the tab's changes should be saved.
+    /// Returns <c>true</c> if the changes are successfully saved or discarded; otherwise, <c>false</c>.
+    /// </param>
+    /// <param name="preservedTab">
+    /// The tab to preserve during the operation. If <c>null</c>, all tabs are considered for closure.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if all tabs (except the preserved tab) are successfully closed; otherwise, <c>false</c>
+    /// if the operation is interrupted due to unsaved changes.
+    /// </returns>
+    public Boolean CloseTabsWithPreservation(Func<AsnDocumentHostVM, Boolean> requestFileSave, AsnDocumentHostVM? preservedTab = null) {
+        foreach (AsnDocumentHostVM tab in Tabs.ToList()) {
+            if (preservedTab is not null && Equals(tab, preservedTab)) {
+                continue;
+            }
+            Asn1DocumentVM doc = tab.GetPrimaryDocument();
+            if (!doc.IsModified) {
+                RemoveTab(tab);
+                continue;
+            }
+            SelectedTab = tab;
+            if (!requestFileSave(tab)) {
+                return false;
+            }
+            RemoveTab(tab);
+        }
+        return true;
+    }
+
+    /// <summary>
     /// Clears all tabs from the collection of ASN.1 document host view models.
     /// </summary>
     /// <remarks>

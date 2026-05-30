@@ -16,17 +16,11 @@ class AsnDocumentFileService {
     readonly IUIMessenger _uiMessenger;
     readonly AsnDocumentHostManager _tabManager;
     readonly ITreeCommands _treeCommands;
-    readonly Func<AsnDocumentHostVM, Boolean> _requestFileSave;
 
-    public AsnDocumentFileService(
-        IUIMessenger uiMessenger,
-        AsnDocumentHostManager tabManager,
-        ITreeCommands treeCommands,
-        Func<AsnDocumentHostVM, Boolean> requestFileSave) {
+    public AsnDocumentFileService(IUIMessenger uiMessenger, AsnDocumentHostManager tabManager, ITreeCommands treeCommands) {
         _uiMessenger = uiMessenger;
         _tabManager = tabManager;
         _treeCommands = treeCommands;
-        _requestFileSave = requestFileSave;
     }
 
     #region Open

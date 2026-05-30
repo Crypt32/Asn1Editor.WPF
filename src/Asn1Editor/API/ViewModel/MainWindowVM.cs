@@ -25,19 +25,16 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         AsnDocumentHostManager documentHostManager,
         ITreeCommands treeCommands,
         UserSettings userSettings) {
-        _windowFactory = windowFactory;
-        _uiMessenger = windowFactory.GetUIMessenger();
         UserSettings = userSettings;
         DocumentHostManager = documentHostManager;
         TreeCommands = treeCommands;
-        _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, TreeCommands, requestFileSave);
+        _windowFactory = windowFactory;
+        _uiMessenger = windowFactory.GetUIMessenger();
+        _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, TreeCommands);
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         
         NewCommand = new RelayCommand(_ => DocumentHostManager.AddNewTab(TreeCommands));
-        CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
-        CloseAllTabsCommand = new RelayCommand(closeAllTabs);
-        CloseAllButThisTabCommand = new RelayCommand(closeAllButThisTab, canCloseAllButThisTab);
         OpenCommand = new AsyncCommand((_, _) => _documentFileService.OpenFileAsync());
         SaveCommand = new RelayCommand(o => _documentFileService.SaveFile(o as String), canPrintSave);
         ReloadDocumentCommand = new AsyncCommand((_, _) => _documentFileService.ReloadActiveDocumentAsync());
@@ -45,6 +42,10 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
         _sessionDocumentSource = new SessionDocumentSource(DocumentHostManager, UserSettings);
         DocumentHostManager.AddTab(new AsnDocumentHostVM(UserSettings, TreeCommands));
+
+        CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
+        CloseAllTabsCommand = new RelayCommand(_ => CloseAllTabs());
+        CloseAllButThisTabCommand = new RelayCommand(closeAllButThis, canCloseAllButThisTab);
     }
 
     
@@ -73,16 +74,16 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     /// </summary>
     /// <param name="o"></param>
     void showConverter(Object o) {
-        if (SelectedTab is null) {
+        if (DocumentHostManager.SelectedTab is null) {
             _windowFactory.ShowConverterWindow([], _documentFileService.OpenRawAsync);
         } else {
-            _windowFactory.ShowConverterWindow(SelectedTab.GetPrimaryDocument().AsnDocContext.RawData, _documentFileService.OpenRawAsync);
+            _windowFactory.ShowConverterWindow(DocumentHostManager.SelectedTab.GetPrimaryDocument().AsnDocContext.RawData, _documentFileService.OpenRawAsync);
         }
     }
 
     #region Write tab to file
     Boolean canPrintSave(Object obj) {
-        return SelectedTab?.Left.AsnDocContext.RawData.Count > 0;
+        return DocumentHostManager.SelectedTab?.Left.AsnDocContext.RawData.Count > 0;
     }
 
     Boolean requestFileSave(AsnDocumentHostVM tab) {
@@ -95,72 +96,30 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
     }
     #endregion
 
-    #region Close Tab(s)
+    #region Close Tab(s)/ Shutdown
 
     void closeTab(Object? o) {
-        if (o is AsnDocumentHostVM vm) {
-            closeTab(vm);
-        } else {
-            closeTab(SelectedTab);
-        }
+        DocumentHostManager.CloseTab(o as AsnDocumentHostVM ?? DocumentHostManager.SelectedTab, requestFileSave);
     }
+    void closeAllButThis(Object o) {
+        DocumentHostManager.CloseTabsWithPreservation(requestFileSave, o as AsnDocumentHostVM ?? DocumentHostManager.SelectedTab);
+    }
+    public Boolean CloseAllTabs() {
+        return DocumentHostManager.CloseTabsWithPreservation(requestFileSave);
+    }
+
     Boolean canCloseTab(Object? o) {
         return o is AsnDocumentHostVM or null;
-    }
-    void closeAllTabs(Object? o) {
-        CloseAllTabs();
-    }
-    void closeAllButThisTab(Object? o) {
-        if (o is AsnDocumentHostVM vm) {
-            closeTabsWithPreservation(vm);
-        } else {
-            closeTabsWithPreservation(SelectedTab);
-        }
     }
     Boolean canCloseAllButThisTab(Object? o) {
         if (DocumentHostManager.Tabs.Count == 0) {
             return false;
         }
         if (o is null) {
-            return SelectedTab is not null;
+            return DocumentHostManager.SelectedTab is not null;
         }
 
         return true;
-    }
-
-    void closeTab(AsnDocumentHostVM tab) {
-        Asn1DocumentVM doc = tab.GetPrimaryDocument();
-        if (!doc.IsModified) {
-            DocumentHostManager.RemoveTab(tab);
-        }
-        if (doc.IsModified && requestFileSave(tab)) {
-            DocumentHostManager.RemoveTab(tab);
-        }
-    }
-    Boolean closeTabsWithPreservation(AsnDocumentHostVM? preservedTab = null) {
-        // loop over a copy of tabs since we are going to update source collection in a loop
-        var tabs = DocumentHostManager.Tabs.ToList();
-        foreach (AsnDocumentHostVM tab in tabs) {
-            Asn1DocumentVM doc = tab.GetPrimaryDocument();
-            if (preservedTab is not null && Equals(tab, preservedTab)) {
-                continue;
-            }
-            if (!doc.IsModified) {
-                DocumentHostManager.RemoveTab(tab);
-
-                continue;
-            }
-            DocumentHostManager.SelectedTab = tab;
-            if (!requestFileSave(tab)) {
-                return false;
-            }
-            DocumentHostManager.RemoveTab(tab);
-        }
-
-        return true;
-    }
-    public Boolean CloseAllTabs() {
-        return closeTabsWithPreservation();
     }
 
     /// <inheritdoc />

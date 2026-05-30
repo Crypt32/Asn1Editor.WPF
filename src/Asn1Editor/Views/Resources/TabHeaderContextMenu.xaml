@@ -9,7 +9,7 @@
         <Setter Property="Command">
             <Setter.Value>
                 <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"
-                         Path="PlacementTarget.Tag.SelectedTab.StartCompareModeCommand"/>
+                         Path="PlacementTarget.Tag.DocumentHostManager.SelectedTab.StartCompareModeCommand"/>
             </Setter.Value>
         </Setter>
 
@@ -45,7 +45,7 @@
         </MenuItem>
         <MenuItem Header="Synchronize Scrollbars"
                   IsCheckable="True"
-                  IsChecked="{Binding SelectedTab.IsScrollbarSynchronized}">
+                  IsChecked="{Binding DocumentHostManager.SelectedTab.IsScrollbarSynchronized}">
         </MenuItem>
         <Separator/>
         <MenuItem Header="_Close"
