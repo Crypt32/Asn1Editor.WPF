@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.SessionState;
+using SysadminsLV.Asn1Editor.Core.Tree;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -16,13 +19,18 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 /// operations such as creating new tabs, reusing existing tabs, and clearing all tabs.
 /// It implements the <see cref="ISessionTabHost"/> interface to provide session tab management capabilities.
 /// </remarks>
-class AsnDocumentHostManager : ViewModelBase, ISessionTabHost {
+class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTabs {
     readonly ObservableCollection<AsnDocumentHostVM> _tabs = [];
     readonly UserSettings _userSettings;
 
     public AsnDocumentHostManager(UserSettings userSettings) {
         _userSettings = userSettings;
+        _userSettings.RequireTreeRefresh += OnUserSettingsChanged;
         Tabs = new ReadOnlyObservableCollection<AsnDocumentHostVM>(_tabs);
+    }
+
+    async void OnUserSettingsChanged(Object sender, RequireTreeRefreshEventArgs args) {
+        await RefreshTabs(args.Filter);
     }
 
     /// <summary>
@@ -59,6 +67,9 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost {
                 OnPropertyChanged();
             }
         }
+    }
+    public Task RefreshTabs(Func<AsnTreeNode, Boolean>? filter = null) {
+        return Task.WhenAll(Tabs.Select(x => x.GetPrimaryDocument().RefreshTreeView(filter)));
     }
 
     /// <summary>

@@ -79,11 +79,13 @@ public partial class App {
             // view models
             .RegisterSingleton<MainWindowVM>()
             .RegisterSingleton<IMainWindowVM, MainWindowVM>()
-            .RegisterType<IHasAsnDocumentTabs, MainWindowVM>()
+            .RegisterSingleton<AsnDocumentHostManager>()
+            .RegisterType<IHasAsnDocumentTabs, AsnDocumentHostManager>()
             .RegisterType<ITextViewerVM, TextViewerVM>()
             .RegisterType<IAsnValueEditorVM, AsnValueEditorVM>()
             .RegisterType<IOidEditorVM, OidEditorVM>()
             .RegisterType<INewAsnNodeEditorVM, NewAsnNodeEditorVM>()
+            .RegisterType<ITreeCommands, TreeViewCommands>()
             .RegisterInstance(_options);
         var oidMgr = new OidDbManager(Container.Resolve<IUIMessenger>()) {
             OidLookupLocations = [Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, _appDataPath]

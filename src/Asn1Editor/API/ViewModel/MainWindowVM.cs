@@ -9,12 +9,11 @@ using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
-using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
-class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
+class MainWindowVM : ViewModelBase, IMainWindowVM {
     readonly IWindowFactory _windowFactory;
     readonly IUIMessenger _uiMessenger;
     readonly AsnDocumentFileService _documentFileService;
@@ -23,13 +22,14 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
     public MainWindowVM(
         IWindowFactory windowFactory,
         IAppCommands appCommands,
+        AsnDocumentHostManager documentHostManager,
+        ITreeCommands treeCommands,
         UserSettings userSettings) {
         _windowFactory = windowFactory;
         _uiMessenger = windowFactory.GetUIMessenger();
         UserSettings = userSettings;
-        UserSettings.RequireTreeRefresh += OnUserSettingsChanged;
-        TreeCommands = new TreeViewCommands(windowFactory, this);
-        DocumentHostManager = new AsnDocumentHostManager(userSettings);
+        DocumentHostManager = documentHostManager;
+        TreeCommands = treeCommands;
         _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, TreeCommands, requestFileSave);
         GlobalData = new GlobalData();
         AppCommands = appCommands;
@@ -47,9 +47,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         DocumentHostManager.AddTab(new AsnDocumentHostVM(UserSettings, TreeCommands));
     }
 
-    async void OnUserSettingsChanged(Object sender, RequireTreeRefreshEventArgs args) {
-        await RefreshTabs(args.Filter);
-    }
+    
 
     public ICommand NewCommand { get; }
     public ICommand CloseTabCommand { get; }
@@ -183,9 +181,6 @@ class MainWindowVM : ViewModelBase, IMainWindowVM, IHasAsnDocumentTabs {
         }
     }
 
-    public Task RefreshTabs(Func<AsnTreeNode, Boolean>? filter = null) {
-        return Task.WhenAll(DocumentHostManager.Tabs.Select(x => x.GetPrimaryDocument().RefreshTreeView(filter)));
-    }
     public async Task RestoreSessionAsync(SessionRecoveryDto recoveryData) {
         if (recoveryData.Tabs.Count > 0) {
             DocumentHostManager.Clear();
