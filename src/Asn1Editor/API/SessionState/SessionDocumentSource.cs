@@ -47,6 +47,7 @@ class SessionDocumentSource : IDisposable {
     }
 
     void enableRecovery() {
+        SessionBackupManager.Instance.Start();
         _sessionTabHost.PropertyChanged += SessionTabHost_OnPropertyChanged;
         _tabsChangeSource.CollectionChanged += TabsChangeSource_OnCollectionChanged;
         _timer.Tick += Timer_OnTick;

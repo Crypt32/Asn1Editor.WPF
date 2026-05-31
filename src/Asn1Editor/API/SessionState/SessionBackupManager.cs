@@ -16,6 +16,7 @@ class SessionBackupManager {
     static readonly Object _lock = new();
     static readonly SessionManagerStorage _sessionStorage = new();
     static volatile Boolean isRunning;
+    static volatile Boolean savesEnabled;  // controlled by Start/Shutdown
 
     readonly SessionDto _currentSession;
 
@@ -53,7 +54,7 @@ class SessionBackupManager {
     /// </remarks>
     public async Task SaveSessionAsync(ISessionTabHost documentHosts) {
         lock (_lock) {
-            if (isRunning) {
+            if (isRunning || !savesEnabled) {
                 return;
             }
             isRunning = true;
@@ -68,7 +69,11 @@ class SessionBackupManager {
         }
     }
     
+    public void Start() {
+        savesEnabled = true;
+    }
     public void Shutdown() {
+        savesEnabled = false;
         foreach (SessionTabDto tab in _currentSession.OpenTabs) {
             _sessionStorage.DeleteRecoveryFile(tab.ID);
         }
@@ -103,6 +108,9 @@ class SessionBackupManager {
         List<TabChangeState> compareState = compareStateChange(activeTabs, lastKnownState);
         // process changes
         foreach (TabChangeState tabChangeState in compareState) {
+            if (!savesEnabled) {
+                return; // hard return if saves were disabled during processing
+            }
             switch (tabChangeState.State) {
                 case SessionTabState.Dirty:
                     tabChangeState.Tab.RecoveryFile = await _sessionStorage.WriteRecoveryFileAsync(activeTabs[tabChangeState.Tab.ID].Document);
@@ -121,7 +129,9 @@ class SessionBackupManager {
             _currentSession.OpenTabs.Add(tab.Dto);
         }
 
-        await _sessionStorage.WriteSessionAsync(_currentSession);
+        if (savesEnabled) {
+            await _sessionStorage.WriteSessionAsync(_currentSession);
+        }
     }
 
     static List<TabChangeState> compareStateChange(IDictionary<String, TabSource> activeTabs, IDictionary<String, SessionTabDto> lastKnownState) {
