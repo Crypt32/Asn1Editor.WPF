@@ -172,4 +172,25 @@ class SessionBackupManager {
         Dirty   = 1,
         Removed = 2
     }
+
+    public async Task SaveSessionMetadataOnlyAsync(ISessionTabHost sessionTabHost) {
+        lock (_lock) {
+            if (isRunning || !savesEnabled) {
+                return;
+            }
+            isRunning = true;
+        }
+
+        try {
+            _currentSession.SelectedTabID = sessionTabHost.SelectedTab?.GetPrimaryDocument().ID;
+            _currentSession.UpdatedUtc = DateTime.UtcNow;
+            if (savesEnabled) {
+                await _sessionStorage.WriteSessionAsync(_currentSession);
+            }
+        } catch (Exception ex) {
+            App.Write(ex);
+        } finally {
+            isRunning = false;
+        }
+    }
 }

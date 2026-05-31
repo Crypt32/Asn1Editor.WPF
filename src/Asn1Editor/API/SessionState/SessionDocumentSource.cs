@@ -87,7 +87,7 @@ class SessionDocumentSource : IDisposable {
     }
     async void SessionTabHost_OnPropertyChanged(Object sender, PropertyChangedEventArgs args) {
         if (args.PropertyName == nameof(ISessionTabHost.SelectedTab)) {
-            await saveSessionAsync();
+            await SessionBackupManager.Instance.SaveSessionMetadataOnlyAsync(_sessionTabHost);
         }
     }
 
