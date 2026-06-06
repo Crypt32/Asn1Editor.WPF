@@ -14,9 +14,6 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
     static BinaryConverterWindow? binConverterWindow;
     static Boolean binConverterWindowClosed = true;
 
-    public IUIMessenger GetUIMessenger() {
-        return App.Container.Resolve<IUIMessenger>();
-    }
     public void ShowLicenseDialog() {
         hwnd = App.Container.Resolve<LicenseWindow>();
         ShowAsDialog();
@@ -43,7 +40,7 @@ class WindowFactory : WindowFactoryBase, IWindowFactory {
         binConverterWindowClosed = false;
         hwnd = binConverterWindow = new BinaryConverterWindow();
         var options = App.Container.Resolve<UserSettings>();
-        var binConverterVM = new BinaryConverterVM(GetUIMessenger(), options, action);
+        var binConverterVM = new BinaryConverterVM(App.Container.Resolve<IUIMessenger>(), options, action);
         hwnd.DataContext = binConverterVM;
         binConverterVM.SetBytes(data);
         hwnd.Closed += (o, e) => { binConverterWindowClosed = true; };
