@@ -83,8 +83,8 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
     /// <returns>
     /// The newly created <see cref="AsnDocumentHostVM"/> instance representing the new tab.
     /// </returns>
-    public AsnDocumentHostVM AddNewTab(ITreeCommands treeCommands) {
-        var tab = new AsnDocumentHostVM(_userSettings, treeCommands);
+    public AsnDocumentHostVM AddNewTab() {
+        var tab = new AsnDocumentHostVM(_userSettings);
         AddTab(tab);
         return tab;
     }
@@ -109,7 +109,6 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
     /// <summary>
     /// Retrieves an available tab for use, either by reusing an existing tab or creating a new one.
     /// </summary>
-    /// <param name="treeCommands">The tree commands to be used for the tab.</param>
     /// <param name="isNew">
     /// When this method returns, contains a value indicating whether a new tab was created. 
     /// <c>true</c> if a new tab was created; otherwise, <c>false</c>.
@@ -121,7 +120,7 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
     /// This method first checks if the currently selected tab can be reused. If it can, the method returns
     /// the selected tab. Otherwise, a new tab is created and returned.
     /// </remarks>
-    public AsnDocumentHostVM GetAvailableTab(ITreeCommands treeCommands, out Boolean isNew) {
+    public AsnDocumentHostVM GetAvailableTab(out Boolean isNew) {
         isNew = false;
         Boolean useExistingTab = SelectedTab is not null && SelectedTab.GetPrimaryDocument().CanReuse;
         if (useExistingTab && Tabs.Count > 0) {
@@ -129,7 +128,7 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
         }
 
         isNew = true;
-        return AddNewTab(treeCommands);
+        return AddNewTab();
     }
 
     /// <summary>
