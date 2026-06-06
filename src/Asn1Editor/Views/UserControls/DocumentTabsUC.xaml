@@ -14,7 +14,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Views/Resources/AsnTreeViewContextMenu.xaml"/>
                 <ResourceDictionary Source="/Views/Resources/TabHeaderContextMenu.xaml"/>
                 <ResourceDictionary Source="/Views/Resources/TreeViewResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -103,7 +102,7 @@
                                     </ToolBar>
                                 </ToolBarTray>
                                 <c:AsnHexViewer DataSource="{Binding Left.AsnDocContext.RawData, Mode=OneWay}"
-                                                SelectedNode="{Binding Left.AsnDocContext.SelectedNode.Value, Mode=OneWay}"
+                                                SelectedNode="{Binding Left.AsnDocContext.SelectedNode.Value, Mode=OneWay, FallbackValue={x:Null}}"
                                                 FontFamily="Consolas"
                                                 FontSize="{Binding UserSettings.FontSize}"
                                                 Background="#D5E7FE"
@@ -118,21 +117,20 @@
                                                AllowDrop="True"
                                                FontSize="{Binding UserSettings.FontSize}"
                                                MaxTextLength="{Binding UserSettings.MaxTreeTextLength}"
-                                               DoubleClickCommand="{Binding TreeCommands.EditNodeCommand}"
+                                               DoubleClickCommand="{x:Static c:AsnTreeViewCommands.EditNodeCommand}"
                                                DoubleClickCommandParameter="{x:Static clr:NodeEditMode.Text}"
                                                FileDropCommand="{Binding DataContext.DropFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                ItemTemplate="{StaticResource AsnTreeViewDataTemplate}"
                                                ItemContainerStyle="{StaticResource AsnTreeViewItemStyle}"
-                                               ContextMenu="{StaticResource AsnTreeViewContextMenu}"
                                                behaviors:ScrollSyncBehavior.Group="{Binding ScrollGroupId}"
                                                behaviors:ScrollSyncBehavior.IsScrollSyncEnabled="{Binding IsScrollbarSynchronized}">
                                     <c:AsnTreeView.InputBindings>
-                                        <KeyBinding Modifiers="Ctrl" Key="E" Command="{Binding TreeCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
-                                        <KeyBinding Modifiers="Ctrl" Key="N" Command="{Binding TreeCommands.AddNewNodeCommand}"/>
-                                        <KeyBinding Modifiers="Ctrl" Key="X" Command="{Binding TreeCommands.CutNodeCommand}"/>
-                                        <KeyBinding Modifiers="Ctrl" Key="C" Command="{Binding TreeCommands.CopyNodeCommand}"/>
-                                        <KeyBinding Modifiers="Ctrl" Key="V" Command="{Binding TreeCommands.PasteAfterCommand}"/>
-                                        <KeyBinding Key="Delete" Command="{Binding TreeCommands.DeleteNodeCommand}"/>
+                                        <KeyBinding Modifiers="Ctrl" Key="E" Command="{x:Static c:AsnTreeViewCommands.EditNodeCommand}" CommandParameter="{x:Static clr:NodeEditMode.Text}"/>
+                                        <KeyBinding Modifiers="Ctrl" Key="N" Command="{x:Static c:AsnTreeViewCommands.AddNewNodeCommand}"/>
+                                        <KeyBinding Modifiers="Ctrl" Key="X" Command="{x:Static c:AsnTreeViewCommands.CutNodeCommand}"/>
+                                        <KeyBinding Modifiers="Ctrl" Key="C" Command="{x:Static c:AsnTreeViewCommands.CopyNodeCommand}"/>
+                                        <KeyBinding Modifiers="Ctrl" Key="V" Command="{x:Static c:AsnTreeViewCommands.PasteAfterCommand}"/>
+                                        <KeyBinding Key="Delete" Command="{x:Static c:AsnTreeViewCommands.DeleteNodeCommand}"/>
                                     </c:AsnTreeView.InputBindings>
                                 </c:AsnTreeView>
                                 <c:BusyIndicator IsShown="{Binding IsBusy}"

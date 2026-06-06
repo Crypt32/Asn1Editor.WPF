@@ -4,7 +4,6 @@
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:behaviors="clr-namespace:SysadminsLV.Asn1Editor.Controls.Behaviors;assembly=SysadminsLV.Asn1Editor.Controls"
                     xmlns:tree="clr-namespace:SysadminsLV.Asn1Editor.Core.Tree;assembly=SysadminsLV.Asn1Editor.Core"
-                    xmlns:local="clr-namespace:SysadminsLV.Asn1Editor.API.Utils.WPF"
                     mc:Ignorable="d"
                     d:DataContext="{d:DesignInstance tree:AsnTreeNode}">
     <Style x:Key="AsnTreeIconStyle" TargetType="Image">
