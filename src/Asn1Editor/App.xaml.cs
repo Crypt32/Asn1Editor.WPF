@@ -86,6 +86,7 @@ public partial class App {
             .RegisterSingleton<ISplashScreenVM, SplashScreenVM>()
             .RegisterSingleton<IMainWindowVM, MainWindowVM>()
             .RegisterSingleton<AsnDocumentHostManager>()
+            .RegisterSingleton<AsnDocumentFileService>()
             .RegisterType<IHasAsnDocumentTabs, AsnDocumentHostManager>()
             .RegisterSingleton<IOidDbManager, OidDbManager>()
             .RegisterType<ITextViewerVM, TextViewerVM>()
