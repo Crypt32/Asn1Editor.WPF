@@ -7,6 +7,7 @@ namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 public interface IMainWindowVM {
     AsnDocumentHostVM? SelectedTab { get; }
+    ITreeCommands TreeCommands { get; }
 
     /// <summary>
     /// Requests all tab closing. Internally, this method calls a prompt to save unsaved data if necessary.
