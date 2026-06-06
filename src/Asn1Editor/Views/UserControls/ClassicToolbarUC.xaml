@@ -6,6 +6,7 @@
              xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
+             xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="60" d:DesignWidth="800">
@@ -103,7 +104,7 @@
                         <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding DocumentHostManager.SelectedTab.Left.AsnDocContext.SelectedNode.Value.Tag}" Value="6">
+                                <DataTrigger Binding="{Binding DocumentHostManager.SelectedTab.Left.AsnDocContext.SelectedNode.Value.Tag, FallbackValue={x:Null}}" Value="6">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
@@ -112,48 +113,48 @@
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="New node"
-                          Command="{Binding TreeCommands.AddNewNodeCommand}"
+                          Command="{x:Static c:AsnTreeViewCommands.AddNewNodeCommand}"
                           InputGestureText="Ctrl + N">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Cut"
-                          Command="{Binding TreeCommands.CutNodeCommand}"
+                          Command="{x:Static c:AsnTreeViewCommands.CutNodeCommand}"
                           InputGestureText="Ctrl + X">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Copy"
-                          Command="{Binding TreeCommands.CopyNodeCommand}"
+                          Command="{x:Static c:AsnTreeViewCommands.CopyNodeCommand}"
                           InputGestureText="Ctrl + C">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste before"
-                          Command="{Binding TreeCommands.PasteBeforeCommand}">
+                          Command="{x:Static c:AsnTreeViewCommands.PasteBeforeCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Paste After"
-                          Command="{Binding TreeCommands.PasteAfterCommand}"
+                          Command="{x:Static c:AsnTreeViewCommands.PasteAfterCommand}"
                           InputGestureText="Ctrl + V">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <MenuItem Header="Insert as a last child node"
-                          Command="{Binding TreeCommands.PasteLastCommand}">
+                          Command="{x:Static c:AsnTreeViewCommands.PasteLastCommand}">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
                 <MenuItem Header="Remove"
-                          Command="{Binding TreeCommands.DeleteNodeCommand}"
+                          Command="{x:Static c:AsnTreeViewCommands.DeleteNodeCommand}"
                           InputGestureText="Del">
                     <MenuItem.Icon>
                         <Image Source="/Views/Images/Menu/delete_16x16.png"/>
@@ -209,42 +210,42 @@
                 </Button>
             </ToolBar>
             <ToolBar>
-                <Button Command="{Binding TreeCommands.EditNodeCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.EditNodeCommand}"
                         CommandParameter="{x:Static clr:NodeEditMode.Text}"
                         ToolTip="Edit selected node">
                     <Image Source="/Views/Images/Menu/edit_16x16.png" Width="16"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.ShowNodeTextViewer}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.ShowNodeTextViewer}"
                         ToolTip="View node text">
                     <Image Source="/Views/Images/Menu/viewtext_16x16.png"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding TreeCommands.CutNodeCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.CutNodeCommand}"
                         ToolTip="Cut selected node">
                     <Image Source="/Views/Images/Menu/cut_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.CopyNodeCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.CopyNodeCommand}"
                         ToolTip="Copy selected node">
                     <Image Source="/Views/Images/Menu/copy_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.PasteBeforeCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.PasteBeforeCommand}"
                         ToolTip="Insert before selected node">
                     <Image Source="/Views/Images/Menu/insertbefore_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.PasteAfterCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.PasteAfterCommand}"
                         ToolTip="Insert after selected node">
                     <Image Source="/Views/Images/Menu/insertafter_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.PasteLastCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.PasteLastCommand}"
                         ToolTip="Insert as a last child node">
                     <Image Source="/Views/Images/Menu/insertlast_16x16.png"/>
                 </Button>
                 <Separator/>
-                <Button Command="{Binding TreeCommands.AddNewNodeCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.AddNewNodeCommand}"
                         ToolTip="New node">
                     <Image Source="/Views/Images/Menu/newnode_16x16.png"/>
                 </Button>
-                <Button Command="{Binding TreeCommands.DeleteNodeCommand}"
+                <Button Command="{x:Static c:AsnTreeViewCommands.DeleteNodeCommand}"
                         ToolTip="Delete selected node">
                     <Image Source="/Views/Images/Menu/delete_16x16.png"/>
                 </Button>
