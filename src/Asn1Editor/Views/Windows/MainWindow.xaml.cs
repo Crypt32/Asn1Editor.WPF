@@ -11,6 +11,7 @@ public partial class MainWindow {
     readonly IMainWindowVM _vm;
     public MainWindow(IMainWindowVM vm) {
         _vm = vm;
+        CommandBindings.AddRange(_vm.TreeCommands.Bindings);
         InitializeComponent();
         DataContext = vm;
         Closing += onClosing;
