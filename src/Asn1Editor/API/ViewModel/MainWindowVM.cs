@@ -25,12 +25,13 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         AsnDocumentHostManager documentHostManager,
         AsnDocumentFileService documentFileService,
         ITreeCommands treeCommands,
-        UserSettings userSettings) {
+        UserSettings userSettings,
+        IUIMessenger uiMessenger) {
         UserSettings = userSettings;
         DocumentHostManager = documentHostManager;
         TreeCommands = treeCommands;
         _windowFactory = windowFactory;
-        _uiMessenger = windowFactory.GetUIMessenger();
+        _uiMessenger = uiMessenger;
         _documentFileService = documentFileService;
         GlobalData = new GlobalData();
         AppCommands = appCommands;

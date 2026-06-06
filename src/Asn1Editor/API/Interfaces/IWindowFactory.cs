@@ -8,7 +8,6 @@ using SysadminsLV.Asn1Editor.Core.Tree;
 namespace SysadminsLV.Asn1Editor.API.Interfaces;
 
 interface IWindowFactory {
-    IUIMessenger GetUIMessenger();
     void ShowLicenseDialog();
     void ShowAboutDialog();
     AsnNodeValue ShowNodeContentEditor(NodeEditMode editMode);

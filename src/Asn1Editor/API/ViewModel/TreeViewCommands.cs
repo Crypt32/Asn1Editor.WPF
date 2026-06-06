@@ -21,9 +21,9 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     readonly IUIMessenger _uiMessenger;
     readonly IHasAsnDocumentTabs _tabs;
 
-    public TreeViewCommands(IWindowFactory windowFactory, IHasAsnDocumentTabs appTabs) {
+    public TreeViewCommands(IWindowFactory windowFactory, IHasAsnDocumentTabs appTabs, IUIMessenger uiMessenger) {
         _windowFactory = windowFactory;
-        _uiMessenger = windowFactory.GetUIMessenger();
+        _uiMessenger = uiMessenger;
         _tabs = appTabs;
         initializeTreeCommands();
     }
