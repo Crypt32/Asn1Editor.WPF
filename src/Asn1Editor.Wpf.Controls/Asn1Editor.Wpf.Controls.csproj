@@ -18,7 +18,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\book_16x16.png" />
+    <Resource Include="Assets\converter_16x16.png" />
+    <Resource Include="Assets\copy_16x16.png" />
+    <Resource Include="Assets\cut_16x16.png" />
+    <Resource Include="Assets\delete_16x16.png" />
+    <Resource Include="Assets\edit_16x16.png" />
+    <Resource Include="Assets\insertafter_16x16.png" />
+    <Resource Include="Assets\insertbefore_16x16.png" />
+    <Resource Include="Assets\insertlast_16x16.png" />
+    <Resource Include="Assets\newnode_16x16.png" />
     <Resource Include="Assets\spritesheet.png" />
+    <Resource Include="Assets\viewtext_16x16.png" />
   </ItemGroup>
 
   <ItemGroup>
