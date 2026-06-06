@@ -8,10 +8,10 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
+using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Core.ASN;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -21,47 +21,77 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     readonly IUIMessenger _uiMessenger;
     readonly IHasAsnDocumentTabs _tabs;
 
-    Boolean hasNodeClipboardData;
-
     public TreeViewCommands(IWindowFactory windowFactory, IHasAsnDocumentTabs appTabs) {
         _windowFactory = windowFactory;
         _uiMessenger = windowFactory.GetUIMessenger();
         _tabs = appTabs;
-        SaveNodeCommand = new RelayCommand(saveBinaryNode, ensureNodeSelected);
-        ShowNodeTextViewer = new RelayCommand(showNodeTextViewer, ensureNodeSelected);
-        ShowNodeInConverter = new RelayCommand(showNodeInConverter, ensureNodeSelected);
-        ShowNodeHashCommand = new RelayCommand(showNodeHashes, ensureNodeSelected);
-        EditNodeCommand = new RelayCommand(editNodeContent, ensureNodeSelected);
-        RegisterOidCommand = new RelayCommand(registerOid, ensureNodeSelected);
-        AddNewNodeCommand = new AsyncCommand(addNewNode, canAddNewNode);
-        DeleteNodeCommand = new RelayCommand(removeNode, ensureNodeSelected);
-        CutNodeCommand = new RelayCommand(cutNode, canCutNode);
-        CopyNodeCommand = new RelayCommand(copyNode, ensureNodeSelected);
-        PasteBeforeCommand = new AsyncCommand(pasteBefore, canPasteBeforeAfter);
-        PasteAfterCommand = new AsyncCommand(pasteAfter, canPasteBeforeAfter);
-        PasteLastCommand = new AsyncCommand(pasteLast, canPasteLast);
+        initializeTreeCommands();
     }
 
-    public ICommand ShowNodeTextViewer { get; }
-    public ICommand ShowNodeInConverter { get; }
-    public ICommand ShowNodeHashCommand { get; }
-    public ICommand EditNodeCommand { get; }
-    public ICommand RegisterOidCommand { get; }
-    public ICommand SaveNodeCommand { get; }
-    public ICommand AddNewNodeCommand { get; }
-    public ICommand DeleteNodeCommand { get; }
-    public ICommand CutNodeCommand { get; }
-    public ICommand CopyNodeCommand { get; }
-    public IAsyncCommand PasteBeforeCommand { get; }
-    public IAsyncCommand PasteAfterCommand { get; }
-    public IAsyncCommand PasteLastCommand { get; }
+    public CommandBindingCollection Bindings { get; } = [];
 
     public Boolean HasNodeClipboardData {
-        get => hasNodeClipboardData;
+        get;
         set {
-            hasNodeClipboardData = value;
-            OnPropertyChanged();
+            field = value;
+            CommandManager.InvalidateRequerySuggested();
         }
+    }
+
+    void initializeTreeCommands() {
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.ShowNodeTextViewer,
+            (_, e) => showNodeTextViewer(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.ShowNodeHashCommand,
+            (_, e) => showNodeHashes(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.ShowNodeInConverter,
+            (_, e) => showNodeInConverter(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.SaveNodeCommand,
+            (_, e) => saveBinaryNode(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.EditNodeCommand,
+            (_, e) => editNodeContent(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.RegisterOidCommand,
+            (_, e) => registerOid(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.AddNewNodeCommand,
+            async (_, e) => await addNewNode(e.Parameter, CancellationToken.None),
+            (_, e) => e.CanExecute = canAddNewNode(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.DeleteNodeCommand,
+            (_, e) => removeNode(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.CutNodeCommand,
+            (_, e) => cutNode(e.Parameter),
+            (_, e) => e.CanExecute = canCutNode(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.CopyNodeCommand,
+            (_, e) => copyNode(e.Parameter),
+            (_, e) => e.CanExecute = ensureNodeSelected(e.Parameter)));
+
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.PasteBeforeCommand,
+            async (_, e) => await pasteBefore(e.Parameter, CancellationToken.None),
+            (_, e) => e.CanExecute = canPasteBeforeAfter(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.PasteAfterCommand,
+            async (_, e) => await pasteAfter(e.Parameter, CancellationToken.None),
+            (_, e) => e.CanExecute = canPasteBeforeAfter(e.Parameter)));
+        Bindings.Add(new CommandBinding(
+            AsnTreeViewCommands.PasteLastCommand,
+            async (_, e) => await pasteLast(e.Parameter, CancellationToken.None),
+            (_, e) => e.CanExecute = canPasteLast(e.Parameter)));
     }
 
     void saveBinaryNode(Object o) {
@@ -93,7 +123,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     void editNodeContent(Object o) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         if (data?.SelectedNode is not null) {
-            _windowFactory.ShowNodeContentEditor((NodeEditMode)o);
+            _windowFactory.ShowNodeContentEditor(o is NodeEditMode mode ? mode : NodeEditMode.Text);
         }
     }
     void registerOid(Object obj) {
@@ -108,7 +138,6 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
     async Task addNewNode(Object o, CancellationToken ct) {
         isTabSelected(out IAsn1DocumentContext data); // granted to be non-null
         Byte[]? nodeRawData = _windowFactory.ShowNewAsnNodeEditor(data);
-        //Asn1Lite nodeValue = _windowFactory.ShowNodeContentEditor(NodeEditMode.NewNode);
         if (nodeRawData is null) {
             return;
         }
@@ -116,7 +145,7 @@ class TreeViewCommands : ViewModelBase, ITreeCommands {
         AsnTreeNode node = await data.AddNode(nodeRawData, data.SelectedNode);
         data.SelectedNode = node;
         if (node.Value is { IsContainer: false, Tag: not ((Byte)Asn1Type.NULL or (Byte)Asn1Type.SEQUENCE or (Byte)Asn1Type.SET) }) {
-            EditNodeCommand.Execute(NodeEditMode.Text);
+            editNodeContent(NodeEditMode.Text);
         }
     }
     void removeNode(Object o) {
