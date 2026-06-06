@@ -5,6 +5,99 @@
         <ResourceDictionary Source="Shared.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
+    <!-- x:Shared="False": ContextMenu is a UIElement — each AsnTreeView instance must own its own. -->
+    <ContextMenu x:Key="AsnTreeViewContextMenu" x:Shared="False">
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.EditNodeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.EditNodeCommand}">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/edit_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.SaveNodeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.SaveNodeCommand}"/>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.ShowNodeTextViewer}"
+                  Command="{x:Static controls:AsnTreeViewCommands.ShowNodeTextViewer}">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/viewtext_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.ShowNodeInConverter}"
+                  Command="{x:Static controls:AsnTreeViewCommands.ShowNodeInConverter}">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/converter_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.ShowNodeHashCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.ShowNodeHashCommand}"/>
+        <MenuItem Command="{x:Static controls:AsnTreeViewCommands.RegisterOidCommand}">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/book_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+            <MenuItem.Style>
+                <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Setter Property="Header" Value="{x:Static controls:AsnTreeViewCommands.RegisterOidCommand}"/>
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PlacementTarget.SelectedItem.Value.Tag,
+                                         RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                     Value="6">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </MenuItem.Style>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.AddNewNodeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.AddNewNodeCommand}"
+                  InputGestureText="Ctrl+N">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/newnode_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.CutNodeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.CutNodeCommand}"
+                  InputGestureText="Ctrl+X">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/cut_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.CopyNodeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.CopyNodeCommand}"
+                  InputGestureText="Ctrl+C">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/copy_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.PasteBeforeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.PasteBeforeCommand}">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/insertbefore_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.PasteAfterCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.PasteAfterCommand}"
+                  InputGestureText="Ctrl+V">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/insertafter_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.PasteLastCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.PasteLastCommand}">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/insertlast_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="{x:Static controls:AsnTreeViewCommands.DeleteNodeCommand}"
+                  Command="{x:Static controls:AsnTreeViewCommands.DeleteNodeCommand}"
+                  InputGestureText="Del">
+            <MenuItem.Icon>
+                <Image Source="/SysadminsLV.Asn1Editor.Controls;component/Assets/delete_16x16.png" Width="16"/>
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
+
     <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
         <Setter Property="ItemsPanel">
             <Setter.Value>
@@ -20,5 +113,6 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{StaticResource PanelBorderBrush}"/>
         <Setter Property="FontFamily" Value="Consolas"/>
+        <Setter Property="ContextMenu" Value="{StaticResource AsnTreeViewContextMenu}"/>
     </Style>
 </ResourceDictionary>
