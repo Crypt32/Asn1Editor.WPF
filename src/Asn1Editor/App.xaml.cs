@@ -92,7 +92,7 @@ public partial class App {
             .RegisterType<IAsnValueEditorVM, AsnValueEditorVM>()
             .RegisterType<IOidEditorVM, OidEditorVM>()
             .RegisterType<INewAsnNodeEditorVM, NewAsnNodeEditorVM>()
-            .RegisterType<ITreeCommands, TreeViewCommands>()
+            .RegisterSingleton<ITreeCommands, TreeViewCommands>()
             .RegisterInstance(_options);
     }
 }
