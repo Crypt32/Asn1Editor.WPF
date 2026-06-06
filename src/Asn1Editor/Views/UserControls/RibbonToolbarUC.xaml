@@ -6,6 +6,7 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
              xmlns:clr="clr-namespace:SysadminsLV.Asn1Editor.API.Utils"
+             xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance vm:MainWindowVM}"
              d:DesignHeight="120" d:DesignWidth="800">
@@ -84,53 +85,53 @@
                     </RibbonGroup.Resources>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/edit_32x32.png"
                                   Label="Edit node"
-                                  Command="{Binding TreeCommands.EditNodeCommand}"
+                                  Command="{x:Static c:AsnTreeViewCommands.EditNodeCommand}"
                                   CommandParameter="{x:Static clr:NodeEditMode.Text}"
                                   ToolTip="Edit selected node"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/viewtext_32x32.png"
                                   Label="View node text"
-                                  Command="{Binding TreeCommands.ShowNodeTextViewer}"
+                                  Command="{x:Static c:AsnTreeViewCommands.ShowNodeTextViewer}"
                                   ToolTip="Edit selected node"/>
                     <RibbonSeparator/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/newnode_32x32.png"
                               Label="New node"
-                              Command="{Binding TreeCommands.AddNewNodeCommand}"
+                              Command="{x:Static c:AsnTreeViewCommands.AddNewNodeCommand}"
                               ToolTip="Create new tree node"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/cut_16x16.png"
                                   Label="Cut node"
-                                  Command="{Binding TreeCommands.CutNodeCommand}"/>
+                                  Command="{x:Static c:AsnTreeViewCommands.CutNodeCommand}"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/copy_16x16.png"
                                   Label="Copy node"
-                                  Command="{Binding TreeCommands.CopyNodeCommand}"/>
+                                  Command="{x:Static c:AsnTreeViewCommands.CopyNodeCommand}"/>
                     <!-- keep this just for reference as an option
                     <RibbonMenuButton LargeImageSource="/Views/Images/Menu/paste_32x32.png"
                                       Label="Paste"
                                       KeyTip="V">
                         <RibbonMenuItem ImageSource="/Views/Images/Menu/insertbefore_16x16.png"
                                         Header="Insert before"
-                                        Command="{Binding TreeCommands.PasteBeforeCommand}"/>
+                                        Command="{x:Static controls:AsnTreeViewCommands.PasteBeforeCommand}"/>
                         <RibbonMenuItem ImageSource="/Views/Images/Menu/insertafter_16x16.png"
                                         Header="Insert before"
-                                        Command="{Binding TreeCommands.PasteAfterCommand}"/>
+                                        Command="{x:Static controls:AsnTreeViewCommands.PasteAfterCommand}"/>
                         <RibbonMenuItem ImageSource="/Views/Images/Menu/insertlast_16x16.png"
                                         Header="Insert before"
-                                        Command="{Binding TreeCommands.PasteLastCommand}"/>
+                                        Command="{x:Static controls:AsnTreeViewCommands.PasteLastCommand}"/>
                     </RibbonMenuButton>-->
                     <RibbonButton SmallImageSource="/Views/Images/Menu/insertbefore_16x16.png"
                                   Label="Insert before"
-                                  Command="{Binding TreeCommands.PasteBeforeCommand}"
+                                  Command="{x:Static c:AsnTreeViewCommands.PasteBeforeCommand}"
                                   ToolTip="Insert copied node above selected node as sibling"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/insertafter_16x16.png"
                                   Label="Insert after"
-                                  Command="{Binding TreeCommands.PasteAfterCommand}"
+                                  Command="{x:Static c:AsnTreeViewCommands.PasteAfterCommand}"
                                   ToolTip="Insert copied node below selected node as sibling"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/insertlast_16x16.png"
                                   Label="Insert as last child"
-                                  Command="{Binding TreeCommands.PasteLastCommand}"
+                                  Command="{x:Static c:AsnTreeViewCommands.PasteLastCommand}"
                                   ToolTip="Add copied node as a child of the selected node"/>
                     <RibbonButton SmallImageSource="/Views/Images/Menu/delete_16x16.png"
                                   Label="Delete node"
-                                  Command="{Binding TreeCommands.DeleteNodeCommand}"
+                                  Command="{x:Static c:AsnTreeViewCommands.DeleteNodeCommand}"
                                   ToolTip="Removes selected node"/>
                 </RibbonGroup>
             </RibbonTab>
