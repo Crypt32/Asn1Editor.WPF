@@ -15,12 +15,10 @@ namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class AsnDocumentFileService {
     readonly IUIMessenger _uiMessenger;
     readonly AsnDocumentHostManager _tabManager;
-    readonly ITreeCommands _treeCommands;
 
-    public AsnDocumentFileService(IUIMessenger uiMessenger, AsnDocumentHostManager tabManager, ITreeCommands treeCommands) {
+    public AsnDocumentFileService(IUIMessenger uiMessenger, AsnDocumentHostManager tabManager) {
         _uiMessenger = uiMessenger;
         _tabManager = tabManager;
-        _treeCommands = treeCommands;
     }
 
     #region Open
@@ -63,7 +61,7 @@ class AsnDocumentFileService {
         var asn = new Asn1Reader(rawBytes);
         try {
             asn.BuildOffsetMap();
-            AsnDocumentHostVM tab = _tabManager.GetAvailableTab(_treeCommands, out _);
+            AsnDocumentHostVM tab = _tabManager.GetAvailableTab(out _);
             return tab.GetPrimaryDocument().Decode(rawBytes, false);
         } catch (Exception ex) {
             _uiMessenger.ShowError(ex.Message, "Read Error");
@@ -187,7 +185,7 @@ class AsnDocumentFileService {
     /// If a new tab was created but decoding fails the temporary tab is closed.
     /// </summary>
     public async Task CreateTabFromFileAsync(String file) {
-        AsnDocumentHostVM tab = _tabManager.GetAvailableTab(_treeCommands, out Boolean isNew);
+        AsnDocumentHostVM tab = _tabManager.GetAvailableTab(out Boolean isNew);
         Asn1DocumentVM doc = tab.GetPrimaryDocument();
         doc.Path = file;
         try {

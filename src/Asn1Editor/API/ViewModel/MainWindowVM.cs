@@ -23,6 +23,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         IWindowFactory windowFactory,
         IAppCommands appCommands,
         AsnDocumentHostManager documentHostManager,
+        AsnDocumentFileService documentFileService,
         ITreeCommands treeCommands,
         UserSettings userSettings) {
         UserSettings = userSettings;
@@ -30,18 +31,18 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         TreeCommands = treeCommands;
         _windowFactory = windowFactory;
         _uiMessenger = windowFactory.GetUIMessenger();
-        _documentFileService = new AsnDocumentFileService(_uiMessenger, DocumentHostManager, TreeCommands);
+        _documentFileService = documentFileService;
         GlobalData = new GlobalData();
         AppCommands = appCommands;
         
-        NewCommand = new RelayCommand(_ => DocumentHostManager.AddNewTab(TreeCommands));
+        NewCommand = new RelayCommand(_ => DocumentHostManager.AddNewTab());
         OpenCommand = new AsyncCommand((_, _) => _documentFileService.OpenFileAsync());
         SaveCommand = new RelayCommand(o => _documentFileService.SaveFile(o as String), canPrintSave);
         ReloadDocumentCommand = new AsyncCommand((_, _) => _documentFileService.ReloadActiveDocumentAsync());
         DropFileCommand = new AsyncCommand((o, _) => _documentFileService.DropFileAsync(o as String));
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
         _sessionDocumentSource = new SessionDocumentSource(DocumentHostManager, UserSettings);
-        DocumentHostManager.AddTab(new AsnDocumentHostVM(UserSettings, TreeCommands));
+        DocumentHostManager.AddTab(new AsnDocumentHostVM(UserSettings));
 
         CloseTabCommand = new RelayCommand(closeTab, canCloseTab);
         CloseAllTabsCommand = new RelayCommand(_ => CloseAllTabs());
@@ -146,7 +147,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         }
         var compareDictionary = new Dictionary<String, AsnDocumentHostVM>();
         foreach (SessionTabRecoveryDto recoveryTab in recoveryData.Tabs) {
-            var tab = new AsnDocumentHostVM(UserSettings, TreeCommands);
+            var tab = new AsnDocumentHostVM(UserSettings);
             Asn1DocumentVM doc = tab.GetPrimaryDocument();
             if (recoveryTab.RecoveryData is not null) {
                 try {
