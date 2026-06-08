@@ -19,7 +19,7 @@
         <KeyBinding Modifiers="Ctrl" Key="O" Command="{Binding OpenCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
     </Window.InputBindings>
-    <DockPanel>
+    <DockPanel FocusManager.FocusedElement="{Binding ElementName=txt}">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Header="Open" Command="{Binding OpenCommand}" InputGestureText="Ctrl + O">
