@@ -13,6 +13,7 @@
         Foreground="{StaticResource Panel.FgBrush}"
         FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         Title="New ASN.1 Node"
+        Icon="/Views/Images/Menu/newnode_16x16.png"
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
