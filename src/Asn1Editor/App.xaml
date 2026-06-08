@@ -42,6 +42,16 @@
             <Style x:Key="{x:Static StatusBar.SeparatorStyleKey}" TargetType="Separator">
                 <Setter Property="Background" Value="{StaticResource PanelBorderBrush}"/>
             </Style>
+            <Style TargetType="ToolTip" BasedOn="{StaticResource {x:Type ToolTip}}">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="White" Offset="0"/>
+                            <GradientStop Color="LightGray" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
