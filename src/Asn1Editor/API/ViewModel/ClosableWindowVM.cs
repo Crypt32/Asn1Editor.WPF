@@ -2,21 +2,19 @@
 using System.Windows.Input;
 using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
 
-namespace SysadminsLV.Asn1Editor.API.ViewModel; 
+namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
 public abstract class ClosableWindowVM : ViewModelBase {
-    Boolean? dialogResult;
-
     protected ClosableWindowVM() {
-        CloseCommand = new RelayCommand(o => { DialogResult = true; });
+        CloseCommand = new RelayCommand(_ => { DialogResult = true; });
     }
 
     public ICommand CloseCommand { get; }
 
     public Boolean? DialogResult {
-        get => dialogResult;
+        get;
         set {
-            dialogResult = value;
+            field = value;
             OnPropertyChanged();
         }
     }
