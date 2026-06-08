@@ -6,6 +6,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         mc:Ignorable="d"
         Title="License"
+        Icon="/Views/Images/Menu/license_16x16.png"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
         Background="{StaticResource PanelBackgroundBrush}"
