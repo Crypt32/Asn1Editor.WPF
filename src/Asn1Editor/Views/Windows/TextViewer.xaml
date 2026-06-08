@@ -16,7 +16,6 @@
     <Window.InputBindings>
         <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding SaveCommand}"/>
         <KeyBinding Modifiers="Ctrl" Key="P" Command="{Binding PrintCommand}"/>
-        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
@@ -61,12 +60,12 @@
             </StatusBarItem>
             <StatusBarItem IsEnabled="{Binding OpenSSLViewChecked}">
                 <controls:AutoSizeTextBox Text="{Binding CurrentLength, UpdateSourceTrigger=PropertyChanged}"
-                                   UndoLimit="0"
-                                   IsUndoEnabled="False"
-                                   FontFamily="Consolas"
-                                   Foreground="Navy"
-                                   LineWidth="3"
-                                   MaxLength="3"/>
+                                          UndoLimit="0"
+                                          IsUndoEnabled="False"
+                                          FontFamily="Consolas"
+                                          Foreground="Navy"
+                                          LineWidth="3"
+                                          MaxLength="3"/>
             </StatusBarItem>
             <StatusBarItem IsEnabled="{Binding OpenSSLViewChecked}">
                 <Button Content="Apply" Command="{Binding ApplyCommand}" MinWidth="50"/>

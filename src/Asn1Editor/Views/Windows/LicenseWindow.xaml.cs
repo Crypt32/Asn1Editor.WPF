@@ -14,7 +14,7 @@ namespace SysadminsLV.Asn1Editor.Views.Windows;
 /// </summary>
 public partial class LicenseWindow {
     public LicenseWindow() {
-        CloseCommand = new RelayCommand(o => Close());
+        CloseCommand = new RelayCommand(_ => Close());
         InitializeComponent();
         loadEula();
         DataContext = this;
