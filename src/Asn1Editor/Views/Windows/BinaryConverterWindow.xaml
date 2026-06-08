@@ -7,11 +7,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:BinaryConverterVM}"
+        Title="Binary Converter"
         Background="{StaticResource PanelBackgroundBrush}"
         FontSize="{Binding UserSettings.FontSize}"
-        Title="Binary Converter"
         ResizeMode="CanResize"
         WindowStartupLocation="CenterOwner"
+        Icon="/Views/Images/Menu/converter_16x16.png"
         Height="500"
         Width="650">
     <Window.InputBindings>
