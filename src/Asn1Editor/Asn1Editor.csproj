@@ -40,6 +40,7 @@
     <Resource Include="Views\Images\Menu\eraser_16x16.png" />
     <Resource Include="Views\Images\Menu\exit_16x16.png" />
     <Resource Include="Views\Images\Menu\exit_32x32.png" />
+    <Resource Include="Views\Images\Menu\hash_16x16.png" />
     <Resource Include="Views\Images\Menu\help_16x16.png" />
     <Resource Include="Views\Images\Menu\hexview_16x16.png" />
     <Resource Include="Views\Images\Menu\hexview_32x32.png" />
