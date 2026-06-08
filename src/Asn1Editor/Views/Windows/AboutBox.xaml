@@ -17,10 +17,10 @@
             <Setter Property="Background">
                 <Setter.Value>
                     <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Offset="0" Color="LightBlue" />
+                        <GradientStop Offset="0" Color="{StaticResource Panel.BgColor}" />
                         <GradientStop Offset="0.55" Color="White" />
                         <GradientStop Offset="0.85" Color="White" />
-                        <GradientStop Offset="1" Color="LightBlue" />
+                        <GradientStop Offset="1" Color="{StaticResource Panel.BgColor}" />
                     </LinearGradientBrush>
                 </Setter.Value>
             </Setter>
