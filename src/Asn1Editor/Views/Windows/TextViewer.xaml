@@ -7,9 +7,10 @@
         xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:TextViewerVM}"
-        WindowStartupLocation="CenterOwner"
         Title="ASN.1 Text Dump Viewer"
+        Icon="/Views/Images/Menu/viewtext_16x16.png"
         FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
+        WindowStartupLocation="CenterOwner"
         Height="600"
         Width="800">
     <Window.InputBindings>
