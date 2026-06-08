@@ -57,7 +57,7 @@
                 <Separator/>
                 <MenuItem Header="Clear" Command="{Binding ClearCommand}">
                     <MenuItem.Icon>
-                        <Image Source="../Images/Menu/eraser_16x16.png"/>
+                        <Image Source="../Images/Menu/eraser_16x16.png" Width="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
@@ -83,6 +83,9 @@
                 </Button>
                 <Button Command="ApplicationCommands.Paste" ToolTip="Paste (Ctrl + V)">
                     <Image Source="../Images/Menu/paste_16x16.png"/>
+                </Button>
+                <Button Command="{Binding ClearCommand}" ToolTip="Clear content">
+                    <Image Source="../Images/Menu/eraser_16x16.png" Width="16"/>
                 </Button>
             </ToolBar>
             <ToolBar>
