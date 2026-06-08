@@ -48,6 +48,7 @@
     <Resource Include="Views\Images\Menu\insertafter_16x16.png" />
     <Resource Include="Views\Images\Menu\insertbefore_16x16.png" />
     <Resource Include="Views\Images\Menu\insertlast_16x16.png" />
+    <Resource Include="Views\Images\Menu\license_16x16.png" />
     <Resource Include="Views\Images\Menu\license_32x32.png" />
     <Resource Include="Views\Images\Menu\new_16x16.png" />
     <Resource Include="Views\Images\Menu\new_32x32.png" />
