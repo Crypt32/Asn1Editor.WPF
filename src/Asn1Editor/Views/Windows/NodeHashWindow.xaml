@@ -13,6 +13,7 @@
         Foreground="{StaticResource Panel.FgBrush}"
         FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         Title="Node Hashes"
+        Icon="/Views/Images/Menu/hash_16x16.png"
         SizeToContent="Height"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
