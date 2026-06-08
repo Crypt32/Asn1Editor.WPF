@@ -21,10 +21,10 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" IsLocked="True">
             <ToolBar>
-                <Button Command="{Binding SaveCommand}" ToolTip="Paste (Ctrl + S)">
+                <Button Command="{Binding SaveCommand}" ToolTip="Save (Ctrl + S)">
                     <Image Source="/Views/Images/Menu/save_16x16.png"/>
                 </Button>
-                <Button Command="{Binding PrintCommand}" ToolTip="Paste (Ctrl + P)">
+                <Button Command="{Binding PrintCommand}" ToolTip="Print (Ctrl + P)">
                     <Image Source="/Views/Images/Menu/print_16x16.png"/>
                 </Button>
             </ToolBar>
