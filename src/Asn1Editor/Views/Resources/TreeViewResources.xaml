@@ -123,15 +123,27 @@
                 <Border.Style>
                     <Style TargetType="Border">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Value.Status}" Value="Modified">
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Value.Status}" Value="Modified"/>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TreeViewItem}}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" Value="#FFF3CD"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Value.Status}" Value="Added">
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Value.Status}" Value="Added"/>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TreeViewItem}}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" Value="#D4EDDA"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Value.Status}" Value="Deleted">
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Value.Status}" Value="Deleted"/>
+                                    <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TreeViewItem}}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
                                 <Setter Property="Background" Value="#F8D7DA"/>
-                            </DataTrigger>
+                            </MultiDataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
