@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -76,6 +76,9 @@ public class Asn1DocumentVM : AsyncViewModel {
                 field = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Header));
+                if (!field && AsnDocContext.Tree.Count > 0) {
+                    AsnDocContext.Tree[0].ResetMarkers();
+                }
             }
         }
     }
