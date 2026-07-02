@@ -124,7 +124,9 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
     public async Task<AsnTreeNode> AddNode(Byte[] nodeRawData, AsnTreeNode? parent) {
         if (Root is null) {
             var asn = new Asn1Reader(nodeRawData);
-            var rootValue = new AsnNodeValue(asn);
+            var rootValue = new AsnNodeValue(asn) {
+                Status = AsnNodeStatus.Added
+            };
             Root = new AsnTreeNode(rootValue, _binarySource, viewOptions);
             _binarySource.InsertRange(0, nodeRawData);
             await Root.UpdateNodeHeaderAsync();
@@ -139,7 +141,11 @@ public class TreeCoordinator(INodeViewOptions viewOptions) {
         // create new node value from raw data
         var nodeValue = new AsnNodeValue(new Asn1Reader(nodeRawData));
         // create new node with the value and insert it into the binary source at the correct offset
-        var node = new AsnTreeNode(nodeValue, _binarySource, viewOptions);
+        var node = new AsnTreeNode(nodeValue, _binarySource, viewOptions) {
+            Value = {
+                        Status = AsnNodeStatus.Added
+                    }
+        };
         // shift the inserted node and its subtree to the end of the parent in the binary structure
         // it will not be updated by the propagation of size change
         node.UpdateOffset(parent.Value.Offset + parent.Value.TagLength);
