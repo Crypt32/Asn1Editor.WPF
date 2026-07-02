@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -37,7 +37,7 @@ static class FileUtility {
         }
         Byte[] buffer = new Byte[4];
         // must not use 'using' declaration.
-        using (FileStream fs = new FileStream(path, FileMode.Open)) {
+        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read)) {
             Int32 readBytes = fs.Read(buffer, 0, 4);
             if (readBytes < 2) {
                 throw new Exception("The data is invalid");
