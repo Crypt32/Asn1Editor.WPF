@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -119,6 +119,27 @@ public class AsnNodeValue : NotifyPropertyChanged, IHexAsnNode {
         }
     }
     public String ExplicitValue { get; set; }
+
+    /// <summary>
+    /// Gets or sets the status of the ASN.1 node, indicating whether the node has been 
+    /// modified, added, deleted, or remains unchanged.
+    /// </summary>
+    /// <value>
+    /// A <see cref="AsnNodeStatus"/> value representing the current state of the node.
+    /// </value>
+    /// <remarks>
+    /// The <see cref="Status"/> property is used to track changes to the node during 
+    /// editing operations. It can be set internally to reflect the node's state.
+    /// </remarks>
+    public AsnNodeStatus Status {
+        get;
+        internal set {
+            if (field != value) {
+                field = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     /// <summary>
     /// Retrieves a formatted metadata string for the current ASN.1 node.
