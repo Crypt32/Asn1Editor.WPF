@@ -46,6 +46,7 @@
 1.2.840.10045.1.2.3.3,ppBasis
 1.2.840.10045.2,publicKeyType
 1.2.840.10045.2.1,ECC
+1.2.840.10045.3.1.7,ECDSA_P256
 1.2.840.10046.2.1,DH
 1.2.840.113533.7,nsn
 1.2.840.113533.7.65,nsn-ce
@@ -68,6 +69,8 @@
 1.2.840.113549.1.1.4,md5RSA
 1.2.840.113549.1.1.5,sha1RSA
 1.2.840.113549.1.1.6,rsaOAEPEncryptionSET
+1.2.840.113549.1.1.7,RSAES-OAEP
+1.2.840.113549.1.1.10,RSASSA-PSS
 1.2.840.113549.1.12,PKCS 12
 1.2.840.113549.1.12.1,pkcs-12-PbeIds
 1.2.840.113549.1.12.1.1,pbeWithSHAAnd128BitRC4
@@ -163,6 +166,7 @@
 1.2.840.113549.1.9.16.2.3,id-aa-mlExpandHistory
 1.2.840.113549.1.9.16.2.4,id-aa-contentHint
 1.2.840.113549.1.9.16.2.47,Signing certificate V2
+1.2.840.113549.1.9.16.3.5,ESDH
 1.2.840.113549.1.9.20,Friendly Name
 1.2.840.113549.1.9.21,localKeyID
 1.2.840.113549.1.9.22,certTypes
@@ -226,6 +230,8 @@
 1.3.6.1.5.5.7.48.1.2,OCSP Nonce
 1.3.6.1.5.5.7.48.1.3,OCSP CRL Reference
 1.3.6.1.5.5.7.48.1.5,OCSP No Revocation Checking
+1.3.132.0.34,ECDSA_P384
+1.3.132.0.35,ECDSA_P521
 1.3.133.16.840.9.84,x9-84
 1.3.133.16.840.9.84.0,x9-84-Module
 1.3.133.16.840.9.84.0.1,x9-84-Biometrics
@@ -276,6 +282,7 @@
 1.3.133.16.840.9.84.4.1.8,id-ibia-eCryp.
 1.3.133.16.840.9.84.4.1.9,id-ibia-FingerprintCardsAB
 1.3.133.16.840.9.84.4.2,x9-Owner
+1.3.133.16.840.63.0.2,ECDH_STD_SHA1_KDF
 1.3.14.2.26.5,sha
 1.3.14.3.2.1.1,rsa
 1.3.14.3.2.10,desMAC
@@ -497,6 +504,7 @@
 1.3.6.1.5.5.7.4.4,preferredSymmAlg
 1.3.6.1.5.5.7.4.5,caKeyUpdateInfo
 1.3.6.1.5.5.7.4.6,currentCRL
+1.3.6.1.5.5.7.6.2,NO_SIGN
 1.3.6.1.5.5.7.48.1,On-line Certificate Status Protocol
 1.3.6.1.5.5.7.48.2,Certification Authority Issuer
 1.3.6.1.5.5.8.1.1,HMAC-MD5
