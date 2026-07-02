@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -184,6 +184,23 @@ public class AsnTreeNode {
     }
     public Task UpdateNodeHeaderAsync(Func<AsnTreeNode, Boolean>? filter = null) {
         return Task.Run(() => UpdateNodeView(filter));
+    }
+    /// <summary>
+    /// Resets the status markers for the current node and all its child nodes.
+    /// </summary>
+    /// <remarks>
+    /// This method traverses the tree starting from the current node, resetting the <see cref="AsnNodeValue.Status"/>
+    /// property of each node to <see cref="AsnNodeStatus.Unchanged"/>. It ensures that all nodes in the subtree
+    /// are marked as unmodified.
+    /// </remarks>
+    public void ResetMarkers() {
+        resetMarkers(this);
+    }
+    static void resetMarkers(AsnTreeNode node) {
+        node.Value.Status = AsnNodeStatus.Unchanged;
+        foreach (AsnTreeNode child in node.Children) {
+            resetMarkers(child);
+        }
     }
 
     void updateNodeView(AsnTreeNode node, Func<AsnTreeNode, Boolean>? filter) {
