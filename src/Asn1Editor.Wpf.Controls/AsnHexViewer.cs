@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -34,10 +34,12 @@ public class AsnHexViewer : Control {
         }
     }
 
+    readonly TextRange[][] ranges = new TextRange[2][];
+    readonly HashSet<TextBoxBase> _rtbTextBoxes = [];
+
     RichTextBox[] panes;
 
     Boolean controlInitialized, scrollLocked;
-    readonly TextRange[][] ranges = new TextRange[2][];
 
     ScrollBar Scroller;
     RichTextBox HexAddrHeaderRtb, HexRawHeaderRtb, HexAsciiHeaderRtb;
@@ -324,19 +326,38 @@ public class AsnHexViewer : Control {
 
     BindableRichTextBox initializeBindableRtb(String resourceName) {
         var rtb = GetTemplateChild(resourceName) as BindableRichTextBox;
-        rtb!.Loaded += (sender, _) => subscribeScrollViewerEvent((TextBoxBase)sender);
+        rtb!.Loaded += (sender, _) => trySubscribeScrollViewerEvent((TextBoxBase)sender);
         rtb.Document = new FlowDocument();
 
         return rtb;
     }
-    void subscribeScrollViewerEvent(TextBoxBase textBoxBase) {
+    void trySubscribeScrollViewerEvent(TextBoxBase textBoxBase) {
         if (textBoxBase is null) {
             throw new ArgumentNullException(nameof(textBoxBase));
         }
-        if (textBoxBase.Template.FindName("PART_ContentHost", textBoxBase) is not ScrollViewer scroll) {
-            throw new ArgumentException("'PART_ContentHost' named element could not be found in current TextBoxBase instance.");
+
+        if (_rtbTextBoxes.Contains(textBoxBase)) {
+            return;
         }
-        scroll.ScrollChanged += onRtbScrollChanged;
+
+        if (textBoxBase.Template.FindName("PART_ContentHost", textBoxBase) is ScrollViewer scroll) {
+            _rtbTextBoxes.Add(textBoxBase);
+            scroll.ScrollChanged += onRtbScrollChanged;
+        } else {
+            // RTB is Collapsed — template not yet applied. Defer until it becomes visible.
+            textBoxBase.IsVisibleChanged -= onPaneIsVisibleChanged;
+            textBoxBase.IsVisibleChanged += onPaneIsVisibleChanged;
+        }
+    }
+
+    void onPaneIsVisibleChanged(Object sender, DependencyPropertyChangedEventArgs e) {
+        if (e.NewValue is not true) {
+            return; // only interested in Collapsed → Visible transitions
+        }
+        var rtb = (TextBoxBase)sender;
+        rtb.IsVisibleChanged -= onPaneIsVisibleChanged;
+        rtb.ApplyTemplate(); // force template application before querying PART_ContentHost
+        trySubscribeScrollViewerEvent(rtb);
     }
 
     #region Hex Colorizer
