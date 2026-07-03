@@ -7,7 +7,7 @@
     <LangVersion>latest</LangVersion>
     <RootNamespace>SysadminsLV.Asn1Editor.Controls</RootNamespace>
     <Title>Asn1Editor.Wpf.Controls</Title>
-    <Version>26.07.02</Version>
+    <Version>26.07.03</Version>
     <Authors>Vadims Podāns</Authors>
     <Copyright>Copyright © Sysadmins LV  2019 - 2026</Copyright>
     <Company>Sysadmins LV</Company>

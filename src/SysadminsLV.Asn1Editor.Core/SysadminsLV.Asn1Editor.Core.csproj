@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <Version>26.07.02</Version>
+    <Version>26.07.03</Version>
     <Authors>Vadims Podāns</Authors>
     <Copyright>Copyright © Sysadmins LV  2019 - 2026</Copyright>
     <Company>Sysadmins LV</Company>
