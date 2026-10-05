@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
@@ -39,7 +40,7 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         NewCommand = new RelayCommand(_ => DocumentHostManager.AddNewTab());
         OpenCommand = new AsyncCommand((_, _) => _documentFileService.OpenFileAsync());
         SaveCommand = new RelayCommand(o => _documentFileService.SaveFile(o as String), canPrintSave);
-        ReloadDocumentCommand = new AsyncCommand((_, _) => _documentFileService.ReloadActiveDocumentAsync());
+        ReloadDocumentCommand = new AsyncCommand(reloadTab, canReloadTab);
         DropFileCommand = new AsyncCommand((o, _) => _documentFileService.DropFileAsync(o as String));
         appCommands.ShowConverterWindow = new RelayCommand(showConverter);
         _sessionDocumentSource = new SessionDocumentSource(DocumentHostManager, UserSettings);
@@ -81,6 +82,13 @@ class MainWindowVM : ViewModelBase, IMainWindowVM {
         } else {
             _windowFactory.ShowConverterWindow(DocumentHostManager.SelectedTab.GetPrimaryDocument().AsnDocContext.RawData, _documentFileService.OpenRawAsync);
         }
+    }
+
+    async Task reloadTab(Object o, CancellationToken ct) {
+        await _documentFileService.ReloadActiveDocumentAsync();
+    }
+    Boolean canReloadTab(Object o) {
+        return SelectedTab?.GetPrimaryDocument().Path != null;
     }
 
     #region Write tab to file
