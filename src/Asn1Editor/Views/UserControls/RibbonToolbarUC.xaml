@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SysadminsLV.Asn1Editor.Views.UserControls.RibbonToolbarUC"
+<UserControl x:Class="SysadminsLV.Asn1Editor.Views.UserControls.RibbonToolbarUC"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -17,15 +17,15 @@
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu Label="File">
                     <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/info_32x32.png"
-                                           Header="About"
-                                           Command="{Binding AppCommands.ShowAboutCommand}"/>
+                                               Header="About"
+                                               Command="{Binding AppCommands.ShowAboutCommand}"/>
                     <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/license_32x32.png"
-                                           Header="License"
-                                           Command="{Binding AppCommands.ShowLicenseCommand}"/>
+                                               Header="License"
+                                               Command="{Binding AppCommands.ShowLicenseCommand}"/>
                     <RibbonSeparator/>
                     <RibbonApplicationMenuItem ImageSource="/Views/Images/Menu/exit_32x32.png"
-                                           Header="Exit"
-                                           Click="onCloseClick"/>
+                                               Header="Exit"
+                                               Click="onCloseClick"/>
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
             <RibbonTab Header="Main">
@@ -33,11 +33,11 @@
                     <RibbonButton LargeImageSource="/Views/Images/Menu/new_32x32.png"
                                   Label="New tab"
                                   Command="{Binding NewCommand}"
-                                  ToolTip="Create new tab"/>
+                                  ToolTip="Create new tab (Ctrl+N)"/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/open_32x32.png"
                                   Label="Open file"
                                   Command="{Binding OpenCommand}"
-                                  ToolTip="Open existing file"/>
+                                  ToolTip="Open existing file (Ctrl+O)"/>
                     <RibbonMenuButton LargeImageSource="/Views/Images/Menu/save_32x32.png"
                                       Label="Save"
                                       KeyTip="S">
@@ -58,6 +58,10 @@
                                         CommandParameter="1"
                                         ToolTip="Save current tab with different name"/>
                     </RibbonMenuButton>
+                    <RibbonButton LargeImageSource="/Views/Images/Menu/refresh_32x32.png"
+                                  Label="Reload"
+                                  Command="{Binding ReloadDocumentCommand}"
+                                  ToolTip="Reload current tab (F5)"/>
                 </RibbonGroup>
                 <RibbonGroup Header="Dialogs">
                     <RibbonToggleButton LargeImageSource="/Views/Images/Menu/hexview_32x32.png"
@@ -91,7 +95,7 @@
                     <RibbonButton LargeImageSource="/Views/Images/Menu/viewtext_32x32.png"
                                   Label="View node text"
                                   Command="{x:Static c:AsnTreeViewCommands.ShowNodeTextViewer}"
-                                  ToolTip="Edit selected node"/>
+                                  ToolTip="Edit selected node (Ctrl+E)"/>
                     <RibbonSeparator/>
                     <RibbonButton LargeImageSource="/Views/Images/Menu/newnode_32x32.png"
                               Label="New node"

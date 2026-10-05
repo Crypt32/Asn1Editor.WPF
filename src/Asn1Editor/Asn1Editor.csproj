@@ -62,6 +62,7 @@
     <Resource Include="Views\Images\Menu\print_16x16.png" />
     <Resource Include="Views\Images\Menu\printpreview_16x16.png" />
     <Resource Include="Views\Images\Menu\redo_16x16.png" />
+    <Resource Include="Views\Images\Menu\refresh_32x32.png" />
     <Resource Include="Views\Images\Menu\save_16x16.png" />
     <Resource Include="Views\Images\Menu\save_32x32.png" />
     <Resource Include="Views\Images\Menu\saveall_16x16.png" />
