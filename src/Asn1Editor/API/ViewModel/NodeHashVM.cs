@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,7 +8,7 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Core.Tree;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 // The idea is plain and simple: instead of creating separate bindings to string properties,

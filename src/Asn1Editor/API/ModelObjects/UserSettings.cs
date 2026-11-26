@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
 

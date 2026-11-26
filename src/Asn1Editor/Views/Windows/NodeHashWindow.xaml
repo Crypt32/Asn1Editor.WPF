@@ -1,15 +1,14 @@
-﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.NodeHashWindow"
+<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.NodeHashWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
-        xmlns:commands="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;assembly=Wpf.OfficeTheme"
         xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
-        commands:DialogCloser.DialogResult="{Binding DialogResult}"
+        xmlns:wpf="http://schemas.sysadmins.lv/wpf"
+        wpf:DialogCloser.DialogResult="{Binding DialogResult}"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:NodeHashVM}"
-        Background="{StaticResource PanelBackgroundBrush}"
+        Background="{StaticResource Panel.BgBrush}"
         Foreground="{StaticResource Panel.FgBrush}"
         FontSize="{Binding UserSettings.FontSize, Mode=OneTime}"
         Title="Node Hashes"
@@ -28,13 +27,13 @@
     <DockPanel>
         <StackPanel DockPanel.Dock="Top"
                     Orientation="Horizontal"
-                    behaviors:MarginSetter.Margin="5">
+                    wpf:MarginSetter.Margin="5">
             <RadioButton GroupName="HashType" IsChecked="{Binding IsHexChecked}" Content="HEX"/>
             <RadioButton GroupName="HashType" IsChecked="{Binding IsBase64Checked}" Content="Base64"/>
         </StackPanel>
         <Border DockPanel.Dock="Bottom"
                 BorderThickness="0"
-                Background="{StaticResource PanelBackgroundBrush}">
+                Background="{StaticResource Panel.BgBrush}">
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="Close"
@@ -44,7 +43,7 @@
                         Command="{Binding CloseCommand}"/>
             </StackPanel>
         </Border>
-        <Grid behaviors:MarginSetter.Margin="3">
+        <Grid wpf:MarginSetter.Margin="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

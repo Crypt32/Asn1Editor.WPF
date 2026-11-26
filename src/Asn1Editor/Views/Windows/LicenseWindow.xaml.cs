@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using SysadminsLV.WPF.OfficeTheme.Toolkit;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using SysadminsLV.WPF.Dialogs;
+using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.Views.Windows;
 

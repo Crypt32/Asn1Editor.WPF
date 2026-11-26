@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
@@ -9,7 +9,7 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 class OidEditorVM : ViewModelBase, IOidEditorVM {

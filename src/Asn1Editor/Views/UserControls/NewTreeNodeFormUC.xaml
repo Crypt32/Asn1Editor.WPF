@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SysadminsLV.Asn1Editor.Views.UserControls.NewTreeNodeFormUC"
+<UserControl x:Class="SysadminsLV.Asn1Editor.Views.UserControls.NewTreeNodeFormUC"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,9 +6,8 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:asn1Parser="clr-namespace:SysadminsLV.Asn1Parser;assembly=SysadminsLV.Asn1Parser"
              xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
-             xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
-             xmlns:controls="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
              xmlns:controls1="clr-namespace:SysadminsLV.Asn1Editor.Controls;assembly=SysadminsLV.Asn1Editor.Controls"
+             xmlns:wpf="http://schemas.sysadmins.lv/wpf"
              d:DataContext="{d:DesignInstance vm:NewAsnNodeEditorVM}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -23,7 +22,7 @@
     <StackPanel>
         <TextBlock Text="Specify node type:"/>
         <Border BorderThickness="1"
-                BorderBrush="{StaticResource PanelBorderBrush}"
+                BorderBrush="{StaticResource Panel.BorderBrush}"
                 Margin="0,3"/>
         <RadioButton x:Name="FormRadio"
                      GroupName="NodeOption"
@@ -87,7 +86,7 @@
                     <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
                 </Style>
             </GroupBox.Resources>
-            <Grid behaviors:MarginSetter.Margin="3">
+            <Grid wpf:MarginSetter.Margin="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
