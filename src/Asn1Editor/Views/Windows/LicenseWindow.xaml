@@ -1,4 +1,4 @@
-﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.LicenseWindow"
+<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.LicenseWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,7 @@
         Icon="/Views/Images/Menu/license_16x16.png"
         ShowInTaskbar="False"
         ResizeMode="NoResize"
-        Background="{StaticResource PanelBackgroundBrush}"
+        Background="{StaticResource Panel.BgBrush}"
         WindowStartupLocation="CenterOwner"
         Height="480"
         Width="640">
@@ -18,7 +18,7 @@
     </Window.InputBindings>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom">
-            <Border BorderBrush="{StaticResource PanelBorderBrush}"
+            <Border BorderBrush="{StaticResource Panel.BorderBrush}"
                     BorderThickness="0,1,0,0"/>
             <Button Content="Close"
                     Width="70"

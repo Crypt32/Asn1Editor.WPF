@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
-using SysadminsLV.WPF.OfficeTheme.Toolkit.Commands;
+using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 

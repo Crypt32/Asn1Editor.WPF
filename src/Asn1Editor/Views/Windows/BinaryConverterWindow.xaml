@@ -1,14 +1,14 @@
-﻿<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.BinaryConverterWindow"
+<Window x:Class="SysadminsLV.Asn1Editor.Views.Windows.BinaryConverterWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
         xmlns:vm="clr-namespace:SysadminsLV.Asn1Editor.API.ViewModel"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:wpf="http://schemas.sysadmins.lv/wpf"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:BinaryConverterVM}"
         Title="Binary Converter"
-        Background="{StaticResource PanelBackgroundBrush}"
+        Background="{StaticResource Panel.BgBrush}"
         FontSize="{Binding UserSettings.FontSize}"
         ResizeMode="CanResize"
         WindowStartupLocation="CenterOwner"
@@ -90,7 +90,7 @@
             </ToolBar>
             <ToolBar>
                 <TextBlock Text="Encoding: "
-                           Foreground="Navy"
+                           Foreground="{StaticResource Panel.FgBrush}"
                            VerticalAlignment="Center"
                            Margin="3,0,0,0"/>
                 <ComboBox ItemsSource="{Binding EncodingTypesView}"
@@ -98,30 +98,16 @@
                           DisplayMemberPath="DisplayName"
                           MinWidth="170">
                     <ComboBox.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.HeaderTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="0,1"
-                                            BorderBrush="{StaticResource Panel.Border.LightBrush}"
-                                            Background="{StaticResource PanelBackgroundBrush}">
-                                        <TextBlock Text="{Binding Path=Name}"
-                                                   Margin="5"
-                                                   FontWeight="Bold"
-                                                   Foreground="{StaticResource Panel.FgBrush}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </GroupStyle.HeaderTemplate>
-                            
-                        </GroupStyle>
+                        <GroupStyle/>
                     </ComboBox.GroupStyle>
                 </ComboBox>
                 <Separator/>
                 <Button Content="Validate"
-                        Command="{Binding ValidateCommand}"></Button>
+                        Command="{Binding ValidateCommand}"/>
                 <Separator/>
                 <Button Content="Validate &amp; Decode"
                         Command="{Binding ValidateCommand}"
-                        CommandParameter="Decode"></Button>
+                        CommandParameter="Decode"/>
             </ToolBar>
         </ToolBarTray>
         <StatusBar DockPanel.Dock="Bottom">
@@ -130,11 +116,11 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="Ln: "><Run Text="{Binding ElementName=txt, Path=(behaviors:CaretBehavior.LineIndex)}"/></TextBlock>
+                <TextBlock Text="Ln: "><Run Text="{Binding ElementName=txt, Path=(wpf:CaretBehavior.LineIndex)}"/></TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <TextBlock Text="Col: "><Run Text="{Binding ElementName=txt, Path=(behaviors:CaretBehavior.CaretIndex)}"/></TextBlock>
+                <TextBlock Text="Col: "><Run Text="{Binding ElementName=txt, Path=(wpf:CaretBehavior.CaretIndex)}"/></TextBlock>
             </StatusBarItem>
             <Separator/>
             <StatusBarItem HorizontalAlignment="Right">
@@ -147,7 +133,7 @@
                  UndoLimit="10"
                  MinWidth="{Binding TextBoxWidth}"
                  Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                 behaviors:CaretBehavior.ObserveCaret="True"
+                 wpf:CaretBehavior.ObserveCaret="True"
                  FontFamily="Consolas"
                  TextWrapping="Wrap"
                  AcceptsReturn="True"
