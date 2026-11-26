@@ -3,8 +3,9 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="SysadminsLV.Asn1Parser" Version="1.3.0" />
-    <PackageVersion Include="Unity" Version="5.11.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageVersion Include="SysadminsLV.Asn1Parser" Version="1.3.0" />
+    <PackageVersion Include="SysadminsLV.WPF" Version="2.0.0-preview.3" />
+    <PackageVersion Include="Unity" Version="5.11.10" />
   </ItemGroup>
 </Project>
