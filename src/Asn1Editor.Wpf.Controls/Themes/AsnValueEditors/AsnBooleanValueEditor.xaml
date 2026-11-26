@@ -1,12 +1,12 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme"
-                    xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls">
+                    xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls"
+                    xmlns:wpf="http://schemas.sysadmins.lv/wpf">
     <Style TargetType="c:AsnBooleanValueEditor">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="c:AsnBooleanValueEditor">
-                    <StackPanel behaviors:MarginSetter.Margin="3"
+                    <StackPanel wpf:MarginSetter.Margin="3"
                                 VerticalAlignment="Center">
                         <CheckBox x:Name="MainCheck"
                                   IsThreeState="False"

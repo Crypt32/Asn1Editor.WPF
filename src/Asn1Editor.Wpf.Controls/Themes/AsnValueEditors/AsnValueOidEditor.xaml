@@ -1,7 +1,7 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:c="clr-namespace:SysadminsLV.Asn1Editor.Controls"
-                    xmlns:behaviors="clr-namespace:SysadminsLV.WPF.OfficeTheme.Toolkit.Behaviors;assembly=Wpf.OfficeTheme">
+                    xmlns:wpf="http://schemas.sysadmins.lv/wpf">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="AsnValueEditorResources.xaml"/>
     </ResourceDictionary.MergedDictionaries>
@@ -12,7 +12,7 @@
                 <ControlTemplate TargetType="c:AsnOidValueEditor">
                     <DockPanel>
                         <Grid DockPanel.Dock="Bottom"
-                              behaviors:MarginSetter.Margin="3">
+                              wpf:MarginSetter.Margin="3">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
@@ -45,7 +45,7 @@
                             <TextBlock Grid.Column="1"
                                        Grid.Row="2">
                                 <Hyperlink x:Name="PART_Hyperlink"
-                                           Foreground="Navy"
+                                           Foreground="{StaticResource Panel.FgBrush}"
                                            NavigateUri="{Binding Path=OidInfo.ExternalUri, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
                                     <Run Text="{Binding Path=OidInfo.ExternalUri, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"/>
                                 </Hyperlink>

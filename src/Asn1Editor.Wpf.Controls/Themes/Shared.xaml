@@ -1,13 +1,11 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:c="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Wpf.OfficeTheme;component/UI/OfficeTheme.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/SysadminsLV.WPF;component/Themes/OfficeBlue.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
     <Style TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
         <Setter Property="Padding" Value="0"/>
     </Style>
-    <Style TargetType="c:BindableRichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}"/>
 </ResourceDictionary>
