@@ -14,7 +14,5 @@
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnTreeView.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AutoSizeTextBox.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/BusyIndicator.xaml"/>
-        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/NotificationItem.xaml"/>
-        <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/NotificationPanel.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

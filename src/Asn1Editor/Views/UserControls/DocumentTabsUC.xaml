@@ -53,25 +53,25 @@
                     <DockPanel.InputBindings>
                         <KeyBinding Key="Escape" Command="{Binding ExitCompareModeCommand}"/>
                     </DockPanel.InputBindings>
-                    <c:NotificationPanel DockPanel.Dock="Top">
-                        <c:NotificationItem Kind="Warning"
-                                            Icon="/Views/Images/Menu/info_16x16.png"
-                                            IsDismissable="False"
-                                            Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <wpf:NotificationPanel DockPanel.Dock="Top">
+                        <wpf:NotificationItem Kind="Warning"
+                                              Icon="/Views/Images/Menu/info_16x16.png"
+                                              IsDismissable="False"
+                                              Visibility="{Binding IsCompareMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <TextBlock FontSize="{Binding UserSettings.FontSize}">
                                 <Run Text="You are in a compare mode. Click"/>
                                 <Hyperlink Command="{Binding ExitCompareModeCommand}">Close</Hyperlink>
                                 <Run Text="or press Esc button to exit from compare mode."/>
                             </TextBlock>
-                        </c:NotificationItem>
-                        <c:NotificationItem Kind="Warning"
-                                            Icon="/Views/Images/Menu/info_16x16.png"
-                                            IsDismissable="False"
-                                            Visibility="{Binding Left.IsEnabled, Converter={StaticResource BooleanToVisibilityReversedConverter}}">
+                        </wpf:NotificationItem>
+                        <wpf:NotificationItem Kind="Warning"
+                                              Icon="/Views/Images/Menu/info_16x16.png"
+                                              IsDismissable="False"
+                                              Visibility="{Binding Left.IsEnabled, Converter={StaticResource BooleanToVisibilityReversedConverter}}">
                             <TextBlock TextWrapping="Wrap"
                                        Text="This document is opened in another compare mode. Editing functionality is disabled. Exit from compare mode first."/>
-                        </c:NotificationItem>
-                    </c:NotificationPanel>
+                        </wpf:NotificationItem>
+                    </wpf:NotificationPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>

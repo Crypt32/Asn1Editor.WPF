@@ -54,9 +54,9 @@
 
         <DataTemplate x:Key="OidEditorTemplate">
             <c:AsnOidValueEditor d:DataContext="{d:DesignInstance vm:AsnValueEditorContext}"
-                            InputValue="{Binding OriginalEncodedValue, Mode=OneTime}"
-                            Result="{Binding Result, Mode=OneWayToSource}"
-                            ValidateCommand="{Binding ValidateCommand, Mode=OneWayToSource}"/>
+                                 InputValue="{Binding OriginalEncodedValue, Mode=OneTime}"
+                                 Result="{Binding Result, Mode=OneWayToSource}"
+                                 ValidateCommand="{Binding ValidateCommand, Mode=OneWayToSource}"/>
         </DataTemplate>
 
         <DataTemplate x:Key="UtcTimeTemplate">
@@ -135,9 +135,9 @@
                                 BorderThickness="0,1,0,0">
             <DockPanel>
                 <!-- Error Display -->
-                <c:NotificationPanel DockPanel.Dock="Top"
+                <behaviors:NotificationPanel DockPanel.Dock="Top"
                                      Visibility="{Binding EditorContext.Result.IsValid, Converter={StaticResource BooleanToVisibilityReversedConverter}, FallbackValue=Collapsed}">
-                    <c:NotificationItem Kind="Danger" IsDismissable="False">
+                    <behaviors:NotificationItem Kind="Danger" IsDismissable="False">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding EditorContext.Result.ErrorMessage, FallbackValue={x:Null}}"
                                        Foreground="Black"/>
@@ -145,8 +145,8 @@
                                 <Hyperlink Command="{Binding EditorContext.ValidateCommand, FallbackValue={x:Null}}">Refresh</Hyperlink>
                             </TextBlock>
                         </StackPanel>
-                    </c:NotificationItem>
-                </c:NotificationPanel>
+                    </behaviors:NotificationItem>
+                </behaviors:NotificationPanel>
                 <!-- Mode Selector -->
                 <StackPanel DockPanel.Dock="Top"
                             Visibility="{Binding EditorContext.IsHexSwitchEnabled, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
