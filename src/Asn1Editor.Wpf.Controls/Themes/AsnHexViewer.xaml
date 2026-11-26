@@ -1,22 +1,23 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:wpflib="clr-namespace:SysadminsLV.WPF.OfficeTheme.Controls;assembly=Wpf.OfficeTheme"
-                    xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls">
+                    xmlns:controls="clr-namespace:SysadminsLV.Asn1Editor.Controls"
+                    xmlns:wpf="http://schemas.sysadmins.lv/wpf">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Shared.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="RtbHeaderStyle" TargetType="RichTextBox" BasedOn="{StaticResource {x:Type RichTextBox}}">
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Background" Value="#D5E7FE"/>
-        <Setter Property="Foreground" Value="Navy"/>
+        <Setter Property="Foreground" Value="{StaticResource Panel.FgBrush}"/>
         <Setter Property="IsEnabled" Value="False"/>
         <Setter Property="FontFamily" Value="Consolas"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="ContextMenu" Value="{x:Null}"/>
         <Setter Property="IsUndoEnabled" Value="False"/>
     </Style>
-    <Style x:Key="RtbPaneStyle" TargetType="wpflib:BindableRichTextBox" BasedOn="{StaticResource {x:Type wpflib:BindableRichTextBox}}">
-        <Setter Property="BorderBrush" Value="{StaticResource Panel.Border.LightBrush}"/>
+    <Style x:Key="RtbPaneStyle" TargetType="wpf:BindableRichTextBox" BasedOn="{StaticResource {x:Type TextBoxBase}}">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Panel.BorderLightBrush}"/>
         <Setter Property="BorderThickness" Value="0,0,1,0"/>
         <Setter Property="Foreground" Value="#FFA0A0A0"/>
         <Setter Property="IsReadOnly" Value="True"/>
@@ -70,18 +71,18 @@
                 <ScrollBar x:Name="PART_ScrollBar"
                            DockPanel.Dock="Right"
                            Visibility="Visible"/>
-                <wpflib:BindableRichTextBox x:Name="PART_AddressBody"
-                                            Style="{StaticResource RtbPaneStyle}"
-                                            Visibility="{TemplateBinding ShowAddressPane, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                            Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
-                <wpflib:BindableRichTextBox x:Name="PART_HexBody"
-                                            Style="{StaticResource RtbPaneStyle}"
-                                            ObserveCaret="True"
-                                            Width="{Binding ElementName=PART_HexHeader, Path=Width}"/>
-                <wpflib:BindableRichTextBox x:Name="PART_AsciiBody"
-                                            Style="{StaticResource RtbPaneStyle}"
-                                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                            Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
+                <wpf:BindableRichTextBox x:Name="PART_AddressBody"
+                                         Style="{StaticResource RtbPaneStyle}"
+                                         Visibility="{TemplateBinding ShowAddressPane, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         Width="{Binding ElementName=PART_AddressHeader, Path=Width}"/>
+                <wpf:BindableRichTextBox x:Name="PART_HexBody"
+                                         Style="{StaticResource RtbPaneStyle}"
+                                         ObserveCaret="True"
+                                         Width="{Binding ElementName=PART_HexHeader, Path=Width}"/>
+                <wpf:BindableRichTextBox x:Name="PART_AsciiBody"
+                                         Style="{StaticResource RtbPaneStyle}"
+                                         Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type controls:AsnHexViewer}}, Path=ShowAsciiPane, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         Width="{Binding ElementName=PART_AsciiHeader, Path=Width}"/>
             </DockPanel>
         </DockPanel>
         <ControlTemplate.Triggers>
@@ -95,7 +96,7 @@
 
     <Style TargetType="controls:AsnHexViewer">
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="#add1ff"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Panel.BorderLightBrush}"/>
         <Setter Property="IsColoringEnabled" Value="True"/>
         <Setter Property="TagOctetBrush" Value="Red"/>
         <Setter Property="TagLengthOctetBrush" Value="Green"/>

@@ -11,7 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using SysadminsLV.Asn1Editor.Controls.Extensions;
 using SysadminsLV.Asn1Editor.Core.Tree;
-using SysadminsLV.WPF.OfficeTheme.Controls;
+using SysadminsLV.WPF.Controls;
 
 namespace SysadminsLV.Asn1Editor.Controls;
 

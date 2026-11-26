@@ -1,5 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/SysadminsLV.WPF;component/Themes/OfficeBlue.xaml"/>
         <!-- ASN Value Editors -->
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnBooleanValueEditor.xaml"/>
         <ResourceDictionary Source="/SysadminsLV.Asn1Editor.Controls;component/Themes/AsnValueEditors/AsnBitStringEditor.xaml"/>

@@ -22,17 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SysadminsLV.Asn1Parser"/>
+    <None Remove="Asn1Editor.Wpf.Controls.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SysadminsLV.Asn1Parser" />
+    <PackageReference Include="SysadminsLV.WPF" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SysadminsLV.Asn1Editor.Core\SysadminsLV.Asn1Editor.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Wpf.OfficeTheme">
-      <HintPath>..\Asn1Editor\_ExternalReferences\Wpf.OfficeTheme.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
