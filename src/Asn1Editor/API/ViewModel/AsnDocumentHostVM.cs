@@ -4,6 +4,7 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils.WPF;
+using SysadminsLV.WPF.Mvvm;
 using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -28,10 +29,7 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
 
     public Boolean IsScrollbarSynchronized {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     } = true;
 
 
@@ -50,17 +48,11 @@ public class AsnDocumentHostVM : ViewModelBase, IAsnDocumentHost {
     }
     public Asn1DocumentVM? Right {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
     public Boolean IsCompareMode {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
 
     void refreshHeader() {

@@ -72,9 +72,7 @@ public class Asn1DocumentVM : AsyncViewModel {
     public Boolean IsModified {
         get;
         set {
-            if (field != value) {
-                field = value;
-                OnPropertyChanged();
+            if (SetField(ref field, value)) {
                 OnPropertyChanged(nameof(Header));
                 if (!field && AsnDocContext.Tree.Count > 0) {
                     AsnDocContext.Tree[0].ResetMarkers();
@@ -84,17 +82,11 @@ public class Asn1DocumentVM : AsyncViewModel {
     }
     public String ProgressText {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     } = String.Empty;
     public Boolean IsEnabled {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     } = true;
 
     public Task RefreshTreeView(Func<AsnTreeNode, Boolean>? filter = null) {

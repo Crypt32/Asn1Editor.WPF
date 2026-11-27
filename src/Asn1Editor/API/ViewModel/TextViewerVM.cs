@@ -6,6 +6,7 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Core.AsnFormatters;
 using SysadminsLV.Asn1Editor.Core.Tree;
+using SysadminsLV.WPF.Mvvm;
 using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -42,17 +43,11 @@ class TextViewerVM : ViewModelBase, ITextViewerVM {
 
     public String Text {
         get => text;
-        set {
-            text = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref text, value);
     }
     public String CurrentLength {
         get => currentLengthStr;
-        set {
-            currentLengthStr = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref currentLengthStr, value);
     }
     public Boolean CertutilViewChecked {
         get => certutilChecked;

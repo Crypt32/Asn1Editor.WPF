@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows.Input;
 using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.Mvvm;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -56,10 +57,7 @@ public class AsnValueEditorContext : ViewModelBase {
     /// </remarks>
     public Boolean IsHexSwitchEnabled {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
     /// <summary>
     /// Gets or sets a value indicating whether hex mode is forced.
@@ -78,10 +76,7 @@ public class AsnValueEditorContext : ViewModelBase {
     /// </remarks>
     public ICommand? ValidateCommand {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
     /// <summary>
     /// Gets or sets the result of the ASN.1 tag validation process.
@@ -103,10 +98,8 @@ public class AsnValueEditorContext : ViewModelBase {
     /// </remarks>
     public AsnValueValidationResult? Result {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
+
     }
 
     /// <summary>

@@ -5,6 +5,7 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.Utils;
 using SysadminsLV.Asn1Editor.Core.Tree;
+using SysadminsLV.WPF.Mvvm;
 using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -35,10 +36,7 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
     /// </summary>
     public AsnValueEditorContext? EditorContext {
         get;
-        private set {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set => SetField(ref field, value);
     }
 
     /// <summary>
@@ -47,9 +45,7 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
     public Boolean ForceHexMode {
         get;
         set {
-            if (field != value) {
-                field = value;
-                OnPropertyChanged();
+            if (SetField(ref field, value)) {
                 RefreshEditorContext();
             }
         }
@@ -60,10 +56,7 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
     /// </summary>
     public String TagDetails {
         get;
-        private set {
-            field = value;
-            OnPropertyChanged();
-        }
+        private set => SetField(ref field, value);
     }
 
     /// <summary>
@@ -71,10 +64,7 @@ class AsnValueEditorVM : ViewModelBase, IAsnValueEditorVM {
     /// </summary>
     public Boolean? DialogResult {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
 
     /// <summary>

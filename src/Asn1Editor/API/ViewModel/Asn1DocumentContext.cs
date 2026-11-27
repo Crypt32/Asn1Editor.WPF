@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.Core.Tree;
+using SysadminsLV.WPF.Mvvm;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -54,10 +55,7 @@ class Asn1DocumentContext : ViewModelBase, IAsn1DocumentContext {
     /// </summary>
     public AsnTreeNode? SelectedNode {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
 
     public UserSettings UserSettings { get; }

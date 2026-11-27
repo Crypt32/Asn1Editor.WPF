@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +12,7 @@ using SysadminsLV.Asn1Editor.Controls;
 using SysadminsLV.Asn1Editor.Core.ASN;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.Mvvm;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 

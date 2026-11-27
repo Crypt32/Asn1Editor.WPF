@@ -9,6 +9,7 @@ using System.Windows.Input;
 using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.Mvvm;
 using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -74,39 +75,26 @@ class OidEditorVM : ViewModelBase, IOidEditorVM {
 
     public Boolean? DialogResult {
         get => dialogResult;
-        set {
-            dialogResult = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref dialogResult, value);
     }
     public String OidValue {
         get => oidValue;
-        set {
-            oidValue = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref oidValue, value);
     }
     public String FriendlyName {
         get => friendlyName;
-        set {
-            friendlyName = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref friendlyName, value);
     }
     public String SearchText {
         get => searchText;
         set {
-            searchText = value;
-            OnPropertyChanged();
+            SetField(ref searchText, value);
             OidView.Refresh();
         }
     }
     public OidDto? SelectedItem {
         get => selectedItem;
-        set {
-            selectedItem = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref selectedItem, value);
     }
     public OidSearchScope SearchScope {
         get => searchScope;

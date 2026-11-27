@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Input;
+using SysadminsLV.WPF.Mvvm;
 using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
@@ -13,9 +14,6 @@ public abstract class ClosableWindowVM : ViewModelBase {
 
     public Boolean? DialogResult {
         get;
-        set {
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
 }
