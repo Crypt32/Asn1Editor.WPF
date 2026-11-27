@@ -1,5 +1,8 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/SysadminsLV.WPF;component/Themes/OfficeBlue.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
     <Style x:Key="AsnValueEditorLargeTextBoxStyle" TargetType="TextBox" BasedOn="{x:Null}">
         <Setter Property="FontFamily" Value="Consolas"/>
         <Setter Property="BorderThickness" Value="0"/>
