@@ -136,7 +136,7 @@
             <DockPanel>
                 <!-- Error Display -->
                 <behaviors:NotificationPanel DockPanel.Dock="Top"
-                                     Visibility="{Binding EditorContext.Result.IsValid, Converter={StaticResource BooleanToVisibilityReversedConverter}, FallbackValue=Collapsed}">
+                                             Visibility="{Binding EditorContext.Result.IsValid, Converter={StaticResource BooleanToVisibilityReversedConverter}, FallbackValue=Collapsed}">
                     <behaviors:NotificationItem Kind="Danger" IsDismissable="False">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding EditorContext.Result.ErrorMessage, FallbackValue={x:Null}}"
@@ -150,18 +150,15 @@
                 <!-- Mode Selector -->
                 <StackPanel DockPanel.Dock="Top"
                             Visibility="{Binding EditorContext.IsHexSwitchEnabled, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
-                            Orientation="Horizontal"
-                            MinHeight="30"
-                            Margin="10,5">
+                            MinHeight="30">
                     <CheckBox Content="Force Hex Mode" 
                               IsChecked="{Binding ForceHexMode}"
+                              Margin="10"
                               VerticalAlignment="Center"/>
+                    <!-- Separator -->
+                    <Border BorderBrush="{StaticResource Panel.BorderBrush}"
+                            BorderThickness="0,0,0,1"/>
                 </StackPanel>
-                <!-- Separator -->
-                <Border DockPanel.Dock="Top"
-                        Visibility="{Binding EditorContext.IsHexSwitchEnabled, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
-                        BorderBrush="{StaticResource Panel.BorderBrush}"
-                        BorderThickness="0,1,0,0"/>
 
                 <!-- Dynamic Editor Content -->
                 <ContentControl Content="{Binding EditorContext}"
