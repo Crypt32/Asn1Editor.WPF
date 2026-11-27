@@ -22,10 +22,8 @@ class BinaryConverterVM : AsyncViewModel {
     readonly IUIMessenger _uiMessenger;
     readonly String master = new('0', 78);
     readonly Func<Byte[], Task>? _action;
-    Double width;
-    String? text, path;
+    String? path;
     EncodingTypeEntry? selectedEncoding;
-    Boolean canCheck;
 
     public BinaryConverterVM(IUIMessenger uiMessenger, UserSettings options, Func<Byte[], Task>? action) {
         _uiMessenger = uiMessenger;
@@ -50,44 +48,32 @@ class BinaryConverterVM : AsyncViewModel {
     public UserSettings UserSettings { get; }
 
     public String? Text {
-        get => text;
+        get;
         set {
-            text = value?.Trim();
+            field = value?.Trim();
             OnPropertyChanged();
         }
     }
     public String? Path {
         get => path;
-        set {
-            path = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref path, value);
     }
     public Double TextBoxWidth {
-        get => width;
-        set {
-            width = value;
-            OnPropertyChanged();
-        }
+        get;
+        set => SetField(ref field, value);
     }
     public Boolean CanCheck {
-        get => canCheck;
-        set {
-            canCheck = value;
-            OnPropertyChanged();
-        }
+        get;
+        set => SetField(ref field, value);
     }
     public EncodingTypeEntry? SelectedEncoding {
         get => selectedEncoding;
         set {
-            if (selectedEncoding == value) {
-                return;
+            if (SetField(ref selectedEncoding, value)) {
+                if (selectedEncoding is not null) {
+                    Text = AsnFormatter.BinaryToString(RawData.ToArray(), selectedEncoding.EncodingType);
+                }
             }
-            selectedEncoding = value;
-            if (selectedEncoding is not null) {
-                Text = AsnFormatter.BinaryToString(RawData.ToArray(), selectedEncoding.EncodingType);
-            }
-            OnPropertyChanged();
         }
     }
     public ObservableList<Byte> RawData { get; } = new(true, false);
@@ -183,7 +169,7 @@ class BinaryConverterVM : AsyncViewModel {
         OnPropertyChanged(nameof(SelectedEncoding));
         if (SelectedEncoding is null) {
             _uiMessenger.ShowError("Input text cannot be validated.");
-            
+
             return;
         }
         RawData.AddRange(HexUtility.AnyToBinary(Text));
@@ -241,7 +227,7 @@ class BinaryConverterVM : AsyncViewModel {
         if (RawData.Count == 0) {
             return;
         }
-        
+
         SelectedEncoding = EncodingTypes[0];
     }
     public void SetBytes(IEnumerable<Byte> rawData) {

@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Xml.Serialization;
-using SysadminsLV.Asn1Editor.API.ViewModel;
 using SysadminsLV.Asn1Editor.Core.Tree;
 using SysadminsLV.Asn1Parser;
+using SysadminsLV.WPF.Mvvm;
 using SysadminsLV.WPF.Mvvm.Commands;
 
 namespace SysadminsLV.Asn1Editor.API.ModelObjects;
@@ -415,13 +415,7 @@ public class AsnIntegerViewOptions : ViewModelBase, IAsnIntegerViewOptions {
     [XmlElement("integerAsInteger")]
     public Boolean IntegerAsInteger {
         get;
-        set {
-            if (value == field) {
-                return;
-            }
-            field = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref field, value);
     }
 }
 
@@ -429,22 +423,12 @@ public class SessionRecoveryOptions : ViewModelBase {
     [XmlElement("enableAutomaticRecovery")]
     public Boolean EnableAutomaticRecovery {
         get;
-        set {
-            if (value != field) {
-                field = value;
-                OnPropertyChanged();
-            }
-        }
+        set => SetField(ref field, value);
     } = true;
     [XmlElement("backupIntervalInSeconds")]
     public Int32 BackupIntervalInSeconds {
         get;
-        set {
-            if (value != field) {
-                field = value;
-                OnPropertyChanged();
-            }
-        }
+        set => SetField(ref field, value);
     } = 60;
 }
 

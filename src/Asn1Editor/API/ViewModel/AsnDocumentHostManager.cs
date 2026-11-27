@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -7,6 +7,7 @@ using SysadminsLV.Asn1Editor.API.Interfaces;
 using SysadminsLV.Asn1Editor.API.ModelObjects;
 using SysadminsLV.Asn1Editor.API.SessionState;
 using SysadminsLV.Asn1Editor.Core.Tree;
+using SysadminsLV.WPF.Mvvm;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
 
@@ -61,12 +62,7 @@ class AsnDocumentHostManager : ViewModelBase, ISessionTabHost, IHasAsnDocumentTa
     /// </remarks>
     public AsnDocumentHostVM? SelectedTab {
         get;
-        set {
-            if (!Equals(field, value)) {
-                field = value;
-                OnPropertyChanged();
-            }
-        }
+        set => SetField(ref field, value);
     }
     /// <inheritdoc />
     public Task RefreshTabs(Func<AsnTreeNode, Boolean>? filter = null) {

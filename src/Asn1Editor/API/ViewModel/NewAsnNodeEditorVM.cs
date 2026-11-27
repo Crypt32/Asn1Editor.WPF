@@ -31,11 +31,9 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     public Boolean FormTagChecked {
         get => formTagChecked;
         set {
-            formTagChecked = value;
-            OnPropertyChanged();
-            if (formTagChecked) {
-                DecimalTagText = null;
-                HexTagText = null;
+            if (SetField(ref formTagChecked, value) && formTagChecked) {
+                DecimalTagText = String.Empty;
+                HexTagText = String.Empty;
                 updateResultTagInfo();
             }
         }
@@ -43,22 +41,18 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     public Boolean DecimalTagChecked {
         get => decimalTagChecked;
         set {
-            decimalTagChecked = value;
-            OnPropertyChanged();
-            if (decimalTagChecked) {
+            if (SetField(ref decimalTagChecked, value) && decimalTagChecked) {
                 DecimalTagText = "48";
-                HexTagText = null;
+                HexTagText = String.Empty;
             }
         }
     }
     public Boolean HexTagChecked {
         get => hexTagChecked;
         set {
-            hexTagChecked = value;
-            OnPropertyChanged();
-            if (hexTagChecked) {
+            if (SetField(ref hexTagChecked, value) && hexTagChecked) {
                 HexTagText = "30";
-                DecimalTagText = null;
+                DecimalTagText = String.Empty;
             }
         }
     }
@@ -66,82 +60,73 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
     public Boolean ConstructedChecked {
         get => clsConstructedChecked;
         set {
-            clsConstructedChecked = value;
-            OnPropertyChanged();
-            updateResultTagInfo();
+            if (SetField(ref clsConstructedChecked, value)) {
+                updateResultTagInfo();
+            }
         }
     }
     public Boolean SpecificChecked {
         get => clsSpecificChecked;
         set {
-            clsSpecificChecked = value;
-            OnPropertyChanged();
-            updateResultTagInfo();
+            if (SetField(ref clsSpecificChecked, value)) {
+                updateResultTagInfo();
+            }
         }
     }
     public Boolean ApplicationChecked {
         get => clsApplicationChecked;
         set {
-            clsApplicationChecked = value;
-            OnPropertyChanged();
-            updateResultTagInfo();
+            if (SetField(ref clsApplicationChecked, value)) {
+                updateResultTagInfo();
+            }
         }
     }
     public Boolean PrivateChecked {
         get => clsPrivateChecked;
         set {
-            clsPrivateChecked = value;
-            OnPropertyChanged();
-            updateResultTagInfo();
+            if (SetField(ref clsPrivateChecked, value)) {
+                updateResultTagInfo();
+            }
         }
     }
 
     public Asn1Type SelectedType {
         get => selectedType;
         set {
-            selectedType = value;
-            OnPropertyChanged();
-            ConstructedChecked = SelectedType is Asn1Type.SEQUENCE or Asn1Type.SET;
-            // no need to call updateResultTagInfo(), it is already called.
+            if (SetField(ref selectedType, value)) {
+                ConstructedChecked = SelectedType is Asn1Type.SEQUENCE or Asn1Type.SET;
+                // no need to call updateResultTagInfo(), it is already called.
+            }
         }
     }
     public String? DecimalTagText {
         get => decimalTagText;
         set {
-            decimalTagText = value;
-            OnPropertyChanged();
-            updateResultTagInfo();
+            if (SetField(ref decimalTagText, value)) {
+                updateResultTagInfo();
+            }
         }
     }
     public String? HexTagText {
         get => hexTagText;
         set {
-            hexTagText = value;
-            OnPropertyChanged();
-            updateResultTagInfo();
+            if (SetField(ref hexTagText, value)) {
+                updateResultTagInfo();
+            }
         }
     }
 
     public String ResultTagDecimal {
         get => resultTagDecimal;
-        set {
-            resultTagDecimal = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref resultTagDecimal, value);
     }
     public String ResultTagHex {
         get => resultTagHex;
-        set {
-            resultTagHex = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref resultTagHex, value);
     }
     public String ResultTagName {
         get => resultTagName;
-        set {
-            resultTagName = value;
-            OnPropertyChanged();
-        }
+        set => SetField(ref resultTagName, value);
     }
 
     Byte getResultingTag() {
@@ -203,10 +188,10 @@ public class NewAsnNodeEditorVM : ClosableWindowVM, INewAsnNodeEditorVM {
         Byte tag = getResultingTag();
         return tag switch {
             // for BIT_STRING need to include unused bit count
-            (Int32)Asn1Type.BIT_STRING      => [tag, 1, 0],
-            (Int32)Asn1Type.UTCTime         => new Asn1UtcTime(DateTime.Now).GetRawData(),
+            (Int32)Asn1Type.BIT_STRING => [tag, 1, 0],
+            (Int32)Asn1Type.UTCTime => new Asn1UtcTime(DateTime.Now).GetRawData(),
             (Int32)Asn1Type.GeneralizedTime => new Asn1GeneralizedTime(DateTime.Now).GetRawData(),
-            _                               => [tag, 0]
+            _ => [tag, 0]
         };
     }
 }

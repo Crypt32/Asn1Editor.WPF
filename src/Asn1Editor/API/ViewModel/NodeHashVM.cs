@@ -20,8 +20,6 @@ class NodeHashVM : ClosableWindowVM {
     readonly StringBuilder _sb = new(128);
     readonly String[] _algorithms = ["MD5", "SHA1", "SHA256", "SHA384", "SHA512"];
 
-    Boolean isHexChecked, isBase64Checked;
-
     public NodeHashVM(IAsn1DocumentContext asnDocContext) {
         for (Int32 i = 0; i < 10; i++) {
             Hashes.Add(String.Empty);
@@ -39,19 +37,19 @@ class NodeHashVM : ClosableWindowVM {
     public UserSettings UserSettings { get; }
 
     public Boolean IsHexChecked {
-        get => isHexChecked;
+        get;
         set {
-            isHexChecked = value;
-            OnPropertyChanged();
-            calculateAllHashes();
+            if (SetField(ref field, value)) {
+                calculateAllHashes();
+            }
         }
     }
     public Boolean IsBase64Checked {
-        get => isBase64Checked;
+        get;
         set {
-            isBase64Checked = value;
-            OnPropertyChanged();
-            calculateAllHashes();
+            if (SetField(ref field, value)) {
+                calculateAllHashes();
+            }
         }
     }
 

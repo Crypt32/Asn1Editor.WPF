@@ -1,14 +1,12 @@
-﻿using System;
+using System;
+using SysadminsLV.WPF.Mvvm;
 
 namespace SysadminsLV.Asn1Editor.API.ViewModel;
-public abstract class AsyncViewModel : ViewModelBase {
-    Boolean isBusy;
 
-    public Boolean IsBusy {
-        get => isBusy;
-        set {
-            isBusy = value;
-            OnPropertyChanged();
-        }
+public abstract class AsyncViewModel : ViewModelBase {
+    public Boolean IsBusy
+    {
+        get;
+        set => SetField(ref field, value);
     }
 }
